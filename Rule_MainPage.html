@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>KOKOMELON Computer For Rent | เงื่อนไขและสัญญา</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+}
+
+/* Layout */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #1f2937;
+  color: white;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.menu a {
+  display: block;
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  color: #cbd5e1;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.menu a:hover,
+.menu a.active {
+  background: #4f46e5;
+  color: white;
+}
+
+/* Main */
+.main {
+  flex: 1;
+}
+
+header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 30px;
+}
+
+.container {
+  padding: 30px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+/* Knowledge Cards */
+.knowledge {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .knowledge { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .knowledge { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+  margin-top: 0;
+  color: #4f46e5;
+}
+
+.card p {
+  color: #374151;
+  line-height: 1.6;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #111827;
+  color: #9ca3af;
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>🛒 KOKOMELON Computer For Rent </h2>
+    <div class="menu">
+      <a href="index.html">🏠 หน้าหลัก</a>
+      <a href="Knowledge_MainPage.html" >📘 ความรู้พื้นฐาน</a>
+      <a href="Rule_MainPage.html"class="active">✨ เงื่อนไขและสัญญา</a>
+      <a href="Other_MainPage.html">อื่นๆ</a>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Header -->
+    <header>
+      <h1>📘 เงื่อนไขและสัญญา</h1>
+      <p>มาตรการให้เช่า KOKOMELON DDC</p>
+    </header>
+
+    <!-- Content -->
+    <div class="container">
+      <div class="knowledge">
+
+        <div class="card">
+          <h3>🖥️ ข้อที่ 1 </h3>
+          <p>
+            ให้เช่าสำหรับบอทเกม เล่นเกม รันบอทเทรดหุ่น หรืออื่นๆ
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>🎮 ข้อที่ 2</h3>
+          <p>
+            มีระบบสำรองไฟฟ้า
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>⏱️ ข้อที่ 3</h3>
+          <p>
+            ไม่อนุญาติให้นำไปใช้ในแนวทางหลอกลวง โกงผู้อื่น หรือผิดกฎหมาย
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>🔧 ข้อที่ 4</h3>
+          <p>
+            ไม่วางเว็บพนัน
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>📡 ข้อที่ 5</h3>
+          <p>
+            ในกรณีผิดสัญญาหรือต้องการยกเลิกก่อน จะมีการคืนงานตามวันเวลาที่เหลือ
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>💡 ข้อที่ 6</h3>
+          <p>
+            กรณีเช่ารายเดือนสามารถร้องขอให้ลงวินโด้วใหม่ได้
+          </p>
+        </div>
+        <div class="card">
+          <h3>💡 ข้อที่ 7</h3>
+          <p>
+            ไม่อนุญาติให้นำไปใช้แฮค ID IP
+          </p>
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      KOKOMELON Computer For Rent 
+    </footer>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>KOKOMELON Shop</title>
+<title>KOKOMELON Computer For Rent </title>
 
 <style>
 body {
@@ -54,8 +54,20 @@ header {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   padding: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center
+}
+.header-left {
+  max-width: 60%;
 }
 
+.header-right {
+  width: 220px;
+  background: white;
+  border-radius: 12px;
+  padding: 10px;
+}
 .container {
   padding: 30px;
   max-width: 1100px;
@@ -141,25 +153,32 @@ footer {
 
   <!-- Sidebar -->
   <div class="sidebar">
-    <h2>🛒 Kokomelon Shop</h2>
+    <h2>🛒 KOKOMELON Computer For Rent </h2>
     <div class="menu">
-      <a href="index.html" class="active">🏠 หน้าหลัก</a>
-      <a href="index2.html">📘 ความรู้พื้นฐาน</a>
-      <a href="index3.html">✨ อื่นๆ</a>
+      <a href="index.html"class="active">🏠 หน้าหลัก</a>
+      <a href="Knowledge_MainPage.html" >📘 ความรู้พื้นฐาน</a>
+      <a href="Rule_MainPage.html">✨ เงื่อนไขและสัญญา</a>
+      <a href="Other_MainPage.html">อื่นๆ</a>
     </div>
   </div>
 
   <!-- Main -->
   <div class="main">
     <header>
-      <h1>ยินดีต้อนรับสู่ร้านของเรา</h1>
-      <p>คอมพิวเตอร์สำหรับเช่าเล่นเกม</p>
+      <div class="header-left">
+    <h1>ยินดีต้อนรับสู่ร้านของเรา</h1>
+    <p>คอมพิวเตอร์สำหรับเช่าเล่นเกม</p>
+  </div>
+
+  <div class="header-right">
+    <canvas id="statusChart"></canvas>
+  </div>
     </header>
 
     <div class="container">
       <div class="products">
 
-        <!-- CARD 1 -->
+        <!-- Set 1-->
         <div class="card">
           <img src="https://lh3.googleusercontent.com/d/1iAsTX4Ri2Q5qiuRp905Riy8w2elnk231">
           <div class="card-content">
@@ -174,6 +193,7 @@ footer {
             <button>เพิ่มลงตะกร้า</button>
           </div>
         </div>
+        <!-- Set 2-->
         <div class="card">
           <img src="https://lh3.googleusercontent.com/d/1WoXYgHyYGHKYnQvuab_z67VRKoBzznzR">
           <div class="card-content">
@@ -188,7 +208,7 @@ footer {
             <button>เพิ่มลงตะกร้า</button>
           </div>
         </div>
-
+        <!-- Set 3-->
         <div class="card">
           <img src="https://lh3.googleusercontent.com/d/1gevPnfGgvoxb2c23s0ckawQHzDDnoar3">
           <div class="card-content">
@@ -204,7 +224,7 @@ footer {
           </div>
         </div>
 
-
+        <!-- Set 4-->
         <div class="card">
           <img src="https://lh3.googleusercontent.com/d/1z7prwlryCX9SfgWgfAS_1wz5TIzD9lpl">
           <div class="card-content">
@@ -225,9 +245,9 @@ footer {
     <div class="container">
       <div class="products">
 
-        <!-- CARD 1 -->
+        <!-- Set 5-->
         <div class="card">
-          <img src="https://picsum.photos/400/300?5">
+          <img src="https://lh3.googleusercontent.com/d/1UMf5-jYuN8XpMDUo64Rg5DfRgkulX4O2">
           <div class="card-content">
             <h3>Computer Set 5</h3>
             <p>CPU <span id="CPU5"></span></p>
@@ -240,8 +260,10 @@ footer {
             <button>เพิ่มลงตะกร้า</button>
           </div>
         </div>
+        <!-- Set 6 -->
+
         <div class="card">
-          <img src="https://picsum.photos/400/300?6">
+          <img src="https://lh3.googleusercontent.com/d/10tJTOFfLCNqKtl4FZ8CK5GMf4ULmx7WS">
           <div class="card-content">
             <h3>Computer Set 6</h3>
             <p>CPU <span id="CPU6"></span></p>
@@ -255,8 +277,9 @@ footer {
           </div>
         </div>
 
+        <!-- Set 7-->
         <div class="card">
-          <img src="https://picsum.photos/400/300?7">
+          <img src="https://lh3.googleusercontent.com/d/1d-LAL5OhdlwN1lJ76sbCpCC61ummS1o-">
           <div class="card-content">
             <h3>Computer Set 7</h3>
             <p>CPU <span id="CPU7"></span></p>
@@ -270,9 +293,9 @@ footer {
           </div>
         </div>
 
-
+        <!-- Set 8-->
         <div class="card">
-          <img src="https://picsum.photos/400/300?4">
+          <img src="https://lh3.googleusercontent.com/d/1j9hJZ4CVsw6V7WGSYRDlMrFnkUyyWNSo">
           <div class="card-content">
             <h3>Computer Set 8</h3>
             <p>CPU <span id="CPU8"></span></p>
@@ -290,10 +313,10 @@ footer {
 
     <div class="container">
       <div class="products">
-
         <!-- CARD 1 -->
+         <!-- Set 9-->
         <div class="card">
-          <img src="https://picsum.photos/400/300?9">
+          <img src="https://lh3.googleusercontent.com/d/10CCfDvaedPT_Yn2ZyhQELJNKhqbN5tf2">
           <div class="card-content">
             <h3>Computer Set 9</h3>
             <p>CPU <span id="CPU9"></span></p>
@@ -305,9 +328,12 @@ footer {
             <p>สถานะ : <span id="Status9" class="status">กำลังโหลด...</span></p>
             <button>เพิ่มลงตะกร้า</button>
           </div>
-        </div>
+      </div>
+
+
+        <!-- Set 10-->
         <div class="card">
-          <img src="https://picsum.photos/400/300?10">
+          <img src="https://lh3.googleusercontent.com/d/13KIIyNAcDcS5N_3Ifdm8iPUgU5sW0J1m">
           <div class="card-content">
             <h3>Computer Set 10</h3>
             <p>CPU <span id="CPU10"></span></p>
@@ -321,8 +347,9 @@ footer {
           </div>
         </div>
 
+        <!-- Set 11-->
         <div class="card">
-          <img src="https://picsum.photos/400/300?11">
+          <img src="https://lh3.googleusercontent.com/d/1WJuRumqTHM8tPwUw7bEZc5JRvbJ5HB82">
           <div class="card-content">
             <h3>Computer Set 11</h3>
             <p>CPU <span id="CPU11"></span></p>
@@ -336,9 +363,10 @@ footer {
           </div>
         </div>
 
-
+        
+        <!-- Set 12-->
         <div class="card">
-          <img src="https://picsum.photos/400/300?12">
+          <img src="https://lh3.googleusercontent.com/d/1VJk2HYClmQwctqnSYow9u_WjieB-2wyT">
           <div class="card-content">
             <h3>Computer Set 12</h3>
             <p>CPU <span id="CPU12"></span></p>
@@ -355,10 +383,10 @@ footer {
     </div>
 <div class="container">
       <div class="products">
-
         <!-- CARD 1 -->
+         <!-- Set 13-->
         <div class="card">
-          <img src="https://picsum.photos/400/300?13">
+          <img src="https://lh3.googleusercontent.com/d/11UgCzvIMXPdt9ala6m_kaEH0LlRxEEX2">
           <div class="card-content">
             <h3>Computer Set 13</h3>
             <p>CPU <span id="CPU13"></span></p>
@@ -371,8 +399,10 @@ footer {
             <button>เพิ่มลงตะกร้า</button>
           </div>
         </div>
+
+        <!-- Set 14-->
         <div class="card">
-          <img src="https://picsum.photos/400/300?14">
+          <img src="https://lh3.googleusercontent.com/d/1stKpKsEShqhCYkKyOWVwGWGkae6Zr9_Y">
           <div class="card-content">
             <h3>Computer Set 14</h3>
             <p>CPU <span id="CPU14"></span></p>
@@ -386,8 +416,9 @@ footer {
           </div>
         </div>
 
+        <!-- Set 15-->
         <div class="card">
-          <img src="https://picsum.photos/400/300?15">
+          <img src="https://lh3.googleusercontent.com/d/1NNxx7ZfEg6xVMwId53SRrYS_j6btDjKR">
           <div class="card-content">
             <h3>Computer Set 15</h3>
             <p>CPU <span id="CPU15"></span></p>
@@ -401,9 +432,9 @@ footer {
           </div>
         </div>
 
-
+        <!-- Set 16-->
         <div class="card">
-          <img src="https://picsum.photos/400/300?16">
+          <img src="https://lh3.googleusercontent.com/d/15O19_Lwepwp90YD-JbWluQFVvaDtmW2F">
           <div class="card-content">
             <h3>Computer Set 16</h3>
             <p>CPU <span id="CPU16"></span></p>
@@ -419,15 +450,12 @@ footer {
       </div>
     </div>
 
-
-
-
     <div class="container">
       <div class="products">
-
         <!-- CARD 1 -->
+         <!-- Set 17-->
         <div class="card">
-          <img src="https://picsum.photos/400/300?17">
+          <img src="https://lh3.googleusercontent.com/d/1Yr6dROK8PjYgudyGPS7JOX8_7jKYba8J">
           <div class="card-content">
             <h3>Computer Set 17</h3>
             <p>CPU <span id="CPU17"></span></p>
@@ -440,8 +468,11 @@ footer {
             <button>เพิ่มลงตะกร้า</button>
           </div>
         </div>
+        
         <div class="card">
-          <img src="https://picsum.photos/400/300?18">
+
+          <!-- Set 18-->
+          <img src="https://lh3.googleusercontent.com/d/12lElSmQ5oFWlLERfkLLFfRc0KuOH8M-r">
           <div class="card-content">
             <h3>Computer Set 18</h3>
             <p>CPU <span id="CPU18"></span></p>
@@ -458,16 +489,24 @@ footer {
       </div>
     </div>
 
-
     <footer>
-      © 2026 Kokomelon Shop
+      <div class="container" style="text-align:center;">
+        <button onclick="showPage(1)">หน้า 1</button>
+        <button onclick="showPage(2)">หน้า 2</button>
+        <button onclick="showPage(3)">หน้า 3</button>
+      </div>
+      KOKOMELON Computer For Rent 
     </footer>
   </div>
-
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- JavaScript -->
 <script>
+let availableCount = 0;
+let unavailableCount = 0;
+let statusChart;
+
 function setStatus(id, value) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -488,12 +527,12 @@ fetch("https://script.google.com/macros/s/AKfycbxKJLR5t17nJ3VeY_nZGSU0djtgD14fjM
   .then(res => res.json())
   .then(data => {
 
-    const startRow = 6;   // แถวเริ่มต้นใน Google Sheet
-    const total = 18;      // จำนวน card ที่แสดง
+    const startRow = 6;
+    const total = 18;
 
     for (let i = 0; i < total; i++) {
-      const n = i + 1;           // 1,2,3,4
-      const row = startRow + i;  // 6,7,8,9
+      const n = i + 1;
+      const row = startRow + i;
 
       document.getElementById(`CPU${n}`).innerText        = ": " + data["E"][row];
       document.getElementById(`GPU${n}`).innerText        = ": " + data["G"][row];
@@ -502,11 +541,72 @@ fetch("https://script.google.com/macros/s/AKfycbxKJLR5t17nJ3VeY_nZGSU0djtgD14fjM
       document.getElementById(`WeekPrice${n}`).innerText  = "฿" + data["L"][row];
       document.getElementById(`MonthPrice${n}`).innerText = "฿" + data["M"][row];
 
-      setStatus(`Status${n}`, data["J"][row]);
+      const status = data["J"][row];
+      setStatus(`Status${n}`, status);
+
+      if (status === "ว่าง") availableCount++;
+      else if (status === "ไม่ว่าง") unavailableCount++;
     }
 
+    Chart.register({
+  id: 'centerText',
+  beforeDraw(chart) {
+    const { width, height, ctx } = chart;
+    const data = chart.data.datasets[0].data;
+    const total = data.reduce((a, b) => a + b, 0);
+
+    ctx.restore();
+    ctx.font = 'bold 22px Arial';
+    ctx.fillStyle = '#111827';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`ทั้งหมด ${total}`, width / 2, height / 2 - 10);
+
+    ctx.font = '14px Arial';
+    ctx.fillStyle = '#6b7280';
+    ctx.fillText(`เครื่อง`, width / 2, height / 2 + 15);
+    ctx.save();
+  }
+});
+
+
+    const ctx = document.getElementById("statusChart").getContext("2d");
+
+statusChart = new Chart(ctx, {
+  type: "doughnut",
+  data: {
+    labels: ["ว่าง", "ไม่ว่าง"],
+    datasets: [{
+      data: [availableCount, unavailableCount],
+      backgroundColor: ["#22c55e", "#ef4444"],
+      borderWidth: 0,
+      hoverOffset: 10
+    }]
+  },
+  options: {
+    cutout: "70%",
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: {
+          usePointStyle: true,
+          padding: 20,
+          font: { size: 14 }
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function(ctx) {
+            return `${ctx.label}: ${ctx.raw} เครื่อง`;
+          }
+        }
+      }
+    }
+  }
+});
+
   })
-  .catch(err => console.error(err));
+  .catch(err => console.error("โหลดข้อมูลไม่สำเร็จ:", err));
 </script>
 
 
