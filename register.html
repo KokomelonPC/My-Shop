@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Register - KOKOMELON</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.box {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 350px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #10b981;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background: #059669;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.login-link a {
+  color: #4f46e5;
+  text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>สมัครสมาชิก</h2>
+
+  <input type="text" id="name" placeholder="ชื่อของคุณ">
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <input type="password" id="confirmPassword" placeholder="Confirm Password">
+
+  <button onclick="register()">Register</button>
+
+  <div class="login-link">
+    มีบัญชีแล้ว? <a href="login.html">Login</a>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword,
+  updateProfile 
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+// 🔥 เพิ่มตรงนี้
+const firebaseConfig = {
+  apiKey: "AIzaSyBN02k5-YhZc1uitpEfMfVpsPLAPYKQs7A",
+  authDomain: "myshop-c3983.firebaseapp.com",
+  projectId: "myshop-c3983",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// -------------------------
+
+window.register = function() {
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  if (!name || !email || !password) {
+    alert("กรุณากรอกข้อมูลให้ครบ");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    alert("รหัสผ่านไม่ตรงกัน");
+    return;
+  }
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      return updateProfile(userCredential.user, {
+        displayName: name
+      });
+    })
+    .then(() => {
+      alert("สมัครสำเร็จ 🎉");
+      window.location.href = "login.html";
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+};
+</script>
+
+</script>
+</body>
+</html>

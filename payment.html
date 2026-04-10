@@ -71,57 +71,119 @@ button:disabled {
 <button onclick="submitPayment()">ส่งแจ้งโอน</button>
 </div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBN02k5-YhZc1uitpEfMfVpsPLAPYKQs7A",
+  authDomain: "myshop-c3983.firebaseapp.com",
+  projectId: "myshop-c3983",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+let currentUser = null;
+
+// 🔐 เช็ค login
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    alert("กรุณา Login ก่อน");
+    window.location.href = "login.html";
+  } else {
+    currentUser = user;
+    document.getElementById("name").value =
+      user.displayName || user.email;
+  }
+});
+
+// 📦 ดึง set
 const set = new URLSearchParams(location.search).get("set");
-
-const itemName = set
-  ? `ชุดคอมพิวเตอร์ ชุดที่ ${set}`
-  : "-";
-
+const itemName = set ? `ชุดคอม ${set}` : "-";
 document.getElementById("itemName").innerText = itemName;
-    
-function submitPayment() {
-    const name = document.getElementById("name").value;
-    const amount = document.getElementById("amount").value;
-    const note = document.getElementById("note").value;
-    const slip = document.getElementById("slip").files[0];
 
-    if (!name || !amount || !slip) {
-        alert("กรุณากรอกข้อมูลและแนบสลิปให้ครบ");
-        return;
-    }
+// 🔥 resize รูป
+function resizeImage(file, callback) {
+  const img = new Image();
+  const reader = new FileReader();
 
-    const reader = new FileReader();
-    reader.onload = function () {
-        fetch("https://script.google.com/macros/s/AKfycbxAO9wwc9eCbn4cQ8WUneFvfyzDKr9qglMcHSlEq19ISbmt-NYUNUzANHnHlaXgr2M-/exec", {
-            method: "POST",
-            body: JSON.stringify({
-                item: item,
-                name: name,
-                amount: amount,
-                note: note,
-                image: reader.result
-            })
-        })
-        .then(res => res.text())
-        .then(() => {
-    alert("ส่งข้อมูลเรียบร้อย รอตรวจสอบ");
-    setTimeout(() => {
-        window.location.href = "index.html";
-    }, 2000);
-})
-        .catch(() => alert("เกิดข้อผิดพลาด"));
-    };
+  reader.onload = e => img.src = e.target.result;
 
-    reader.readAsDataURL(slip);
-    const btn = document.querySelector("button");
-btn.disabled = true;
-btn.innerText = "กำลังส่งข้อมูล...";
+  img.onload = function () {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const maxWidth = 600; // 🔥 ลดขนาด
+    const scale = maxWidth / img.width;
+
+    canvas.width = maxWidth;
+    canvas.height = img.height * scale;
+
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    callback(canvas.toDataURL("image/jpeg", 0.3)); // 🔥 ลดคุณภาพ
+  };
+
+  reader.readAsDataURL(file);
 }
 
+// 🚀 submit
+window.submitPayment = function () {
 
+  if (!currentUser) {
+    alert("ยัง login ไม่เสร็จ");
+    return;
+  }
 
+  const name = document.getElementById("name").value;
+  const amount = document.getElementById("amount").value;
+  const note = document.getElementById("note").value;
+  const slip = document.getElementById("slip").files[0];
+
+  if (!name || !amount || !slip) {
+    alert("กรุณากรอกข้อมูลให้ครบ");
+    return;
+  }
+
+  const btn = document.querySelector("button");
+  btn.disabled = true;
+  btn.innerText = "กำลังส่ง...";
+
+  resizeImage(slip, function (base64Image) {
+
+    // 🔥 ยิงข้อมูล (ไม่ต้องใส่ header)
+    fetch("https://script.google.com/macros/s/AKfycbzC-ANHs7kFAam3RG8aKvA5FcnBoe6EheSDfPDpPwIbGwSOH_AbGLpCMkr3PRlMjv4/exec", {
+      method: "POST",
+      body: JSON.stringify({
+        item: itemName || "-",
+        name: name,
+        amount: amount,
+        note: note,
+        //image: base64Image, // ✅ ใช้งานได้
+        uid: currentUser.uid,
+        status: "รอ",
+        code: ""
+      })
+    });
+
+    fetch("https://script.google.com/macros/s/AKfycbzC-ANHs7kFAam3RG8aKvA5FcnBoe6EheSDfPDpPwIbGwSOH_AbGLpCMkr3PRlMjv4/exec", {
+      method: "POST",
+      body: JSON.stringify({
+        image: base64Image, // ✅ ใช้งานได้
+
+      })
+    });
+
+    // 🔥 ไม่รอ response กันค้าง
+    setTimeout(() => {
+      alert("ส่งเรียบร้อย");
+      window.location.href = "index.html";
+    }, 1200);
+
+  });
+};
 </script>
 
 </body>
-</html>
+</html> 

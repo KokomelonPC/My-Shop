@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Login - KOKOMELON</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.box {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 350px;
+  max-width: 90%; 
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  margin: auto;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #4f46e5;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background: #4338ca;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.register-link a {
+  color: #10b981;
+  text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>เข้าสู่ระบบ</h2>
+
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+
+  <button onclick="login()">Login</button>
+
+  <div class="register-link">
+    ยังไม่มีบัญชี? <a href="register.html">Register</a>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } 
+from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBN02k5-YhZc1uitpEfMfVpsPLAPYKQs7A",
+  authDomain: "myshop-c3983.firebaseapp.com",
+  projectId: "myshop-c3983",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.login = function() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    alert("กรุณากรอกข้อมูลให้ครบ");
+    return;
+  }
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      alert("Login สำเร็จ 🎉");
+      window.location.href = "index.html";
+    })
+    .catch(err => alert(err.message));
+}
+</script>
+
+</body>
+</html>
