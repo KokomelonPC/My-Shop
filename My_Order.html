@@ -121,6 +121,27 @@ body {
   color: #2563eb;
   font-weight: 700;
 }
+.renew-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 11px 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  box-shadow: 0 10px 22px rgba(16, 185, 129, 0.18);
+}
+.renew-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(16, 185, 129, 0.24);
+}
+.renew-note {
+  margin: 10px 0 0;
+  color: #92400e;
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
 .empty-state {
   text-align: center;
   padding: 30px 16px;
@@ -272,8 +293,33 @@ footer {
         <p><strong>สถานะ:</strong> <span class="status-pill">${order.status || "-"}</span></p>
         <p><strong>ข้อความจากแอดมิน:</strong> ${order.adminReply || "-"}</p>
         <p><strong>วันที่ส่ง:</strong> ${formatDate(order.createdAt)}</p>
+        ${getRenewButton(order)}
       </article>
     `).join("");
+  }
+
+  function getRenewButton(order) {
+    const canRenew = order.status === "อนุมัติแล้ว" || order.status === "เสร็จสิ้น";
+
+    if (!canRenew) {
+      return "";
+    }
+
+    const params = new URLSearchParams({
+      renew: "1",
+      orderId: order.orderId || "",
+      set: order.setNumber || getSetNumberFromItem(order.item)
+    });
+
+    return `
+      <a class="renew-btn" href="payment.html?${params.toString()}">ต่ออายุ</a>
+      <p class="renew-note">การต่ออายุหลังหมดสัญญาแล้ว ให้ตรวจสอบสถานะคอมพิวเตอร์ก่อนโอนเงิน</p>
+    `;
+  }
+
+  function getSetNumberFromItem(item) {
+    const match = String(item || "").match(/\d+/);
+    return match ? match[0] : "";
   }
 
   function formatDate(value) {

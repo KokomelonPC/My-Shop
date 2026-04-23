@@ -90,8 +90,8 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
   <div class="shell">
     <section class="intro">
       <span class="badge">💳 Payment Notice</span>
-      <h1>แจ้งโอนเงินเพื่อยืนยันการเช่า</h1>
-      <p>กรอกข้อมูลการโอนเงินให้ครบถ้วน แล้วแนบสลิปเพื่อส่งให้ระบบตรวจสอบ หลังส่งแล้วลูกค้าจะติดตามสถานะได้ที่หน้า My Orders</p>
+      <h1 id="paymentTitle">แจ้งโอนเงินเพื่อยืนยันการเช่า</h1>
+      <p id="paymentDescription">กรอกข้อมูลการโอนเงินให้ครบถ้วน แล้วแนบสลิปเพื่อส่งให้ระบบตรวจสอบ หลังส่งแล้วลูกค้าจะติดตามสถานะได้ที่หน้า My Orders</p>
 
       <div class="summary">
         <h3>ข้อมูลบัญชี</h3>
@@ -151,9 +151,21 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
     document.getElementById("name").value = user.displayName || user.email;
   });
 
-  const set = new URLSearchParams(location.search).get("set");
-  const itemName = set ? `ชุดคอม ${set}` : "-";
+  const params = new URLSearchParams(location.search);
+  const set = params.get("set");
+  const isRenewal = params.get("renew") === "1";
+  const parentOrderId = params.get("orderId") || "";
+  const itemName = set ? `${isRenewal ? "ต่ออายุชุดคอม" : "ชุดคอม"} ${set}` : "-";
   document.getElementById("itemName").innerText = itemName;
+
+  if (isRenewal) {
+    document.getElementById("paymentTitle").innerText = "แจ้งโอนเงินเพื่อต่ออายุ";
+    document.getElementById("paymentDescription").innerText =
+      "กรอกข้อมูลการโอนเงินสำหรับต่ออายุรายการเช่าเดิม แล้วแนบสลิปเพื่อส่งให้แอดมินตรวจสอบ";
+    document.getElementById("note").value = parentOrderId
+      ? `ต่ออายุจากออเดอร์ ${parentOrderId}`
+      : "ต่ออายุรายการเช่าเดิม";
+  }
 
   function resizeImage(file, callback) {
     const img = new Image();
@@ -216,6 +228,8 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
             customerName: name,
             item: itemName || "-",
             setNumber: set || "",
+            orderType: isRenewal ? "renewal" : "new",
+            parentOrderId: parentOrderId,
             amount: amount,
             note: note,
             image: base64Image,
