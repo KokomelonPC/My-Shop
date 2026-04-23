@@ -2,196 +2,128 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>KOKOMELON Computer For Rent | เงื่อนไขและสัญญา</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOPC Service| เงื่อนไขและสัญญา</title>
+<link rel="icon" type="image/png" href="favicon.png">
 <style>
+:root {
+  --text-main: #0f172a;
+  --text-soft: #475569;
+  --text-muted: #94a3b8;
+  --line-soft: rgba(148, 163, 184, 0.18);
+  --brand-blue: #2563eb;
+  --brand-indigo: #4f46e5;
+  --shadow-xl: 0 28px 70px rgba(15, 23, 42, 0.18);
+  --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+* { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.18), transparent 26%),
+    radial-gradient(circle at right center, rgba(79, 70, 229, 0.14), transparent 24%),
+    linear-gradient(180deg, #f8fbff 0%, #eef4ff 48%, #f8fafc 100%);
 }
-
-/* Layout */
-.layout {
-  display: flex;
-  min-height: 100vh;
-}
-
-/* Sidebar */
+.layout { display: flex; min-height: 100vh; }
 .sidebar {
-  width: 220px;
-  background: #1f2937;
-  color: white;
-  padding: 20px;
+  width: 280px; padding: 26px 22px; color: #fff;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.96));
+  border-right: 1px solid rgba(255, 255, 255, 0.06); position: sticky; top: 0; height: 100vh;
 }
-
-.sidebar h2 {
-  text-align: center;
-  margin-bottom: 30px;
+.brand-box { padding: 22px 18px; border-radius: 24px; background: linear-gradient(135deg, rgba(37, 99, 235, 0.24), rgba(14, 165, 233, 0.16), rgba(124, 58, 237, 0.28)); }
+.brand-box h2 { margin: 0; font-size: 1.45rem; }
+.brand-box p { margin: 10px 0 0; color: rgba(226, 232, 240, 0.88); line-height: 1.7; font-size: 0.95rem; }
+.menu { margin-top: 28px; }
+.menu-label { margin: 0 0 14px; padding-left: 10px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(148, 163, 184, 0.78); }
+.menu a { display: flex; align-items: center; gap: 12px; padding: 14px 16px; margin-bottom: 10px; color: #dbeafe; text-decoration: none; border-radius: 14px; }
+.menu a:hover { background: rgba(59, 130, 246, 0.16); }
+.menu a.active { color: #fff; background: linear-gradient(135deg, rgba(37, 99, 235, 0.8), rgba(124, 58, 237, 0.8)); box-shadow: 0 14px 26px rgba(37, 99, 235, 0.22); }
+.main { flex: 1; padding: 26px; }
+.hero { padding: 38px; border-radius: 34px; color: #fff; background: linear-gradient(135deg, rgba(29, 78, 216, 0.96), rgba(79, 70, 229, 0.92), rgba(14, 165, 233, 0.88)); box-shadow: var(--shadow-xl); }
+.eyebrow { display: inline-block; padding: 8px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.16); font-size: 0.92rem; }
+.hero h1 { margin: 18px 0 0; font-size: clamp(2rem, 4vw, 3.2rem); }
+.hero p { margin: 16px 0 0; max-width: 760px; line-height: 1.8; color: rgba(239, 246, 255, 0.9); }
+.content-shell { max-width: 1220px; margin: 28px auto 0; }
+.section-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 22px; }
+.section-head h2 { margin: 0; font-size: 1.8rem; }
+.section-head p { margin: 10px 0 0; color: var(--text-soft); line-height: 1.7; }
+.section-tag { padding: 10px 14px; border-radius: 999px; background: rgba(37, 99, 235, 0.1); color: var(--brand-blue); font-weight: 700; }
+.knowledge { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+.card { background: rgba(255, 255, 255, 0.82); border: 1px solid rgba(255, 255, 255, 0.92); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-md); backdrop-filter: blur(14px); }
+.card-badge { display: inline-block; padding: 8px 12px; border-radius: 999px; background: rgba(37, 99, 235, 0.1); color: var(--brand-blue); font-size: 0.86rem; font-weight: 700; }
+.card h3 { margin: 16px 0 10px; font-size: 1.18rem; }
+.card p { margin: 0; color: var(--text-soft); line-height: 1.8; }
+.note-panel { margin-top: 24px; padding: 24px; border-radius: 24px; background: rgba(255, 255, 255, 0.78); border: 1px solid var(--line-soft); box-shadow: var(--shadow-md); }
+.note-panel h3 { margin-top: 0; }
+.note-panel ul { margin: 0; padding-left: 20px; color: var(--text-soft); line-height: 1.9; }
+footer { margin-top: 26px; padding: 24px; border-radius: 24px; background: rgba(15, 23, 42, 0.96); color: var(--text-muted); text-align: center; }
+@media (max-width: 980px) {
+  .layout { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: relative; }
+  .knowledge { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-
-.menu a {
-  display: block;
-  padding: 12px 15px;
-  margin-bottom: 10px;
-  color: #cbd5e1;
-  text-decoration: none;
-  border-radius: 8px;
-}
-
-.menu a:hover,
-.menu a.active {
-  background: #4f46e5;
-  color: white;
-}
-
-/* Main */
-.main {
-  flex: 1;
-}
-
-header {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  padding: 30px;
-}
-
-.container {
-  padding: 30px;
-  max-width: 1100px;
-  margin: auto;
-}
-
-/* Knowledge Cards */
-.knowledge {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-@media (max-width: 900px) {
-  .knowledge { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 600px) {
+@media (max-width: 680px) {
+  .main { padding: 18px; }
+  .hero { padding: 28px 24px; border-radius: 28px; }
+  .section-head { flex-direction: column; align-items: flex-start; }
   .knowledge { grid-template-columns: 1fr; }
-}
-
-.card {
-  background: white;
-  border-radius: 16px;
-  padding: 25px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-}
-
-.card h3 {
-  margin-top: 0;
-  color: #4f46e5;
-}
-
-.card p {
-  color: #374151;
-  line-height: 1.6;
-}
-
-footer {
-  text-align: center;
-  padding: 20px;
-  background: #111827;
-  color: #9ca3af;
 }
 </style>
 </head>
-
 <body>
-
-<div class="layout">
-
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h2>🛒 KOKOMELON Computer For Rent </h2>
-    <div class="menu">
-      <a href="index.html">🏠 หน้าหลัก</a>
-      <a href="Knowledge_MainPage.html" >📘 ความรู้พื้นฐาน</a>
-      <a href="Rule_MainPage.html"class="active">✨ เงื่อนไขและสัญญา</a>
-      <a href="Howto.html" >📺 วิธีใช้งาน</a>
-      <a href="Other_MainPage.html">อื่นๆ</a>
-    </div>
-  </div>
-
-  <!-- Main -->
-  <div class="main">
-
-    <!-- Header -->
-    <header>
-      <h1>📘 เงื่อนไขและสัญญา</h1>
-      <p>มาตรการให้เช่า KOKOMELON DDC</p>
-    </header>
-
-    <!-- Content -->
-    <div class="container">
-      <div class="knowledge">
-
-        <div class="card">
-          <h3>🖥️ ข้อที่ 1 </h3>
-          <p>
-            ให้เช่าสำหรับบอทเกม เล่นเกม รันบอทเทรดหุ่น หรืออื่นๆ
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>🎮 ข้อที่ 2</h3>
-          <p>
-            มีระบบสำรองไฟฟ้า
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>⏱️ ข้อที่ 3</h3>
-          <p>
-            ไม่อนุญาติให้นำไปใช้ในแนวทางหลอกลวง โกงผู้อื่น หรือผิดกฎหมาย
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>🔧 ข้อที่ 4</h3>
-          <p>
-            ไม่วางเว็บพนัน
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>📡 ข้อที่ 5</h3>
-          <p>
-            ในกรณีผิดสัญญาหรือต้องการยกเลิกก่อน จะมีการคืนงานตามวันเวลาที่เหลือ
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>💡 ข้อที่ 6</h3>
-          <p>
-            กรณีเช่ารายเดือนสามารถร้องขอให้ลงวินโด้วใหม่ได้
-          </p>
-        </div>
-        <div class="card">
-          <h3>💡 ข้อที่ 7</h3>
-          <p>
-            ไม่อนุญาติให้นำไปใช้แฮค ID IP
-          </p>
-        </div>
-
-        
-
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand-box">
+        <h2>🛒 KOPC Service</h2>
+        <p>เงื่อนไขการใช้งานที่ชัดเจน ช่วยให้ทั้งผู้เช่าและผู้ให้บริการเข้าใจตรงกันตั้งแต่เริ่มต้น</p>
       </div>
-    </div>
+      <nav class="menu">
+        <p class="menu-label">สินค้าและบริการของเรา</p>
+        <a href="index.html" class="active">🏠 คอมพิวเตอร์ให้เช่า</a>
+        <a href="Other_MainPage.html">🧩 อื่นๆ</a>
+      </nav>
+    </aside>
 
-    <!-- Footer -->
-    <footer>
-      KOKOMELON Computer For Rent 
-    </footer>
+    <main class="main">
+      <section class="hero">
+        <span class="eyebrow">✨ Terms & Conditions</span>
+        <h1>เงื่อนไขและสัญญาการใช้งาน</h1>
+        <p>ข้อกำหนดเหล่านี้ช่วยให้การใช้งานเป็นไปอย่างปลอดภัยและเหมาะสม กรุณาอ่านก่อนเช่าทุกครั้งเพื่อป้องกันความเข้าใจคลาดเคลื่อน</p>
+      </section>
 
+      <div class="content-shell">
+        <div class="section-head">
+          <div>
+            <h2>ข้อกำหนดสำคัญ</h2>
+            <p>เนื้อหาในหน้านี้สรุปเงื่อนไขพื้นฐานในการเช่าเครื่อง KOKOMELON DDC ให้ตรวจสอบก่อนเริ่มใช้งานจริง</p>
+          </div>
+          <div class="section-tag">7 Conditions</div>
+        </div>
+
+        <section class="knowledge">
+          <article class="card"><span class="card-badge">ข้อที่ 1</span><h3>วัตถุประสงค์การใช้งาน</h3><p>เปิดให้เช่าสำหรับบอทเกม เล่นเกม รันงาน หรือใช้งานอื่น ๆ ที่ไม่ขัดต่อกฎของผู้ให้บริการและไม่ผิดกฎหมาย</p></article>
+          <article class="card"><span class="card-badge">ข้อที่ 2</span><h3>ความต่อเนื่องของระบบ</h3><p>มีระบบสำรองไฟฟ้าเพื่อช่วยลดผลกระทบจากปัญหาไฟตกไฟดับและเพิ่มความเสถียรระหว่างใช้งาน</p></article>
+          <article class="card"><span class="card-badge">ข้อที่ 3</span><h3>ห้ามใช้งานในทางหลอกลวง</h3><p>ไม่อนุญาตให้นำเครื่องไปใช้ในลักษณะหลอกลวง โกงผู้อื่น หรือกิจกรรมใด ๆ ที่ขัดต่อกฎหมายโดยเด็ดขาด</p></article>
+          <article class="card"><span class="card-badge">ข้อที่ 4</span><h3>ห้ามใช้กับเว็บพนัน</h3><p>ไม่อนุญาตให้นำเครื่องเช่าไปใช้กับเว็บไซต์พนัน หรือกิจกรรมที่มีความเสี่ยงทางกฎหมายทุกประเภท</p></article>
+          <article class="card"><span class="card-badge">ข้อที่ 5</span><h3>การยกเลิกก่อนกำหนด</h3><p>ในกรณีผิดสัญญาหรือต้องการยกเลิกก่อนกำหนด การคืนงานหรือการพิจารณาคืนเงินจะอิงตามวันเวลาที่เหลืออยู่</p></article>
+          <article class="card"><span class="card-badge">ข้อที่ 6</span><h3>การลงวินโดวส์ใหม่</h3><p>หากเช่าแบบรายเดือน สามารถร้องขอให้ลงวินโดวส์ใหม่ได้ตามเงื่อนไขของผู้ให้บริการเพื่อให้เครื่องพร้อมใช้งาน</p></article>
+          <article class="card"><span class="card-badge">ข้อที่ 7</span><h3>ห้ามใช้เพื่อแฮ็กระบบ</h3><p>ไม่อนุญาตให้นำเครื่องไปใช้เพื่อแฮ็ก ID, IP หรือกระทำการใด ๆ ที่เข้าข่ายบุกรุกหรือโจมตีระบบของผู้อื่น</p></article>
+        </section>
+
+        <section class="note-panel">
+          <h3>ข้อควรทราบ</h3>
+          <ul>
+            <li>หากมีข้อสงสัยเกี่ยวกับเงื่อนไข ควรสอบถามทีมงานก่อนเช่าเพื่อป้องกันความเข้าใจไม่ตรงกัน</li>
+            <li>การใช้งานผิดเงื่อนไขอาจมีผลต่อสิทธิ์การเช่าในอนาคตหรือการยุติบริการก่อนครบกำหนด</li>
+            <li>ควรเก็บหลักฐานการชำระเงินและข้อมูลการเช่าไว้ทุกครั้งเพื่อใช้ในการตรวจสอบ</li>
+          </ul>
+        </section>
+
+        <footer>KOPC Service</footer>
+      </div>
+    </main>
   </div>
-</div>
-
 </body>
 </html>

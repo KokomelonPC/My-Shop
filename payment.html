@@ -2,188 +2,239 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>แจ้งโอนเงิน</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แจ้งโอนเงิน | KOPC Service</title>
+<link rel="icon" type="image/png" href="favicon.png">
 <style>
+* { box-sizing: border-box; }
 body {
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
-    padding: 30px;
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #0f172a;
+  background:
+    radial-gradient(circle at top left, rgba(16, 185, 129, 0.16), transparent 24%),
+    radial-gradient(circle at right center, rgba(79, 70, 229, 0.14), transparent 24%),
+    linear-gradient(135deg, #f0fdf4 0%, #eef2ff 50%, #f8fafc 100%);
+  padding: 24px;
 }
+.shell {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 460px;
+  gap: 22px;
+}
+.intro, .box {
+  border-radius: 30px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.14);
+}
+.intro {
+  padding: 38px;
+  color: white;
+  background: linear-gradient(135deg, rgba(5, 150, 105, 0.94), rgba(37, 99, 235, 0.9), rgba(79, 70, 229, 0.84));
+}
+.intro .badge {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.16);
+}
+.intro h1 { margin: 18px 0 12px; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; }
+.intro p { margin: 0; color: rgba(236, 253, 245, 0.94); line-height: 1.8; }
+.summary {
+  margin-top: 24px;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.14);
+}
+.summary h3 { margin-top: 0; }
+.summary p { margin: 8px 0; }
 .box {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    max-width: 420px;
-    margin: auto;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.84);
+  border: 1px solid rgba(255,255,255,0.92);
+  backdrop-filter: blur(14px);
+  padding: 30px;
 }
+.box h2 { margin: 0 0 8px; }
+.sub { margin: 0 0 22px; color: #64748b; }
+label { display: block; margin-bottom: 8px; font-weight: 600; }
 input, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 6px;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+  width: 100%;
+  padding: 13px 14px;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(248, 250, 252, 0.92);
 }
+textarea { resize: vertical; min-height: 100px; }
 button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    background: #28a745;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
+  width: 100%;
+  padding: 13px 16px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
 }
-button:disabled {
-    background: gray;
-    cursor: not-allowed;
+button:disabled { background: #94a3b8; cursor: not-allowed; }
+.back-home { display: inline-block; margin-top: 18px; color: #475569; text-decoration: none; }
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
 }
 </style>
 </head>
-
 <body>
+  <div class="shell">
+    <section class="intro">
+      <span class="badge">💳 Payment Notice</span>
+      <h1>แจ้งโอนเงินเพื่อยืนยันการเช่า</h1>
+      <p>กรอกข้อมูลการโอนเงินให้ครบถ้วน แล้วแนบสลิปเพื่อส่งให้ระบบตรวจสอบ หลังส่งแล้วลูกค้าจะติดตามสถานะได้ที่หน้า My Orders</p>
 
-<div class="box">
-<h2>แจ้งโอนเงิน</h2>
+      <div class="summary">
+        <h3>ข้อมูลบัญชี</h3>
+        <p><strong>รายการ:</strong> <span id="itemName"></span></p>
+        <p><strong>ธนาคาร:</strong> TTB</p>
+        <p><strong>เลขบัญชี:</strong> 921-7-80960-8</p>
+        <p><strong>ชื่อบัญชี:</strong> นาย กัมพล องการ</p>
+      </div>
+    </section>
 
-<p><b>รายการ:</b> <span id="itemName"></span></p>
+    <div class="box">
+      <h2>แบบฟอร์มแจ้งโอน</h2>
+      <p class="sub">ตรวจสอบข้อมูลให้ถูกต้องก่อนส่งทุกครั้ง</p>
 
-<p><b>ธนาคาร:</b> TTB</p>
-<p><b>เลขบัญชี:</b> 921-7-80960-8</p>
-<p><b>ชื่อบัญชี:</b> นาย กัมพล องการ</p>
+      <label for="name">ชื่อผู้โอน</label>
+      <input id="name" type="text" placeholder="กรอกชื่อผู้โอน">
 
-<hr>
+      <label for="amount">จำนวนเงิน (บาท)</label>
+      <input id="amount" type="number" placeholder="เช่น 500">
 
-<label>ชื่อผู้โอน</label>
-<input id="name" type="text" placeholder="กรอกชื่อผู้โอน">
+      <label for="note">รายละเอียดเพิ่มเติม</label>
+      <textarea id="note" placeholder="รายละเอียดเพิ่มเติม"></textarea>
 
-<label>จำนวนเงิน (บาท)</label>
-<input id="amount" type="number" placeholder="เช่น 500">
+      <label for="slip">แนบสลิปโอนเงิน</label>
+      <input type="file" id="slip" accept="image/*">
 
-<label>รายละเอียดเพิ่มเติม</label>
-<textarea id="note" rows="3"></textarea>
+      <button id="submitBtn" onclick="submitPayment()">ส่งแจ้งโอน</button>
+      <a class="back-home" href="index.html">← กลับหน้าหลัก</a>
+    </div>
+  </div>
 
-<label>แนบสลิปโอนเงิน</label>
-<input type="file" id="slip" accept="image/*">
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
-<button onclick="submitPayment()">ส่งแจ้งโอน</button>
-</div>
+  const ORDER_API_URL = "https://script.google.com/macros/s/AKfycbyPC-bIh5AYPp0PCTuQoC-XEMmmwJLVAHN7cBLEa8euDTSDgUtKGqGQQpth1bT_QtKS/exec";
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBN02k5-YhZc1uitpEfMfVpsPLAPYKQs7A",
-  authDomain: "myshop-c3983.firebaseapp.com",
-  projectId: "myshop-c3983",
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-let currentUser = null;
-
-// 🔐 เช็ค login
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    alert("กรุณา Login ก่อน");
-    window.location.href = "login.html";
-  } else {
-    currentUser = user;
-    document.getElementById("name").value =
-      user.displayName || user.email;
-  }
-});
-
-// 📦 ดึง set
-const set = new URLSearchParams(location.search).get("set");
-const itemName = set ? `ชุดคอม ${set}` : "-";
-document.getElementById("itemName").innerText = itemName;
-
-// 🔥 resize รูป
-function resizeImage(file, callback) {
-  const img = new Image();
-  const reader = new FileReader();
-
-  reader.onload = e => img.src = e.target.result;
-
-  img.onload = function () {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    const maxWidth = 600; // 🔥 ลดขนาด
-    const scale = maxWidth / img.width;
-
-    canvas.width = maxWidth;
-    canvas.height = img.height * scale;
-
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-    callback(canvas.toDataURL("image/jpeg", 0.3)); // 🔥 ลดคุณภาพ
+  const firebaseConfig = {
+    apiKey: "AIzaSyBN02k5-YhZc1uitpEfMfVpsPLAPYKQs7A",
+    authDomain: "myshop-c3983.firebaseapp.com",
+    projectId: "myshop-c3983",
   };
 
-  reader.readAsDataURL(file);
-}
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-// 🚀 submit
-window.submitPayment = function () {
+  let currentUser = null;
 
-  if (!currentUser) {
-    alert("ยัง login ไม่เสร็จ");
-    return;
-  }
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      alert("กรุณา Login ก่อน");
+      window.location.href = "login.html";
+      return;
+    }
 
-  const name = document.getElementById("name").value;
-  const amount = document.getElementById("amount").value;
-  const note = document.getElementById("note").value;
-  const slip = document.getElementById("slip").files[0];
-
-  if (!name || !amount || !slip) {
-    alert("กรุณากรอกข้อมูลให้ครบ");
-    return;
-  }
-
-  const btn = document.querySelector("button");
-  btn.disabled = true;
-  btn.innerText = "กำลังส่ง...";
-
-  resizeImage(slip, function (base64Image) {
-
-    // 🔥 ยิงข้อมูล (ไม่ต้องใส่ header)
-    fetch("https://script.google.com/macros/s/AKfycbzC-ANHs7kFAam3RG8aKvA5FcnBoe6EheSDfPDpPwIbGwSOH_AbGLpCMkr3PRlMjv4/exec", {
-      method: "POST",
-      body: JSON.stringify({
-        item: itemName || "-",
-        name: name,
-        amount: amount,
-        note: note,
-        //image: base64Image, // ✅ ใช้งานได้
-        uid: currentUser.uid,
-        status: "รอ",
-        code: ""
-      })
-    });
-
-    fetch("https://script.google.com/macros/s/AKfycbzC-ANHs7kFAam3RG8aKvA5FcnBoe6EheSDfPDpPwIbGwSOH_AbGLpCMkr3PRlMjv4/exec", {
-      method: "POST",
-      body: JSON.stringify({
-        image: base64Image, // ✅ ใช้งานได้
-
-      })
-    });
-
-    // 🔥 ไม่รอ response กันค้าง
-    setTimeout(() => {
-      alert("ส่งเรียบร้อย");
-      window.location.href = "index.html";
-    }, 1200);
-
+    currentUser = user;
+    document.getElementById("name").value = user.displayName || user.email;
   });
-};
-</script>
 
+  const set = new URLSearchParams(location.search).get("set");
+  const itemName = set ? `ชุดคอม ${set}` : "-";
+  document.getElementById("itemName").innerText = itemName;
+
+  function resizeImage(file, callback) {
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = e => img.src = e.target.result;
+
+    img.onload = function () {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const maxWidth = 600;
+      const scale = maxWidth / img.width;
+
+      canvas.width = maxWidth;
+      canvas.height = img.height * scale;
+
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      callback(canvas.toDataURL("image/jpeg", 0.3));
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  window.submitPayment = function () {
+    if (ORDER_API_URL.includes("PASTE_YOUR")) {
+      alert("ยังไม่ได้ใส่ Web App URL ของ Apps Script ในไฟล์ payment.html");
+      return;
+    }
+
+    if (!currentUser) {
+      alert("ยัง login ไม่เสร็จ");
+      return;
+    }
+
+    const name = document.getElementById("name").value;
+    const amount = document.getElementById("amount").value;
+    const note = document.getElementById("note").value;
+    const slip = document.getElementById("slip").files[0];
+
+    if (!name || !amount || !slip) {
+      alert("กรุณากรอกข้อมูลให้ครบ");
+      return;
+    }
+
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true;
+    btn.innerText = "กำลังส่ง...";
+
+    resizeImage(slip, async function (base64Image) {
+      const orderId = "ORDER-" + Date.now();
+
+      try {
+        await fetch(ORDER_API_URL, {
+          method: "POST",
+          body: JSON.stringify({
+            action: "createOrder",
+            orderId: orderId,
+            uid: currentUser.uid,
+            email: currentUser.email || "",
+            customerName: name,
+            item: itemName || "-",
+            setNumber: set || "",
+            amount: amount,
+            note: note,
+            image: base64Image,
+            status: "รอตรวจสอบ",
+            adminReply: "",
+            code: ""
+          })
+        });
+
+        alert("ส่งแจ้งโอนเรียบร้อย สามารถติดตามสถานะได้ที่ My Orders");
+        window.location.href = "My_Order.html";
+      } catch (error) {
+        console.error(error);
+        alert("ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+        btn.disabled = false;
+        btn.innerText = "ส่งแจ้งโอน";
+      }
+    });
+  };
+  </script>
 </body>
-</html> 
+</html>

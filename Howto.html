@@ -2,192 +2,578 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>KOKOMELON Computer For Rent | อื่นๆ</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOPC Service | วิธีใช้งาน</title>
+<link rel="icon" type="image/png" href="favicon.png">
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
+:root {
+  --bg-main: #eef2ff;
+  --bg-soft: #f8fafc;
+  --bg-panel: rgba(15, 23, 42, 0.88);
+  --text-main: #0f172a;
+  --text-soft: #475569;
+  --text-faint: #94a3b8;
+  --white: #ffffff;
+  --accent: #2563eb;
+  --accent-strong: #7c3aed;
+  --accent-soft: rgba(37, 99, 235, 0.12);
+  --border-soft: rgba(148, 163, 184, 0.18);
+  --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.16);
+  --shadow-md: 0 16px 32px rgba(15, 23, 42, 0.1);
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
 }
 
-/* Layout */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.18), transparent 34%),
+    radial-gradient(circle at right center, rgba(124, 58, 237, 0.16), transparent 28%),
+    linear-gradient(180deg, #f8fbff 0%, #eef4ff 45%, #f8fafc 100%);
+}
+
+a {
+  color: inherit;
+}
+
 .layout {
   display: flex;
   min-height: 100vh;
 }
 
-/* Sidebar */
 .sidebar {
-  width: 220px;
-  background: #1f2937;
-  color: white;
-  padding: 20px;
+  width: 270px;
+  padding: 28px 22px;
+  color: var(--white);
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.92));
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  backdrop-filter: blur(12px);
 }
 
-.sidebar h2 {
-  text-align: center;
-  margin-bottom: 30px;
+.brand {
+  padding: 20px 18px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.24), rgba(124, 58, 237, 0.3));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.brand h2 {
+  margin: 0;
+  font-size: 1.45rem;
+  letter-spacing: 0.04em;
+}
+
+.brand p {
+  margin: 10px 0 0;
+  color: rgba(226, 232, 240, 0.82);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.menu {
+  margin-top: 28px;
+}
+
+.menu-label {
+  margin: 0 0 14px;
+  padding-left: 10px;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.82);
 }
 
 .menu a {
-  display: block;
-  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
   margin-bottom: 10px;
-  color: #cbd5e1;
+  color: #dbeafe;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: 14px;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
-.menu a:hover,
+.menu a:hover {
+  transform: translateX(4px);
+  background: rgba(59, 130, 246, 0.16);
+}
+
 .menu a.active {
-  background: #4f46e5;
-  color: white;
+  color: var(--white);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.8), rgba(124, 58, 237, 0.8));
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.24);
 }
 
-/* Main */
 .main {
   flex: 1;
+  padding: 26px;
 }
 
-header {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  padding: 30px;
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 42px;
+  border-radius: 34px;
+  color: var(--white);
+  background:
+    linear-gradient(135deg, rgba(30, 64, 175, 0.95), rgba(109, 40, 217, 0.9)),
+    linear-gradient(135deg, #1d4ed8, #7c3aed);
+  box-shadow: var(--shadow-lg);
 }
 
-.container {
-  padding: 30px;
-  max-width: 1100px;
-  margin: auto;
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
 }
 
-/* Cards */
+.hero::before {
+  width: 260px;
+  height: 260px;
+  top: -90px;
+  right: -50px;
+}
+
+.hero::after {
+  width: 180px;
+  height: 180px;
+  bottom: -70px;
+  left: 38%;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  margin-bottom: 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 0.92rem;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 3.25rem);
+  line-height: 1.15;
+}
+
+
+.hero p {
+  margin: 16px 0 0;
+  max-width: 620px;
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: rgba(239, 246, 255, 0.9);
+}
+
+.hero-stats {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.stat {
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+}
+
+.stat strong {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 6px;
+}
+
+.stat span {
+  color: rgba(226, 232, 240, 0.88);
+  font-size: 0.95rem;
+}
+
+.content-shell {
+  max-width: 1180px;
+  margin: 26px auto 0;
+}
+
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 34px 0 20px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: 1.7rem;
+}
+
+.section-head p {
+  margin: 10px 0 0;
+  color: var(--text-soft);
+  line-height: 1.7;
+}
+
+.section-tag {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .knowledge {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-@media (max-width: 900px) {
-  .knowledge { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 600px) {
-  .knowledge { grid-template-columns: 1fr; }
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
 }
 
 .card {
-  background: white;
-  border-radius: 16px;
-  padding: 25px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(12px);
+  transition: transform 0.24s ease, box-shadow 0.24s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 46px rgba(15, 23, 42, 0.14);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 38%);
+  pointer-events: none;
+}
+
+.card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--accent);
+  font-size: 0.88rem;
+  font-weight: 600;
 }
 
 .card h3 {
-  margin-top: 0;
-  color: #4f46e5;
+  margin: 18px 0 10px;
+  font-size: 1.28rem;
 }
 
 .card p {
-  color: #374151;
-  line-height: 1.6;
+  margin: 0;
+  color: var(--text-soft);
+  line-height: 1.75;
 }
 
-/* YouTube */
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.meta span {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.84rem;
+}
+
 .video-wrapper {
   position: relative;
   padding-top: 56.25%;
-  margin-top: 15px;
-  border-radius: 12px;
+  margin-top: 22px;
+  border-radius: 18px;
   overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.88));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 .video-wrapper iframe {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   border: none;
 }
 
-/* Footer */
+.tips {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 22px;
+  margin-top: 24px;
+}
+
+.tip-panel,
+.note-panel {
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+}
+
+.tip-panel h3,
+.note-panel h3 {
+  margin-top: 0;
+  margin-bottom: 14px;
+  font-size: 1.2rem;
+}
+
+.tip-list,
+.note-list {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--text-soft);
+  line-height: 1.8;
+}
+
 footer {
+  margin-top: 26px;
   text-align: center;
-  padding: 20px;
-  background: #111827;
-  color: #9ca3af;
+  padding: 22px;
+  border-radius: 24px;
+  color: var(--text-faint);
+  background: rgba(15, 23, 42, 0.96);
+}
+
+@media (max-width: 1100px) {
+  .knowledge {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tips {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .main {
+    padding: 18px;
+  }
+
+  .hero {
+    padding: 30px 24px;
+    border-radius: 28px;
+  }
+
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .knowledge {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar,
+  .main {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .brand,
+  .card,
+  .tip-panel,
+  .note-panel,
+  footer {
+    border-radius: 20px;
+  }
+
+  .menu a {
+    padding: 13px 14px;
+  }
 }
 </style>
 </head>
-
 <body>
-
-<div class="layout">
-
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h2>🛒 KOKOMELON</h2>
-    <div class="menu">
-      <a href="index.html">🏠 หน้าหลัก</a>
-      <a href="Knowledge_MainPage.html">📘 ความรู้พื้นฐาน</a>
-      <a href="Rule_MainPage.html">✨ เงื่อนไขและสัญญา</a>
-      <a href="Howto.html" class="active">📺 วิธีใช้งาน</a>
-      <a href="Other_MainPage.html">อื่นๆ</a>
-    </div>
-  </div>
-
-  <!-- Main -->
-  <div class="main">
-
-    <!-- Header -->
-    <header>
-      <h1>📺 วิธีการใช้งาน & การเชื่อมต่อ</h1>
-      <p>อธิบายการใช้งานเครื่องเช่าแบบเข้าใจง่าย</p>
-    </header>
-
-    <!-- Content -->
-    <div class="container">
-      <div class="knowledge">
-
-        <!-- Card 1 -->
-        <div class="card">
-          <h3>🖥 วิธีเชื่อมต่อเครื่องเช่า</h3>
-          <p>แนะนำขั้นตอนการเชื่อมต่อเครื่องคอมพิวเตอร์เช่า</p>
-          <div class="video-wrapper">
-            <iframe src="https://www.youtube.com/embed/VIDEO_ID_1" allowfullscreen></iframe>
-          </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="card">
-          <h3>💳 วิธีแจ้งโอนเงิน</h3>
-          <p>อธิบายขั้นตอนการแจ้งโอนและอัปโหลดสลิป</p>
-          <div class="video-wrapper">
-            <iframe src="https://www.youtube.com/embed/VIDEO_ID_2" allowfullscreen></iframe>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="card">
-          <h3>🛠 ปัญหาที่พบบ่อย</h3>
-          <p>แนวทางแก้ไขเมื่อเชื่อมต่อไม่ได้หรือเครื่องค้าง</p>
-          <div class="video-wrapper">
-            <iframe src="https://www.youtube.com/embed/VIDEO_ID_3" allowfullscreen></iframe>
-          </div>
-        </div>
-
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <h2>KOKOMELON</h2>
+        <p>บริการเช่าคอมพิวเตอร์พร้อมคู่มือใช้งานที่เข้าใจง่ายและดูเป็นมืออาชีพมากขึ้น</p>
       </div>
-    </div>
 
-    <!-- Footer -->
-    <footer>
-      Kokomelon Computer For Rent © 2026
-    </footer>
+      <nav class="menu">
+        <p class="menu-label">สินค้าและบริการของเรา</p>
+        <a href="index.html" class="active">🏠 คอมพิวเตอร์ให้เช่า</a>
+        <a href="Other_MainPage.html">🧩 อื่นๆ</a>
+      </nav>
+    </aside>
 
+    <main class="main">
+      <section class="hero">
+        <div class="hero-content">
+          <span class="eyebrow">📺 การเชื่อมต่อระยะไกล</span>
+          <h1>ลูกค้าสามารถใช้งานคอมพิวเตอร์เช่า ผ่านหลายเครื่องมือ</h1>
+          <p>รวมวิดีโอแนะนำที่ช่วยให้ลูกค้าเริ่มต้นใช้งานได้เร็วขึ้น ตั้งแต่การเชื่อมต่อเครื่อง การแจ้งโอนเงิน ไปจนถึงการแก้ปัญหาพื้นฐานที่พบได้บ่อย</p>
+        </div>
+
+        <div class="hero-stats">
+          
+        </div>
+      </section>
+
+      <div class="content-shell">
+        <div class="section-head">
+          <div>
+            <h2>วิดีโอแนะนำการใช้งาน</h2>
+            <p>เลือกดูหัวข้อที่ต้องการได้ทันที แต่ละการ์ดถูกออกแบบให้เนื้อหาชัดขึ้นและวิดีโอดูเด่นกว่าเดิม</p>
+          </div>
+          <div class="section-tag">How To Collection</div>
+        </div>
+
+        <section class="knowledge">
+          <article class="card">
+            <h3>แน่ะนำการเชื่อมต่อแบบต่างๆ</h3>
+            <p>แนะนำขั้นตอนการเชื่อมต่อเครื่องคอมพิวเตอร์เช่าแบบทีละลำดับ เหมาะสำหรับผู้ใช้งานครั้งแรกที่ต้องการเริ่มต้นอย่างมั่นใจ</p>
+            <div class="meta">
+            </div>
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/5Iky_96C6i4&t=17s" title="วิธีเชื่อมต่อเครื่องเช่า" allowfullscreen></iframe>
+
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>การเชื่อมต่อผ่าน Anydesk</h3>
+            <p>อธิบายวิธีแจ้งการโอนเงินและอัปโหลดหลักฐานอย่างถูกต้อง เพื่อให้การตรวจสอบรวดเร็วและลดความผิดพลาดระหว่างการยืนยันรายการ</p>
+            <div class="meta">
+            </div>
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/__jzwrMml70" title="วิธีเชื่อมต่อเครื่องเช่า" allowfullscreen></iframe>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>การเชื่อมต่อผ่าน RDC(Remote Desktop PC)</h3>
+            <p>รวบรวมแนวทางแก้ไขเมื่อเชื่อมต่อไม่ได้ เครื่องค้าง หรือมีปัญหาระหว่างใช้งาน ช่วยให้ลูกค้าตรวจสอบเองได้ก่อนติดต่อแอดมิน</p>
+            <div class="meta">
+            </div>
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/-5hVHb_SNzs" title="วิธีเชื่อมต่อเครื่องเช่า" allowfullscreen></iframe>
+            </div>
+          </article>
+        </section>
+
+        <section class="knowledge">
+        <article class="card">
+            <h3>การเชื่อมต่อผ่าน Parsec</h3>
+            <p>รวบรวมแนวทางแก้ไขเมื่อเชื่อมต่อไม่ได้ เครื่องค้าง หรือมีปัญหาระหว่างใช้งาน ช่วยให้ลูกค้าตรวจสอบเองได้ก่อนติดต่อแอดมิน</p>
+            <div class="meta">
+            </div>
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/ofTySCM4PX8" title="วิธีเชื่อมต่อเครื่องเช่า" allowfullscreen></iframe>
+            </div>
+          </article>
+        
+
+        <article class="card">
+            <h3>การเชื่อมต่อผ่าน OSlink</h3>
+            <p>รวบรวมแนวทางแก้ไขเมื่อเชื่อมต่อไม่ได้ เครื่องค้าง หรือมีปัญหาระหว่างใช้งาน ช่วยให้ลูกค้าตรวจสอบเองได้ก่อนติดต่อแอดมิน</p>
+            <div class="meta">
+            </div>
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/o_h0VH3qFCs" title="วิธีเชื่อมต่อเครื่องเช่า" allowfullscreen></iframe>
+            </div>
+          </article>
+        
+
+
+        <article class="card">
+            <h3>การเชื่อมต่อผ่าน RDC(Remote Desktop Chrome)</h3>
+            <p>รวบรวมแนวทางแก้ไขเมื่อเชื่อมต่อไม่ได้ เครื่องค้าง หรือมีปัญหาระหว่างใช้งาน ช่วยให้ลูกค้าตรวจสอบเองได้ก่อนติดต่อแอดมิน</p>
+            <div class="meta">
+            </div>
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/_utVvv4IyMM" title="วิธีเชื่อมต่อเครื่องเช่า" allowfullscreen></iframe>
+            </div>
+          </article>
+        </section>
+
+        <section class="tips">
+          <div class="tip-panel">
+            <h3>คำแนะนำก่อนเริ่มใช้งาน</h3>
+            <ul class="tip-list">
+              <li>ตรวจสอบอินเทอร์เน็ตให้เสถียรก่อนเชื่อมต่อเครื่องเช่า</li>
+              <li>เตรียมข้อมูลสำหรับเข้าสู่ระบบหรือหลักฐานการชำระเงินให้พร้อม</li>
+              <li>หากพบปัญหา ให้ลองดูวิดีโอหมวดปัญหาที่พบบ่อยก่อนติดต่อทีมงาน</li>
+            </ul>
+          </div>
+
+          <div class="note-panel">
+            <h3>หมายเหตุ</h3>
+            <ul class="note-list">
+              <li>-</li>
+            </ul>
+          </div>
+        </section>
+
+        <footer>
+          KOPC Service
+        </footer>
+      </div>
+    </main>
   </div>
-</div>
-
 </body>
 </html>

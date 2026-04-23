@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOPC Service | Admin Orders</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+:root {
+  --bg-sidebar: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.96));
+  --text-main: #0f172a;
+  --text-soft: #475569;
+  --text-muted: #94a3b8;
+  --line-soft: rgba(148, 163, 184, 0.18);
+  --shadow-xl: 0 28px 70px rgba(15, 23, 42, 0.18);
+  --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.18), transparent 26%),
+    radial-gradient(circle at right center, rgba(79, 70, 229, 0.14), transparent 24%),
+    linear-gradient(180deg, #f8fbff 0%, #eef4ff 48%, #f8fafc 100%);
+}
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 280px;
+  padding: 26px 22px;
+  color: #fff;
+  background: var(--bg-sidebar);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.brand-box {
+  padding: 22px 18px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.24), rgba(14, 165, 233, 0.16), rgba(124, 58, 237, 0.28));
+}
+.brand-box h2 { margin: 0; font-size: 1.45rem; }
+.brand-box p { margin: 10px 0 0; color: rgba(226, 232, 240, 0.88); line-height: 1.7; font-size: 0.95rem; }
+.menu { margin-top: 28px; }
+.menu-label { margin: 0 0 14px; padding-left: 10px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(148, 163, 184, 0.78); }
+.menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  color: #dbeafe;
+  text-decoration: none;
+  border-radius: 14px;
+}
+.menu a:hover { background: rgba(59, 130, 246, 0.16); }
+.menu a.active {
+  color: #fff;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.8), rgba(124, 58, 237, 0.8));
+  box-shadow: 0 14px 26px rgba(37, 99, 235, 0.22);
+}
+.main { flex: 1; padding: 26px; }
+.hero {
+  padding: 36px;
+  border-radius: 34px;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(29, 78, 216, 0.96), rgba(79, 70, 229, 0.92), rgba(14, 165, 233, 0.88));
+  box-shadow: var(--shadow-xl);
+}
+.eyebrow { display: inline-block; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,0.16); }
+.hero h1 { margin: 18px 0 0; font-size: clamp(2rem, 4vw, 3.2rem); }
+.hero p { margin: 14px 0 0; max-width: 760px; color: rgba(239, 246, 255, 0.9); line-height: 1.8; }
+.content-shell { max-width: 1280px; margin: 28px auto 0; }
+.admin-grid { display: grid; grid-template-columns: 1fr 0.95fr; gap: 22px; }
+.panel {
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+}
+.toolbar {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+input, select, textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(248, 250, 252, 0.92);
+}
+.order-list { display: grid; gap: 12px; }
+.order-item {
+  padding: 16px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid var(--line-soft);
+  cursor: pointer;
+}
+.order-item:hover, .order-item.active { background: #eef2ff; }
+.order-item strong { display: block; margin-bottom: 6px; }
+.order-meta { color: var(--text-soft); font-size: 0.95rem; line-height: 1.6; }
+.detail-panel { display: grid; gap: 14px; }
+.detail-row {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.detail-row:last-child { border-bottom: none; }
+.detail-row label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-soft);
+  font-weight: 600;
+}
+.detail-value { font-weight: 700; }
+.admin-actions button {
+  padding: 13px 16px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #fff;
+  cursor: pointer;
+}
+.note { color: var(--text-soft); font-size: 0.95rem; }
+footer {
+  margin-top: 26px;
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.96);
+  color: var(--text-muted);
+  text-align: center;
+}
+@media (max-width: 980px) {
+  .layout { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: relative; }
+  .admin-grid { grid-template-columns: 1fr; }
+  .toolbar { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand-box">
+        <h2>🛠 KOPC Admin</h2>
+        <p>หน้าสำหรับตรวจสอบออเดอร์ลูกค้า เปลี่ยนสถานะ และตอบกลับจากฝั่งผู้ดูแลระบบ</p>
+      </div>
+      <nav class="menu">
+        <p class="menu-label">Admin Navigation</p>
+        <a href="index.html">🏠 กลับหน้าหลัก</a>
+        <a href="admin_orders.html" class="active">🛠 Admin Orders</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <section class="hero">
+        <span class="eyebrow">🛠 Admin Dashboard</span>
+        <h1>จัดการออเดอร์และสถานะลูกค้า</h1>
+        <p>แอดมินสามารถดูออเดอร์ทั้งหมด เปลี่ยนสถานะ และกรอกข้อความตอบกลับเพื่อให้ลูกค้าเห็นในหน้า My Orders</p>
+      </section>
+
+      <div class="content-shell">
+        <section class="admin-grid">
+          <div class="panel">
+            <h2>รายการออเดอร์</h2>
+            <div class="toolbar">
+              <input id="searchInput" type="text" placeholder="ค้นหาด้วยชื่อ อีเมล หรือ orderId">
+              <select id="statusFilter">
+                <option value="">ทุกสถานะ</option>
+                <option>รอตรวจสอบ</option>
+                <option>กำลังตรวจสอบ</option>
+                <option>อนุมัติแล้ว</option>
+                <option>ไม่ผ่าน</option>
+                <option>เสร็จสิ้น</option>
+              </select>
+            </div>
+
+            <div id="orderList" class="order-list">
+              <div class="note">กำลังโหลดออเดอร์...</div>
+            </div>
+          </div>
+
+          <div class="panel detail-panel">
+            <h2>รายละเอียดออเดอร์</h2>
+
+            <div class="detail-row">
+              <label>Order ID</label>
+              <div id="detailOrderId" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-row">
+              <label>ลูกค้า</label>
+              <div id="detailCustomer" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-row">
+              <label>รายการเช่า</label>
+              <div id="detailItem" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-row">
+              <label>จำนวนเงิน</label>
+              <div id="detailAmount" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-row">
+              <label>สลิป</label>
+              <a id="detailSlip" href="#" target="_blank">-</a>
+            </div>
+
+            <div class="detail-row">
+              <label>สถานะ</label>
+              <select id="detailStatus">
+                <option>รอตรวจสอบ</option>
+                <option>กำลังตรวจสอบ</option>
+                <option>อนุมัติแล้ว</option>
+                <option>ไม่ผ่าน</option>
+                <option>เสร็จสิ้น</option>
+              </select>
+            </div>
+
+            <div class="detail-row">
+              <label>ข้อความตอบกลับจากแอดมิน</label>
+              <textarea id="detailReply" rows="5" placeholder="ตัวอย่าง: ตรวจสอบแล้ว ชำระเงินถูกต้อง ระบบจะเปิดใช้งานภายใน 10 นาที"></textarea>
+            </div>
+
+            <div class="admin-actions">
+              <button type="button" onclick="saveOrderUpdate()">บันทึกการอัปเดต</button>
+            </div>
+          </div>
+        </section>
+
+        <footer>KOPC Service Admin</footer>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+  const ORDER_API_URL = "https://script.google.com/macros/s/AKfycbyPC-bIh5AYPp0PCTuQoC-XEMmmwJLVAHN7cBLEa8euDTSDgUtKGqGQQpth1bT_QtKS/exec";
+  const ADMIN_EMAILS = [
+    "kamponoxxviii@gmail.com",
+    "kampono@pwa.co.th"
+  ].map(email => email.toLowerCase());
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBN02k5-YhZc1uitpEfMfVpsPLAPYKQs7A",
+    authDomain: "myshop-c3983.firebaseapp.com",
+    projectId: "myshop-c3983"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  let allOrders = [];
+  let selectedOrder = null;
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      alert("กรุณา Login ก่อน");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const loginEmail = (user.email || "").toLowerCase();
+
+    if (!ADMIN_EMAILS.includes(loginEmail)) {
+      alert("คุณไม่มีสิทธิ์เข้าใช้งานหน้านี้");
+      window.location.href = "index.html";
+      return;
+    }
+
+    await loadOrders();
+  });
+
+  document.getElementById("searchInput").addEventListener("input", renderOrderList);
+  document.getElementById("statusFilter").addEventListener("change", renderOrderList);
+
+  async function loadOrders() {
+    if (ORDER_API_URL.includes("PASTE_YOUR")) {
+      document.getElementById("orderList").innerHTML = `<div class="note">ยังไม่ได้ใส่ Web App URL ของ Apps Script</div>`;
+      return;
+    }
+
+    const response = await fetch(`${ORDER_API_URL}?action=getAllOrders`);
+    const data = await response.json();
+    allOrders = data.orders || [];
+    renderOrderList();
+  }
+
+  function renderOrderList() {
+    const list = document.getElementById("orderList");
+    const search = document.getElementById("searchInput").value.toLowerCase();
+    const status = document.getElementById("statusFilter").value;
+
+    const filtered = allOrders.filter(order => {
+      const text = `${order.orderId} ${order.email} ${order.customerName} ${order.item}`.toLowerCase();
+      const matchSearch = !search || text.includes(search);
+      const matchStatus = !status || order.status === status;
+      return matchSearch && matchStatus;
+    });
+
+    if (!filtered.length) {
+      list.innerHTML = `<div class="note">ไม่พบรายการ</div>`;
+      return;
+    }
+
+    list.innerHTML = filtered.map(order => `
+      <div class="order-item" onclick="selectOrder('${order.orderId}')">
+        <strong>${order.orderId}</strong>
+        <div class="order-meta">ลูกค้า: ${order.email || order.customerName || "-"}</div>
+        <div class="order-meta">รายการ: ${order.item || "-"}</div>
+        <div class="order-meta">สถานะ: ${order.status || "-"}</div>
+      </div>
+    `).join("");
+  }
+
+  window.selectOrder = function(orderId) {
+    selectedOrder = allOrders.find(order => order.orderId === orderId);
+    if (!selectedOrder) return;
+
+    document.getElementById("detailOrderId").innerText = selectedOrder.orderId || "-";
+    document.getElementById("detailCustomer").innerText = selectedOrder.email || selectedOrder.customerName || "-";
+    document.getElementById("detailItem").innerText = selectedOrder.item || "-";
+    document.getElementById("detailAmount").innerText = selectedOrder.amount ? `${selectedOrder.amount} บาท` : "-";
+    document.getElementById("detailStatus").value = selectedOrder.status || "รอตรวจสอบ";
+    document.getElementById("detailReply").value = selectedOrder.adminReply || "";
+
+    const slip = document.getElementById("detailSlip");
+    if (selectedOrder.slipImage) {
+      slip.href = selectedOrder.slipImage;
+      slip.innerText = "เปิดดูสลิป";
+    } else {
+      slip.href = "#";
+      slip.innerText = "-";
+    }
+  };
+
+  window.saveOrderUpdate = async function() {
+    if (!selectedOrder) {
+      alert("กรุณาเลือกออเดอร์ก่อน");
+      return;
+    }
+
+    await fetch(ORDER_API_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        action: "updateOrderByAdmin",
+        orderId: selectedOrder.orderId,
+        status: document.getElementById("detailStatus").value,
+        adminReply: document.getElementById("detailReply").value
+      })
+    });
+
+    alert("บันทึกเรียบร้อย");
+    await loadOrders();
+  };
+  </script>
+</body>
+</html>

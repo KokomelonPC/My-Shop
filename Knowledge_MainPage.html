@@ -2,194 +2,353 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>KOKOMELON Computer For Rent | ความรู้พื้นฐาน</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOPC Service | ความรู้พื้นฐาน</title>
+<link rel="icon" type="image/png" href="favicon.png">
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
+:root {
+  --text-main: #0f172a;
+  --text-soft: #475569;
+  --text-muted: #94a3b8;
+  --line-soft: rgba(148, 163, 184, 0.18);
+  --brand-blue: #2563eb;
+  --brand-indigo: #4f46e5;
+  --shadow-xl: 0 28px 70px rgba(15, 23, 42, 0.18);
+  --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.12);
+  --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.08);
 }
 
-/* Layout */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.18), transparent 26%),
+    radial-gradient(circle at right center, rgba(79, 70, 229, 0.14), transparent 24%),
+    linear-gradient(180deg, #f8fbff 0%, #eef4ff 48%, #f8fafc 100%);
+}
+
 .layout {
   display: flex;
   min-height: 100vh;
 }
 
-/* Sidebar */
 .sidebar {
-  width: 220px;
-  background: #1f2937;
-  color: white;
-  padding: 20px;
+  width: 280px;
+  padding: 26px 22px;
+  color: #fff;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.96));
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  position: sticky;
+  top: 0;
+  height: 100vh;
 }
 
-.sidebar h2 {
-  text-align: center;
-  margin-bottom: 30px;
+.brand-box {
+  padding: 22px 18px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.24), rgba(14, 165, 233, 0.16), rgba(124, 58, 237, 0.28));
+}
+
+.brand-box h2 {
+  margin: 0;
+  font-size: 1.45rem;
+  line-height: 1.35;
+}
+
+.brand-box p {
+  margin: 10px 0 0;
+  color: rgba(226, 232, 240, 0.88);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+.menu {
+  margin-top: 28px;
+}
+
+.menu-label {
+  margin: 0 0 14px;
+  padding-left: 10px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(148, 163, 184, 0.78);
 }
 
 .menu a {
-  display: block;
-  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
   margin-bottom: 10px;
-  color: #cbd5e1;
+  color: #dbeafe;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: 14px;
 }
 
-.menu a:hover,
+.menu a:hover {
+  background: rgba(59, 130, 246, 0.16);
+}
+
 .menu a.active {
-  background: #4f46e5;
-  color: white;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.8), rgba(124, 58, 237, 0.8));
+  box-shadow: 0 14px 26px rgba(37, 99, 235, 0.22);
 }
 
-/* Main */
 .main {
   flex: 1;
+  padding: 26px;
 }
 
-header {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  padding: 30px;
+.hero {
+  padding: 38px;
+  border-radius: 34px;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(29, 78, 216, 0.96), rgba(79, 70, 229, 0.92), rgba(14, 165, 233, 0.88));
+  box-shadow: var(--shadow-xl);
 }
 
-.container {
-  padding: 30px;
-  max-width: 1100px;
-  margin: auto;
+.eyebrow {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 0.92rem;
 }
 
-/* Knowledge Cards */
+.hero h1 {
+  margin: 18px 0 0;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.hero p {
+  margin: 16px 0 0;
+  max-width: 760px;
+  line-height: 1.8;
+  color: rgba(239, 246, 255, 0.9);
+}
+
+.content-shell {
+  max-width: 1220px;
+  margin: 28px auto 0;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.section-head p {
+  margin: 10px 0 0;
+  color: var(--text-soft);
+  line-height: 1.7;
+}
+
+.section-tag {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--brand-blue);
+  font-weight: 700;
+}
+
 .knowledge {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-@media (max-width: 900px) {
-  .knowledge { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 600px) {
-  .knowledge { grid-template-columns: 1fr; }
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
 }
 
 .card {
-  background: white;
-  border-radius: 16px;
-  padding: 25px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(14px);
+}
+
+.card-badge {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--brand-blue);
+  font-size: 0.86rem;
+  font-weight: 700;
 }
 
 .card h3 {
-  margin-top: 0;
-  color: #4f46e5;
+  margin: 16px 0 10px;
+  font-size: 1.18rem;
 }
 
 .card p {
-  color: #374151;
-  line-height: 1.6;
+  margin: 0;
+  color: var(--text-soft);
+  line-height: 1.8;
+}
+
+.tips {
+  margin-top: 24px;
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid var(--line-soft);
+  box-shadow: var(--shadow-md);
+}
+
+.tips h3 {
+  margin-top: 0;
+}
+
+.tips ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--text-soft);
+  line-height: 1.9;
 }
 
 footer {
+  margin-top: 26px;
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.96);
+  color: var(--text-muted);
   text-align: center;
-  padding: 20px;
-  background: #111827;
-  color: #9ca3af;
+}
+
+@media (max-width: 980px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .knowledge {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .main {
+    padding: 18px;
+  }
+
+  .hero {
+    padding: 28px 24px;
+    border-radius: 28px;
+  }
+
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .knowledge {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
-
 <body>
-
-<div class="layout">
-
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h2>🛒 KOKOMELON Computer For Rent </h2>
-    <div class="menu">
-      <a href="index.html">🏠 หน้าหลัก</a>
-      <a href="Knowledge_MainPage.html" class="active">📘 ความรู้พื้นฐาน</a>
-      <a href="Rule_MainPage.html">✨ เงื่อนไขและสัญญา</a>
-      <a href="Howto.html" >📺 วิธีใช้งาน</a>
-      <a href="Other_MainPage.html">อื่นๆ</a>
-    </div>
-  </div>
-
-  <!-- Main -->
-  <div class="main">
-
-    <!-- Header -->
-    <header>
-      <h1>📘 ความรู้พื้นฐาน</h1>
-      <p>ข้อมูลสำคัญก่อนตัดสินใจเช่าคอมพิวเตอร์</p>
-    </header>
-
-    <!-- Content -->
-    <div class="container">
-      <div class="knowledge">
-
-        <div class="card">
-          <h3>🖥️ สเปกเครื่องคืออะไร</h3>
-          <p>
-            สเปกเครื่องประกอบด้วย CPU, RAM, การ์ดจอ และ Storage  
-            ยิ่งสเปกสูง ยิ่งเหมาะกับเกมหรือโปรแกรมที่หนัก
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>🎮 เลือกเครื่องให้เหมาะกับเกม</h3>
-          <p>
-            เกม FPS และ MMORPG ต้องการการ์ดจอที่ดี  
-            ส่วนงานทั่วไปหรือดูหนัง ใช้เครื่องระดับกลางได้
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>⏱️ การเช่าแบบรายวัน / รายเดือน</h3>
-          <p>
-            รายวันเหมาะกับใช้งานสั้น ๆ  
-            รายเดือนคุ้มค่าสำหรับใช้งานต่อเนื่อง
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>🔧 การดูแลเครื่อง</h3>
-          <p>
-            เครื่องทุกชุดผ่านการตรวจสอบก่อนปล่อยเช่า  
-            พร้อมใช้งาน ไม่มีไวรัส
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>📡 อินเทอร์เน็ต & ระบบ</h3>
-          <p>
-            รองรับอินเทอร์เน็ตความเร็วสูง  
-            พร้อมอัปเดต Windows และ Driver ล่าสุด
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>💡 คำแนะนำ</h3>
-          <p>
-            หากไม่แน่ใจว่าจะเลือกเครื่องไหน  
-            สามารถสอบถามทีมงานก่อนเช่าได้
-          </p>
-        </div>
-
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand-box">
+        <h2>🛒 KOPC Service</h2>
+        <p>รวมข้อมูลพื้นฐานที่ช่วยให้ลูกค้าเลือกเครื่องเช่าได้ง่ายขึ้นและมั่นใจก่อนตัดสินใจ</p>
       </div>
-    </div>
 
-    <!-- Footer -->
-    <footer>
-      KOKOMELON Computer For Rent 
-    </footer>
+      <nav class="menu">
+        <p class="menu-label">สินค้าและบริการของเรา</p>
+        <a href="index.html" class="active">🏠 คอมพิวเตอร์ให้เช่า</a>
+        <a href="Other_MainPage.html">🧩 อื่นๆ</a>
+      </nav>
+    </aside>
 
+    <main class="main">
+      <section class="hero">
+        <span class="eyebrow">📘 Basic Knowledge</span>
+        <h1>ความรู้พื้นฐานก่อนเลือกเช่าคอมพิวเตอร์</h1>
+        <p>หน้านี้รวบรวมข้อมูลสำคัญที่ลูกค้าควรรู้ก่อนเช่า ไม่ว่าจะเป็นการอ่านสเปก ความเหมาะสมของเครื่องกับเกม หรือการเลือกแพ็กเกจเช่าให้คุ้มกับการใช้งาน</p>
+      </section>
+
+      <div class="content-shell">
+        <div class="section-head">
+          <div>
+            <h2>หัวข้อแนะนำ</h2>
+            <p>เนื้อหาแต่ละหัวข้อถูกสรุปให้เข้าใจง่าย เพื่อช่วยให้ตัดสินใจเลือกชุดคอมที่เหมาะกับงบและลักษณะงานของคุณ</p>
+          </div>
+          <div class="section-tag">6 Knowledge Cards</div>
+        </div>
+
+        <section class="knowledge">
+          <article class="card">
+            <span class="card-badge">🖥 สเปกเครื่อง</span>
+            <h3>สเปกเครื่องคืออะไร</h3>
+            <p>สเปกเครื่องประกอบด้วย CPU, RAM, การ์ดจอ และ Storage ยิ่งสเปกสูงมากเท่าไร ก็ยิ่งเหมาะกับเกมหรือโปรแกรมที่กินทรัพยากรมากขึ้น</p>
+          </article>
+
+          <article class="card">
+            <span class="card-badge">🎮 เลือกให้เหมาะกับเกม</span>
+            <h3>เลือกเครื่องให้เหมาะกับเกม</h3>
+            <p>เกมแนว FPS, MMORPG หรือเกมภาพสวยมาก ๆ ควรเลือกเครื่องที่มีการ์ดจอแรง ส่วนงานทั่วไปหรือดูหนังสามารถใช้เครื่องระดับกลางได้</p>
+          </article>
+
+          <article class="card">
+            <span class="card-badge">⏱ แพ็กเกจเช่า</span>
+            <h3>การเช่าแบบรายวัน / รายเดือน</h3>
+            <p>รายวันเหมาะกับการใช้งานระยะสั้นหรือทดลองระบบ ส่วนรายเดือนจะคุ้มค่ากว่าหากต้องใช้งานต่อเนื่องเป็นเวลานาน</p>
+          </article>
+
+          <article class="card">
+            <span class="card-badge">🔧 ความพร้อมใช้งาน</span>
+            <h3>การดูแลเครื่อง</h3>
+            <p>เครื่องทุกชุดผ่านการตรวจสอบก่อนปล่อยเช่า พร้อมใช้งานทันที ลดปัญหาระหว่างใช้งานและช่วยให้ลูกค้าเริ่มต้นได้เร็วขึ้น</p>
+          </article>
+
+          <article class="card">
+            <span class="card-badge">📡 ระบบและเครือข่าย</span>
+            <h3>อินเทอร์เน็ตและระบบ</h3>
+            <p>รองรับการใช้งานผ่านอินเทอร์เน็ตความเร็วสูง พร้อมอัปเดต Windows และ Driver ให้เหมาะกับการเล่นเกมและการใช้งานทั่วไป</p>
+          </article>
+
+          <article class="card">
+            <span class="card-badge">💡 ขอคำแนะนำได้</span>
+            <h3>ไม่แน่ใจว่าจะเลือกเครื่องไหนดี</h3>
+            <p>หากยังไม่มั่นใจว่างานหรือเกมของคุณเหมาะกับชุดไหน สามารถสอบถามทีมงานก่อนเช่าได้ เพื่อให้ได้เครื่องที่ตรงความต้องการที่สุด</p>
+          </article>
+        </section>
+
+        <section class="tips">
+          <h3>คำแนะนำเพิ่มเติม</h3>
+          <ul>
+            <li>หากต้องการเล่นเกมหนัก ควรดูทั้ง CPU, GPU และ RAM ไปพร้อมกัน ไม่ควรดูเฉพาะอย่างใดอย่างหนึ่ง</li>
+            <li>กรณีใช้งานต่อเนื่องหลายวัน การเลือกแพ็กเกจระยะยาวมักช่วยประหยัดค่าใช้จ่ายได้มากกว่า</li>
+            <li>ถ้ายังลังเล ให้เริ่มจากหน้าแรกเพื่อดูสถานะเครื่องว่าง แล้วค่อยเปรียบเทียบสเปกและราคา</li>
+          </ul>
+        </section>
+
+        <footer>KOPC Service</footer>
+      </div>
+    </main>
   </div>
-</div>
-
 </body>
 </html>

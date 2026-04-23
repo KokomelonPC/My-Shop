@@ -2,19 +2,287 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>KOKOMELON Computer For Rent </title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOPC Service</title>
+<link rel="icon" type="image/png" href="favicon.png">
 <style>
+:root {
+  --bg-page: #eff4ff;
+  --bg-surface: rgba(255, 255, 255, 0.82);
+  --bg-surface-strong: #ffffff;
+  --bg-sidebar: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.96));
+  --text-main: #0f172a;
+  --text-soft: #475569;
+  --text-muted: #94a3b8;
+  --line-soft: rgba(148, 163, 184, 0.18);
+  --brand-blue: #2563eb;
+  --brand-indigo: #4f46e5;
+  --brand-cyan: #0ea5e9;
+  --success: #16a34a;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --shadow-xl: 0 28px 70px rgba(15, 23, 42, 0.18);
+  --shadow-lg: 0 20px 42px rgba(15, 23, 42, 0.12);
+  --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.08);
+  --radius-2xl: 30px;
+  --radius-xl: 24px;
+  --radius-lg: 18px;
+  --radius-md: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.18), transparent 26%),
+    radial-gradient(circle at right center, rgba(79, 70, 229, 0.14), transparent 24%),
+    linear-gradient(180deg, #f8fbff 0%, #eef4ff 48%, #f8fafc 100%);
+}
+
+img {
+  display: block;
+}
+
+button {
+  font: inherit;
+}
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 280px;
+  padding: 26px 22px;
+  color: #fff;
+  background: var(--bg-sidebar);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  backdrop-filter: blur(10px);
+}
+
+.brand-box {
+  padding: 22px 18px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.24), rgba(14, 165, 233, 0.16), rgba(124, 58, 237, 0.28));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.brand-box h2 {
+  margin: 0;
+  font-size: 1.45rem;
+  line-height: 1.35;
+}
+
+.brand-box p {
+  margin: 10px 0 0;
+  color: rgba(226, 232, 240, 0.88);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+.menu {
+  margin-top: 28px;
+}
+
+.menu-label {
+  margin: 0 0 14px;
+  padding-left: 10px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(148, 163, 184, 0.78);
+}
+
+.menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  color: #dbeafe;
+  text-decoration: none;
+  border-radius: 14px;
+  transition: transform 0.22s ease, background 0.22s ease;
+}
+
+.menu a:hover {
+  transform: translateX(4px);
+  background: rgba(59, 130, 246, 0.16);
+}
+
+.menu a.active {
+  color: #fff;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.8), rgba(124, 58, 237, 0.8));
+  box-shadow: 0 14px 26px rgba(37, 99, 235, 0.22);
+}
+
+.main {
+  flex: 1;
+  padding: 26px;
+}
+
+.hero {
+  position: relative;
+  overflow: visible;
+  padding: 36px;
+  border-radius: 34px;
+  color: #fff;
+  background:
+    linear-gradient(135deg, rgba(29, 78, 216, 0.96), rgba(79, 70, 229, 0.92), rgba(14, 165, 233, 0.88));
+  box-shadow: var(--shadow-xl);
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.hero::before {
+  width: 280px;
+  height: 280px;
+  top: -110px;
+  right: -70px;
+}
+
+.hero::after {
+  width: 170px;
+  height: 170px;
+  bottom: -60px;
+  left: 44%;
+}
+
+.hero-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
+  gap: 26px;
+  align-items: center;
+}
+
+.hero-copy {
+  max-width: 720px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 0.92rem;
+}
+
+.hero h1 {
+  margin: 18px 0 0;
+  font-size: clamp(2.1rem, 4vw, 3.5rem);
+  line-height: 1.08;
+}
+
+.hero p {
+  margin: 18px 0 0;
+  color: rgba(239, 246, 255, 0.9);
+  line-height: 1.8;
+  font-size: 1.02rem;
+}
+
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.hero-badges span,
+.hero-badges a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  text-decoration: none;
+}
+
+.hero-badges a:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.contact-strip {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.26);
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-weight: 700;
+}
+
+.contact-link:hover {
+  background: rgba(15, 23, 42, 0.4);
+}
+
+.contact-note {
+  margin: 0;
+  align-self: center;
+  color: rgba(239, 246, 255, 0.9);
+}
+
+.hero-panel {
+  position: relative;
+  z-index: 5;
+  padding: 22px;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(12px);
+}
+
+.panel-top {
+  display: grid;
+  grid-template-columns: 150px 1fr 220px;
+  align-items: center;
+  gap: 18px;
+}
 
 .chart-box {
   width: 150px;
   height: 150px;
-  aspect-ratio: 1 / 1; /* 🔥 บังคับให้เป็นสี่เหลี่ยมจัตุรัส */
-  padding: 0; /* ❌ เอา padding ออก */
-  background: white;
+  flex: 0 0 150px;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.98);
   border-radius: 50%;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,701 +292,1134 @@
   width: 100% !important;
   height: 100% !important;
 }
-body {
+
+.panel-copy h3 {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
+  font-size: 1.15rem;
 }
 
-/* Layout */
-.layout {
+.panel-copy p {
+  margin: 8px 0 0;
+  color: rgba(239, 246, 255, 0.82);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+.auth-buttons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 0;
+}
+
+.account-menu {
+  position: relative;
+  z-index: 30;
+}
+
+.account-trigger {
+  width: 100%;
   display: flex;
-  min-height: 100vh;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 16px;
+  border: none;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.88);
+  color: #fff;
+  cursor: pointer;
 }
 
-/* Sidebar */
-.sidebar {
-  width: 220px;
-  background: #1f2937;
-  color: white;
-  padding: 20px;
-  
-}
-
-
-.sidebar h2 {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.menu a {
+.account-trigger strong {
   display: block;
-  padding: 12px 15px;
-  margin-bottom: 10px;
-  color: #cbd5e1;
+  font-size: 0.98rem;
+  text-align: left;
+}
+
+.account-trigger small {
+  display: block;
+  color: rgba(226, 232, 240, 0.8);
+  text-align: left;
+  margin-top: 2px;
+}
+
+.account-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  display: none;
+  padding: 10px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  z-index: 50;
+}
+
+.account-menu.open .account-dropdown {
+  display: grid;
+  gap: 6px;
+}
+
+.account-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: #0f172a;
   text-decoration: none;
-  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
 }
 
-.menu a:hover,
-.menu a.active {
-  background: #4f46e5;
-  color: white;
+.account-item:hover {
+  background: #eef2ff;
 }
 
-/* Main */
-.main {
-  flex: 1;
+.hero-action {
+  width: 100%;
+  padding: 13px 16px;
+  border: none;
+  border-radius: 14px;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
 }
 
-header {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  padding: 30px;
+.hero-action:hover {
+  transform: translateY(-1px);
+}
+
+.login-btn {
+  background: rgba(15, 23, 42, 0.88);
+}
+
+.register-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.content-shell {
+  max-width: 1260px;
+  margin: 28px auto 0;
+}
+
+.section-head {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  position: relative; 
-}
-.header-left {
-  max-width: 60%;   /* ✅ ให้มันกว้างเหมือนเดิม */
-  position: static; /* ❌ เอา absolute ออก */
+  align-items: end;
+  gap: 16px;
+  margin: 18px 0 22px;
 }
 
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 15px; /* ระยะห่างระหว่างกราฟกับปุ่ม */
+.section-head h2 {
+  margin: 0;
+  font-size: 1.8rem;
 }
-.container {
-  padding: 30px;
-  max-width: 1100px;
-  margin: auto;
+
+.section-head p {
+  margin: 10px 0 0;
+  color: var(--text-soft);
+  line-height: 1.7;
+}
+
+.section-tag {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--brand-blue);
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .products {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-.auth-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.register-btn {
-  background: #10b981; /* สีเขียว */
-}
-
-.register-btn:hover {
-  background: #059669;
-}
-
-@media (max-width: 1200px) {
-  .products { grid-template-columns: repeat(3, 1fr); }
-}
-
-@media (max-width: 900px) {
-  .products { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 600px) {
-  .products { grid-template-columns: 1fr; }
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
 }
 
 .card {
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 24px;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(14px);
+  transition: transform 0.24s ease, box-shadow 0.24s ease;
+}
+
+.card:hover {
+  transform: translateY(-7px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-image {
+  position: relative;
   overflow: hidden;
 }
 
 .card img {
   width: 100%;
-  height: 200px;
+  height: 210px;
   object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.card:hover img {
+  transform: scale(1.04);
+}
+
+.card-label {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.78);
+  color: #fff;
+  font-size: 0.86rem;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
 }
 
 .card-content {
-  padding: 20px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
-button {
-  width: 100%;
-  margin-top: 15px;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: #4f46e5;
-  color: white;
-  cursor: pointer;
+.card h3 {
+  margin: 0 0 14px;
+  font-size: 1.2rem;
 }
 
-button:hover {
-  background: #4338ca;
+.spec-list {
+  display: grid;
+  gap: 10px;
 }
 
-/* Status */
+.spec {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.96);
+}
+
+.spec-label {
+  color: var(--text-soft);
+  font-size: 0.94rem;
+}
+
+.spec-value {
+  font-weight: 700;
+  text-align: right;
+}
+
+.price-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.price-item {
+  padding: 12px 10px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #eff6ff, #eef2ff);
+  text-align: center;
+}
+
+.price-item small {
+  display: block;
+  color: var(--text-soft);
+  margin-bottom: 6px;
+}
+
+.price-item strong {
+  font-size: 0.98rem;
+  color: var(--brand-indigo);
+}
+
+.status-row {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.status-title {
+  color: var(--text-soft);
+}
+
 .status {
-  font-weight: bold;
-  font-size: 18px;
-  padding: 6px 14px;
-  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.96rem;
+  padding: 10px 14px;
+  border-radius: 999px;
   color: white;
   display: inline-block;
 }
 
-.status-green { background: #28a745; }
-.status-red { background: #dc3545; }
-.status-yellow { background: #ffc107; color: black; }
+.status-green {
+  background: rgba(34, 197, 94, 0.15);
+  color: #166534;
+}
+
+.status-red {
+  background: rgba(239, 68, 68, 0.14);
+  color: #991b1b;
+}
+
+.status-yellow {
+  background: rgba(245, 158, 11, 0.16);
+  color: #92400e;
+}
+
+.rent-btn {
+  width: 100%;
+  margin-top: 18px;
+  padding: 13px 16px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.2);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+.rent-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(37, 99, 235, 0.24);
+}
+
+.pager-wrap {
+  margin-top: 28px;
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--line-soft);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.pager-wrap p {
+  margin: 0 0 16px;
+  color: var(--text-soft);
+}
+
+.pager {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pager button {
+  min-width: 120px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #0f172a;
+  cursor: pointer;
+}
+
+.pager button:hover {
+  background: #cbd5e1;
+}
 
 footer {
+  margin-top: 26px;
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.96);
+  color: var(--text-muted);
   text-align: center;
-  padding: 20px;
-  background: #111827;
-  color: #9ca3af;
+}
+
+@media (max-width: 1100px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  .main {
+    padding: 18px;
+  }
+
+  .hero {
+    padding: 28px 24px;
+    border-radius: 28px;
+  }
+
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 680px) {
+  .panel-top {
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+  }
+
+  .chart-box {
+    width: 136px;
+    height: 136px;
+  }
+
+  .price-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar,
+  .main {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }
 </style>
 </head>
-
 <body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand-box">
+        <h2>🛒 KOPC Service</h2>
+        <p>บริการด้านคอมพิวเตอร์ DDC VPS Could บริการขายสินค้าด้านคอมพิวเตอร์</p>
+      </div>
 
-<div class="layout">
+      <nav class="menu">
+        <p class="menu-label">สินค้าและบริการของเรา</p>
+        <a href="index.html" class="active">🏠 คอมพิวเตอร์ให้เช่า</a>
+        <a href="Other_MainPage.html">🧩 อื่นๆ</a>
+      </nav>
+    </aside>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h2>🛒 KOKOMELON Computer For Rent </h2>
-    <div class="menu">
-      <a href="index.html"class="active">🏠 หน้าหลัก</a>
-      <a href="Knowledge_MainPage.html" >📘 ความรู้พื้นฐาน</a>
-      <a href="Rule_MainPage.html">✨ เงื่อนไขและสัญญา</a>
-      <a href="Howto.html" >📺 วิธีใช้งาน</a>
-      <a href="Other_MainPage.html">อื่นๆ</a>
-    </div>
+    <main class="main">
+      <section class="hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">🎮 Gaming PC Rental</span>
+            <h1>เลือกคอมเช่าที่เหมาะกับคุณ</h1>
+            <p>รวมชุดคอมสำหรับเช่า พร้อมสเปก ราคา และสถานะเครื่องแบบดูง่ายในหน้าเดียว ช่วยให้คุณเลือกเครื่องที่ตรงกับงบและการใช้งานได้รวดเร็วขึ้น</p>
+            <div class="hero-badges">
+              <span>สถานะเครื่อง</span>
+              <a href="Knowledge_MainPage.html">📘 ความรู้พื้นฐาน</a>
+              <a href="Rule_MainPage.html">✨ เงื่อนไขและสัญญา</a>
+              <a href="Howto.html">📺 การเชื่อมต่อระยะไกล</a>
+            </div>
+            <div class="contact-strip">
+              <a class="contact-link" href="https://www.facebook.com/profile.php?id=100077422965133" target="_blank" rel="noopener noreferrer">📘 ติดต่อ Facebook Fan Page</a>
+              <p class="contact-note"></p>
+            </div>
+          </div>
+
+          <div class="hero-panel">
+            <div class="panel-top">
+              <div class="chart-box">
+                <canvas id="statusChart"></canvas>
+              </div>
+              <div class="panel-copy">
+                <h3>ภาพรวมสถานะเครื่อง</h3>
+                <p>อยากเล่นเกมแรงๆ ไม่ต้องซื้อเครื่อง เช็คสเปก ราคา และเครื่องว่างได้เลย</p>
+              </div>
+              <div class="auth-buttons">
+                <button class="hero-action login-btn" onclick="goLogin()">Login</button>
+                <button class="hero-action register-btn" onclick="goRegister()">Register</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="content-shell">
+        <div class="section-head">
+          <div>
+            <h2>ชุดคอมพิวเตอร์สำหรับเช่า</h2>
+            <p>แต่ละการ์ดจะแสดงข้อมูลสเปก ราคาเช่า และสถานะล่าสุดจากระบบ เพื่อให้คุณเลือกเครื่องที่เหมาะกับการใช้งานได้เร็วขึ้น</p>
+          </div>
+          <div class="section-tag">18 Computer Sets</div>
+        </div>
+
+        <section class="products">
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/1iAsTX4Ri2Q5qiuRp905Riy8w2elnk231" alt="Computer Set 1">
+              <span class="card-label">Set 1</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 1</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU1">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU1">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM1">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice1">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice1">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice1">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status1" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="1">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/1WoXYgHyYGHKYnQvuab_z67VRKoBzznzR" alt="Computer Set 2">
+              <span class="card-label">Set 2</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 2</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU2">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU2">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM2">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice2">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice2">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice2">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status2" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="2">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/1gevPnfGgvoxb2c23s0ckawQHzDDnoar3" alt="Computer Set 3">
+              <span class="card-label">Set 3</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 3</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU3">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU3">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM3">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice3">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice3">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice3">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status3" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="3">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/1z7prwlryCX9SfgWgfAS_1wz5TIzD9lpl" alt="Computer Set 4">
+              <span class="card-label">Set 4</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 4</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU4">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU4">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM4">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice4">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice4">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice4">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status4" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="4">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/1UMf5-jYuN8XpMDUo64Rg5DfRgkulX4O2" alt="Computer Set 5">
+              <span class="card-label">Set 5</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 5</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU5">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU5">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM5">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice5">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice5">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice5">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status5" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="5">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/10tJTOFfLCNqKtl4FZ8CK5GMf4ULmx7WS" alt="Computer Set 6">
+              <span class="card-label">Set 6</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 6</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU6">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU6">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM6">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice6">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice6">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice6">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status6" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="6">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/1d-LAL5OhdlwN1lJ76sbCpCC61ummS1o-" alt="Computer Set 7">
+              <span class="card-label">Set 7</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 7</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU7">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU7">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM7">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice7">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice7">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice7">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status7" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="7">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/1j9hJZ4CVsw6V7WGSYRDlMrFnkUyyWNSo" alt="Computer Set 8">
+              <span class="card-label">Set 8</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 8</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU8">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU8">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM8">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice8">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice8">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice8">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status8" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="8">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/10CCfDvaedPT_Yn2ZyhQELJNKhqbN5tf2" alt="Computer Set 9">
+              <span class="card-label">Set 9</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 9</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU9">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU9">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM9">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice9">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice9">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice9">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status9" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="9">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/13KIIyNAcDcS5N_3Ifdm8iPUgU5sW0J1m" alt="Computer Set 10">
+              <span class="card-label">Set 10</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 10</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU10">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU10">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM10">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice10">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice10">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice10">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status10" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="10">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/1WJuRumqTHM8tPwUw7bEZc5JRvbJ5HB82" alt="Computer Set 11">
+              <span class="card-label">Set 11</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 11</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU11">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU11">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM11">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice11">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice11">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice11">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status11" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="11">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/1VJk2HYClmQwctqnSYow9u_WjieB-2wyT" alt="Computer Set 12">
+              <span class="card-label">Set 12</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 12</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU12">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU12">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM12">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice12">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice12">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice12">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status12" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="12">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/11UgCzvIMXPdt9ala6m_kaEH0LlRxEEX2" alt="Computer Set 13">
+              <span class="card-label">Set 13</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 13</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU13">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU13">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM13">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice13">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice13">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice13">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status13" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="13">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/1stKpKsEShqhCYkKyOWVwGWGkae6Zr9_Y" alt="Computer Set 14">
+              <span class="card-label">Set 14</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 14</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU14">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU14">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM14">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice14">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice14">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice14">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status14" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="14">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/1NNxx7ZfEg6xVMwId53SRrYS_j6btDjKR" alt="Computer Set 15">
+              <span class="card-label">Set 15</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 15</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU15">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU15">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM15">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice15">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice15">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice15">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status15" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="15">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/15O19_Lwepwp90YD-JbWluQFVvaDtmW2F" alt="Computer Set 16">
+              <span class="card-label">Set 16</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 16</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU16">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU16">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM16">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice16">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice16">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice16">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status16" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="16">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/1Yr6dROK8PjYgudyGPS7JOX8_7jKYba8J" alt="Computer Set 17">
+              <span class="card-label">Set 17</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 17</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU17">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU17">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM17">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice17">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice17">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice17">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status17" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="17">สนใจเช่า</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="https://lh3.googleusercontent.com/d/12lElSmQ5oFWlLERfkLLFfRc0KuOH8M-r" alt="Computer Set 18">
+              <span class="card-label">Set 18</span>
+            </div>
+            <div class="card-content">
+              <h3>Computer Set 18</h3>
+              <div class="spec-list">
+                <div class="spec"><span class="spec-label">CPU</span><span class="spec-value" id="CPU18">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">GPU</span><span class="spec-value" id="GPU18">กำลังโหลด...</span></div>
+                <div class="spec"><span class="spec-label">RAM</span><span class="spec-value" id="RAM18">กำลังโหลด...</span></div>
+              </div>
+              <div class="price-grid">
+                <div class="price-item"><small>ต่อวัน</small><strong id="DayPrice18">-</strong></div>
+                <div class="price-item"><small>ต่อสัปดาห์</small><strong id="WeekPrice18">-</strong></div>
+                <div class="price-item"><small>ต่อเดือน</small><strong id="MonthPrice18">-</strong></div>
+              </div>
+              <div class="status-row">
+                <span class="status-title">สถานะ</span>
+                <span id="Status18" class="status">กำลังโหลด...</span>
+              </div>
+              <button class="rent-btn" data-set="18">สนใจเช่า</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="pager-wrap">
+          <p>ปุ่มด้านล่างยังคงไว้ตามโครงเดิมของคุณ หากมีฟังก์ชัน `showPage()` อยู่ไฟล์อื่นก็จะใช้งานต่อได้ทันที</p>
+          <div class="pager">
+            <button onclick="showPage(1)">หน้า 1</button>
+            <button onclick="showPage(2)">หน้า 2</button>
+            <button onclick="showPage(3)">หน้า 3</button>
+          </div>
+        </div>
+
+        <footer>
+          KOPC Service
+        </footer>
+      </div>
+    </main>
   </div>
 
-  <!-- Main -->
-  <div class="main">
-    <header>
-      <div class="header-left">
-    <h1>ยินดีต้อนรับสู่ร้านของเรา</h1>
-    <p>คอมพิวเตอร์สำหรับเช่าเล่นเกม</p>
-  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+  function formatDate(dateStr) {
+    if (!dateStr) return "";
+    return new Date(dateStr).toLocaleDateString("th-TH");
+  }
 
-<div class="header-right">
-  <div class="chart-box">
-    <canvas id="statusChart"></canvas>
-  </div>
+  function formatTime(timeStr) {
+    if (!timeStr) return "";
+    return new Date(timeStr).toLocaleTimeString("th-TH", {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
 
-  <div class="auth-buttons">
-    <button onclick="goLogin()">Login</button>
-    <button class="register-btn" onclick="goRegister()">Register</button>
-  </div>
-</div>
-
-  
-    </header>
-
-    <div class="container">
-      <div class="products">
-
-        <!-- Set 1-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/1iAsTX4Ri2Q5qiuRp905Riy8w2elnk231">
-          <div class="card-content">
-            <h3>Computer Set 1</h3>
-            <p>CPU <span id="CPU1"></span></p>
-            <p>GPU <span id="GPU1"></span></p>
-            <p>RAM <span id="RAM1"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice1"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice1"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice1"></span></p>
-            <p>สถานะ : <span id="Status1" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="1">สนใจเช่า</button>
-</button>
-          </div>
-        </div>
-        <!-- Set 2-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/1WoXYgHyYGHKYnQvuab_z67VRKoBzznzR">
-          <div class="card-content">
-            <h3>Computer Set 2</h3>
-            <p>CPU <span id="CPU2"></span></p>
-            <p>GPU <span id="GPU2"></span></p>
-            <p>RAM <span id="RAM2"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice2"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice2"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice2"></span></p>
-            <p>สถานะ : <span id="Status2" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="2">สนใจเช่า</button>
-          </div>
-        </div>
-        <!-- Set 3-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/1gevPnfGgvoxb2c23s0ckawQHzDDnoar3">
-          <div class="card-content">
-            <h3>Computer Set 3</h3>
-            <p>CPU <span id="CPU3"></span></p>
-            <p>GPU <span id="GPU3"></span></p>
-            <p>RAM <span id="RAM3"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice3"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice3"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice3"></span></p>
-            <p>สถานะ : <span id="Status3" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="3">สนใจเช่า</button>
-          </div>
-        </div>
-
-        <!-- Set 4-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/1z7prwlryCX9SfgWgfAS_1wz5TIzD9lpl">
-          <div class="card-content">
-            <h3>Computer Set 4</h3>
-            <p>CPU <span id="CPU4"></span></p>
-            <p>GPU <span id="GPU4"></span></p>
-            <p>RAM <span id="RAM4"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice4"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice4"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice4"></span></p>
-            <p>สถานะ : <span id="Status4" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="4">สนใจเช่า</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="products">
-
-        <!-- Set 5-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/1UMf5-jYuN8XpMDUo64Rg5DfRgkulX4O2">
-          <div class="card-content">
-            <h3>Computer Set 5</h3>
-            <p>CPU <span id="CPU5"></span></p>
-            <p>GPU <span id="GPU5"></span></p>
-            <p>RAM <span id="RAM5"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice5"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice5"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice5"></span></p>
-            <p>สถานะ : <span id="Status5" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="5">สนใจเช่า</button>
-          </div>
-        </div>
-        <!-- Set 6 -->
-
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/10tJTOFfLCNqKtl4FZ8CK5GMf4ULmx7WS">
-          <div class="card-content">
-            <h3>Computer Set 6</h3>
-            <p>CPU <span id="CPU6"></span></p>
-            <p>GPU <span id="GPU6"></span></p>
-            <p>RAM <span id="RAM6"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice6"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice6"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice6"></span></p>
-            <p>สถานะ : <span id="Status6" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="6">สนใจเช่า</button>
-          </div>
-        </div>
-
-        <!-- Set 7-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/1d-LAL5OhdlwN1lJ76sbCpCC61ummS1o-">
-          <div class="card-content">
-            <h3>Computer Set 7</h3>
-            <p>CPU <span id="CPU7"></span></p>
-            <p>GPU <span id="GPU7"></span></p>
-            <p>RAM <span id="RAM7"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice7"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice7"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice7"></span></p>
-            <p>สถานะ : <span id="Status7" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="7">สนใจเช่า</button>
-          </div>
-        </div>
-
-        <!-- Set 8-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/1j9hJZ4CVsw6V7WGSYRDlMrFnkUyyWNSo">
-          <div class="card-content">
-            <h3>Computer Set 8</h3>
-            <p>CPU <span id="CPU8"></span></p>
-            <p>GPU <span id="GPU8"></span></p>
-            <p>RAM <span id="RAM8"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice8"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice8"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice8"></span></p>
-            <p>สถานะ : <span id="Status8" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="8">สนใจเช่า</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="products">
-        <!-- CARD 1 -->
-         <!-- Set 9-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/10CCfDvaedPT_Yn2ZyhQELJNKhqbN5tf2">
-          <div class="card-content">
-            <h3>Computer Set 9</h3>
-            <p>CPU <span id="CPU9"></span></p>
-            <p>GPU <span id="GPU9"></span></p>
-            <p>RAM <span id="RAM9"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice9"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice9"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice9"></span></p>
-            <p>สถานะ : <span id="Status9" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="9">สนใจเช่า</button>
-          </div>
-      </div>
-
-
-        <!-- Set 10-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/13KIIyNAcDcS5N_3Ifdm8iPUgU5sW0J1m">
-          <div class="card-content">
-            <h3>Computer Set 10</h3>
-            <p>CPU <span id="CPU10"></span></p>
-            <p>GPU <span id="GPU10"></span></p>
-            <p>RAM <span id="RAM10"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice10"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice10"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice10"></span></p>
-            <p>สถานะ : <span id="Status10" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="10">สนใจเช่า</button>
-          </div>
-        </div>
-
-        <!-- Set 11-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/1WJuRumqTHM8tPwUw7bEZc5JRvbJ5HB82">
-          <div class="card-content">
-            <h3>Computer Set 11</h3>
-            <p>CPU <span id="CPU11"></span></p>
-            <p>GPU <span id="GPU11"></span></p>
-            <p>RAM <span id="RAM11"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice11"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice11"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice11"></span></p>
-            <p>สถานะ : <span id="Status11" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="11">สนใจเช่า</button>
-          </div>
-        </div>
-
-        
-        <!-- Set 12-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/1VJk2HYClmQwctqnSYow9u_WjieB-2wyT">
-          <div class="card-content">
-            <h3>Computer Set 12</h3>
-            <p>CPU <span id="CPU12"></span></p>
-            <p>GPU <span id="GPU12"></span></p>
-            <p>RAM <span id="RAM12"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice12"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice12"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice12"></span></p>
-            <p>สถานะ : <span id="Status12" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="12">สนใจเช่า</button>
-          </div>
-        </div>
-      </div>
-    </div>
-<div class="container">
-      <div class="products">
-        <!-- CARD 1 -->
-         <!-- Set 13-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/11UgCzvIMXPdt9ala6m_kaEH0LlRxEEX2">
-          <div class="card-content">
-            <h3>Computer Set 13</h3>
-            <p>CPU <span id="CPU13"></span></p>
-            <p>GPU <span id="GPU13"></span></p>
-            <p>RAM <span id="RAM13"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice13"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice13"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice13"></span></p>
-            <p>สถานะ : <span id="Status13" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="13">สนใจเช่า</button>
-          </div>
-        </div>
-
-        <!-- Set 14-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/1stKpKsEShqhCYkKyOWVwGWGkae6Zr9_Y">
-          <div class="card-content">
-            <h3>Computer Set 14</h3>
-            <p>CPU <span id="CPU14"></span></p>
-            <p>GPU <span id="GPU14"></span></p>
-            <p>RAM <span id="RAM14"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice14"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice14"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice14"></span></p>
-            <p>สถานะ : <span id="Status14" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="14">สนใจเช่า</button>
-          </div>
-        </div>
-
-        <!-- Set 15-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/1NNxx7ZfEg6xVMwId53SRrYS_j6btDjKR">
-          <div class="card-content">
-            <h3>Computer Set 15</h3>
-            <p>CPU <span id="CPU15"></span></p>
-            <p>GPU <span id="GPU15"></span></p>
-            <p>RAM <span id="RAM15"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice15"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice15"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice15"></span></p>
-            <p>สถานะ : <span id="Status15" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="15">สนใจเช่า</button>
-          </div>
-        </div>
-
-        <!-- Set 16-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/15O19_Lwepwp90YD-JbWluQFVvaDtmW2F">
-          <div class="card-content">
-            <h3>Computer Set 16</h3>
-            <p>CPU <span id="CPU16"></span></p>
-            <p>GPU <span id="GPU16"></span></p>
-            <p>RAM <span id="RAM16"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice16"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice16"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice16"></span></p>
-            <p>สถานะ : <span id="Status16" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="16">สนใจเช่า</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="products">
-        <!-- CARD 1 -->
-         <!-- Set 17-->
-        <div class="card">
-          <img src="https://lh3.googleusercontent.com/d/1Yr6dROK8PjYgudyGPS7JOX8_7jKYba8J">
-          <div class="card-content">
-            <h3>Computer Set 17</h3>
-            <p>CPU <span id="CPU17"></span></p>
-            <p>GPU <span id="GPU17"></span></p>
-            <p>RAM <span id="RAM17"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice17"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice17"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice17"></span></p>
-            <p>สถานะ : <span id="Status17" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="17">สนใจเช่า</button>
-          </div>
-        </div>
-        
-        <div class="card">
-
-          <!-- Set 18-->
-          <img src="https://lh3.googleusercontent.com/d/12lElSmQ5oFWlLERfkLLFfRc0KuOH8M-r">
-          <div class="card-content">
-            <h3>Computer Set 18</h3>
-            <p>CPU <span id="CPU18"></span></p>
-            <p>GPU <span id="GPU18"></span></p>
-            <p>RAM <span id="RAM18"></span></p>
-            <p>ราคาต่อวัน : <span id="DayPrice18"></span></p>
-            <p>ราคาต่อสัปดาห์ : <span id="WeekPrice18"></span></p>
-            <p>ราคาต่อเดือน : <span id="MonthPrice18"></span></p>
-            <p>สถานะ : <span id="Status18" class="status">กำลังโหลด...</span></p>
-            <button class="rent-btn" data-set="18">สนใจเช่า</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <footer>
-      <div class="container" style="text-align:center;">
-        <button onclick="showPage(1)">หน้า 1</button>
-        <button onclick="showPage(2)">หน้า 2</button>
-        <button onclick="showPage(3)">หน้า 3</button>
-      </div>
-      KOKOMELON Computer For Rent 
-    </footer>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- JavaScript -->
-<script>
-
-function formatDate(dateStr) {
-  if (!dateStr) return "";
-  return new Date(dateStr).toLocaleDateString("th-TH");
-}
-
-function formatTime(timeStr) {
-  if (!timeStr) return "";
-  return new Date(timeStr).toLocaleTimeString("th-TH", {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-}
-
-let availableCount = 0;
-let unavailableCount = 0;
-
-function setStatus(id, value) {
-  const el = document.getElementById(id);
-  if (!el) return;
-
-  el.innerText = value;
-  el.classList.remove("status-green", "status-red", "status-yellow");
-
-  if (value.startsWith("ว่าง")) el.classList.add("status-green");
-  else el.classList.add("status-red");
-}
-
-fetch("https://script.google.com/macros/s/AKfycbxKJLR5t17nJ3VeY_nZGSU0djtgD14fjMTkoqFL1l8tjKOuQnacJdFCyT4cA2pFz8jWMg/exec")
-.then(res => res.json())
-.then(data => {
-
-  const startRow = 6;
-  const total = 18;
-
-  for (let i = 0; i < total; i++) {
-    const n = i + 1;
-    const row = startRow + i;
-
-    document.getElementById(`CPU${n}`).innerText        = ": " + data["E"][row];
-    document.getElementById(`GPU${n}`).innerText        = ": " + data["G"][row];
-    document.getElementById(`RAM${n}`).innerText        = ": " + data["H"][row];
-    document.getElementById(`DayPrice${n}`).innerText   = "฿" + data["K"][row];
-    document.getElementById(`WeekPrice${n}`).innerText  = "฿" + data["L"][row];
-    document.getElementById(`MonthPrice${n}`).innerText = "฿" + data["M"][row];
-
-    const status = data["J"][row];
-    const endDate = formatDate(data["Q"][row]);
-    const endTime = formatTime(data["P"][row]);
-
-    const btn = document.querySelector(`.rent-btn[data-set="${n}"]`);
-
-    if (!btn) continue;
-
-    if (status === "ไม่ว่าง") {
-      setStatus(`Status${n}`, `ไม่ว่าง | หมดเวลา : ${endDate} ${endTime}`);
-      btn.disabled = true;
-      btn.innerText = "ไม่ว่าง";
-      btn.style.opacity = "0.5";
-      btn.style.cursor = "not-allowed";
-      unavailableCount++;
-    } else {
-      setStatus(`Status${n}`, "ว่าง");
-      btn.disabled = false;
-      btn.innerText = "สนใจเช่า";
-      btn.onclick = () => {
-  if (!window.currentUser) {
-    alert("กรุณา Login ก่อนเช่า");
+  function goLogin() {
     window.location.href = "login.html";
-    return;
   }
 
-  window.location.href = `payment.html?set=${n}`;
-};
-      availableCount++;
+  function goRegister() {
+    window.location.href = "register.html";
+  }
+
+  function toggleAccountMenu() {
+    const menu = document.querySelector(".account-menu");
+    if (!menu) return;
+    menu.classList.toggle("open");
+  }
+
+  document.addEventListener("click", (event) => {
+    const menu = document.querySelector(".account-menu");
+    if (!menu) return;
+    if (!menu.contains(event.target)) {
+      menu.classList.remove("open");
     }
-  }
-
-new Chart(document.getElementById("statusChart"), {
-  type: "doughnut",
-  data: {
-    labels: ["ว่าง", "ไม่ว่าง"],
-    datasets: [{
-      data: [availableCount, unavailableCount],
-      backgroundColor: ["#22c55e", "#ef4444"]
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: "75%",
-    plugins: { 
-      legend: { display: false }
-    }
-  }
-});
-
-})
-.catch(err => console.error(err));
-
-
-</script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-  // โค้ดเดิมของคุณ (fetch / chart)
-</script>
-
-<!-- 🔥 ใส่ Firebase ตรงนี้ -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { 
-  getAuth, 
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBN02k5-YhZc1uitpEfMfVpsPLAPYKQs7A",
-  authDomain: "myshop-c3983.firebaseapp.com",
-  projectId: "myshop-c3983",
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-// เก็บ user
-window.currentUser = null;
-
-// 🔥 logout ต้องอยู่ตรงนี้
-window.logout = function() {
-  signOut(auth).then(() => {
-    alert("ออกจากระบบแล้ว");
-    window.location.reload();
   });
-};
 
-onAuthStateChanged(auth, (user) => {
-  window.currentUser = user;
+  let availableCount = 0;
+  let unavailableCount = 0;
 
-  if (user) {
-    document.querySelector(".header-left h1").innerText =
-      "สวัสดี " + (user.displayName || user.email);
+  function setStatus(id, value) {
+    const el = document.getElementById(id);
+    if (!el) return;
 
-    document.querySelector(".auth-buttons").innerHTML = `
-      <button onclick="logout()">Logout</button>
-    `;
+    el.innerText = value;
+    el.classList.remove("status-green", "status-red", "status-yellow");
 
-  } else {
-    document.querySelector(".auth-buttons").innerHTML = `
-      <button onclick="goLogin()">Login</button>
-      <button class="register-btn" onclick="goRegister()">Register</button>
-    `;
+    if (value.startsWith("ว่าง")) {
+      el.classList.add("status-green");
+    } else if (value.startsWith("ไม่ว่าง")) {
+      el.classList.add("status-red");
+    } else {
+      el.classList.add("status-yellow");
+    }
   }
-});
-</script>
-</script>
-<script>
-function goLogin() {
-  window.location.href = "login.html";
-}
 
-function goRegister() {
-  window.location.href = "register.html";
-}
+  fetch("https://script.google.com/macros/s/AKfycbxKJLR5t17nJ3VeY_nZGSU0djtgD14fjMTkoqFL1l8tjKOuQnacJdFCyT4cA2pFz8jWMg/exec")
+    .then(res => res.json())
+    .then(data => {
+      const startRow = 6;
+      const total = 18;
 
+      for (let i = 0; i < total; i++) {
+        const n = i + 1;
+        const row = startRow + i;
 
-document.querySelector(".header-right").innerHTML += 
-  `<div style="color:white">${user.displayName}</div>`;
-</script>
+        document.getElementById(`CPU${n}`).innerText = data["E"][row] || "-";
+        document.getElementById(`GPU${n}`).innerText = data["G"][row] || "-";
+        document.getElementById(`RAM${n}`).innerText = data["H"][row] || "-";
+        document.getElementById(`DayPrice${n}`).innerText = data["K"][row] ? `฿${data["K"][row]}` : "-";
+        document.getElementById(`WeekPrice${n}`).innerText = data["L"][row] ? `฿${data["L"][row]}` : "-";
+        document.getElementById(`MonthPrice${n}`).innerText = data["M"][row] ? `฿${data["M"][row]}` : "-";
+
+        const status = data["J"][row];
+        const endDate = formatDate(data["Q"][row]);
+        const endTime = formatTime(data["P"][row]);
+        const btn = document.querySelector(`.rent-btn[data-set="${n}"]`);
+
+        if (!btn) continue;
+
+        if (status === "ไม่ว่าง") {
+          setStatus(`Status${n}`, `ไม่ว่าง | หมดเวลา : ${endDate} ${endTime}`.trim());
+          btn.disabled = true;
+          btn.innerText = "ไม่ว่าง";
+          btn.style.opacity = "0.55";
+          btn.style.cursor = "not-allowed";
+          unavailableCount++;
+        } else {
+          setStatus(`Status${n}`, "ว่าง");
+          btn.disabled = false;
+          btn.innerText = "สนใจเช่า";
+          btn.onclick = () => {
+            if (!window.currentUser) {
+              alert("กรุณา Login ก่อนเช่า");
+              window.location.href = "login.html";
+              return;
+            }
+
+            window.location.href = `payment.html?set=${n}`;
+          };
+          availableCount++;
+        }
+      }
+
+      new Chart(document.getElementById("statusChart"), {
+        type: "doughnut",
+        data: {
+          labels: ["ว่าง", "ไม่ว่าง"],
+          datasets: [{
+            data: [availableCount, unavailableCount],
+            backgroundColor: ["#22c55e", "#ef4444"],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "75%",
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    })
+    .catch(err => console.error(err));
+  </script>
+
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBN02k5-YhZc1uitpEfMfVpsPLAPYKQs7A",
+    authDomain: "myshop-c3983.firebaseapp.com",
+    projectId: "myshop-c3983"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  window.currentUser = null;
+
+  window.logout = function () {
+    signOut(auth).then(() => {
+      alert("ออกจากระบบแล้ว");
+      window.location.reload();
+    });
+  };
+
+  onAuthStateChanged(auth, (user) => {
+    window.currentUser = user;
+
+    if (user) {
+      document.querySelector(".hero-copy h1").innerText =
+        "สวัสดี " + (user.displayName || user.email);
+
+      document.querySelector(".auth-buttons").innerHTML = `
+        <div class="account-menu">
+          <button class="account-trigger" type="button" onclick="toggleAccountMenu()">
+            <span>
+              <strong>${user.displayName || "My Account"}</strong>
+              <small>${user.email || ""}</small>
+            </span>
+            <span>▾</span>
+          </button>
+          <div class="account-dropdown">
+            <a class="account-item" href="My_Accout.html">🙂 My Account</a>
+            <a class="account-item" href="My_Order.html">📦 My Order</a>
+            <button class="account-item" type="button" onclick="logout()">🚪 Log Out</button>
+          </div>
+        </div>
+      `;
+    } else {
+      document.querySelector(".hero-copy h1").innerText = "ยินดีต้อนรับสู่ร้านของเรา";
+      document.querySelector(".auth-buttons").innerHTML = `
+        <button class="hero-action login-btn" onclick="goLogin()">Login</button>
+        <button class="hero-action register-btn" onclick="goRegister()">Register</button>
+      `;
+    }
+  });
+  </script>
 </body>
 </html>
