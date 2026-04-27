@@ -83,9 +83,6 @@ button {
   height: 22px;
   flex: 0 0 22px;
 }
-.social-button.disabled {
-  opacity: 0.55;
-}
 .divider {
   display: flex;
   align-items: center;
@@ -150,7 +147,7 @@ button {
           </svg>
           <span>Google</span>
         </button>
-        <button class="social-button disabled" type="button" onclick="alert('Facebook จะเพิ่มให้ขั้นถัดไปครับ')" title="Facebook coming soon">
+        <button class="social-button" type="button" onclick="registerWithFacebook()">
           <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="10" fill="#1877F2"/>
             <path fill="#fff" d="M13.3 20v-7h2.3l.4-2.7h-2.7V8.6c0-.8.2-1.3 1.3-1.3H16V4.9c-.3 0-1.1-.1-2-.1-2 0-3.3 1.2-3.3 3.5v2H8.5V13h2.2v7h2.6z"/>
@@ -171,6 +168,7 @@ button {
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import {
     getAuth,
+    FacebookAuthProvider,
     GoogleAuthProvider,
     createUserWithEmailAndPassword,
     signInWithPopup,
@@ -186,7 +184,9 @@ button {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const googleProvider = new GoogleAuthProvider();
+  const facebookProvider = new FacebookAuthProvider();
   googleProvider.setCustomParameters({ prompt: "select_account" });
+  facebookProvider.setCustomParameters({ display: "popup" });
 
   window.register = function() {
     const name = document.getElementById("name").value;
@@ -223,6 +223,17 @@ button {
     signInWithPopup(auth, googleProvider)
       .then(() => {
         alert("เข้าสู่ระบบด้วย Google สำเร็จ");
+        window.location.href = "index.html";
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
+
+  window.registerWithFacebook = function() {
+    signInWithPopup(auth, facebookProvider)
+      .then(() => {
+        alert("เข้าสู่ระบบด้วย Facebook สำเร็จ");
         window.location.href = "index.html";
       })
       .catch((error) => {
