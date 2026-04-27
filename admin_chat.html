@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOPC Service | Admin Chat</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+:root {
+  --bg-sidebar: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.96));
+  --text-main: #0f172a;
+  --text-soft: #475569;
+  --text-muted: #94a3b8;
+  --line-soft: rgba(148, 163, 184, 0.18);
+  --shadow-xl: 0 28px 70px rgba(15, 23, 42, 0.18);
+  --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.18), transparent 26%),
+    radial-gradient(circle at right center, rgba(79, 70, 229, 0.14), transparent 24%),
+    linear-gradient(180deg, #f8fbff 0%, #eef4ff 48%, #f8fafc 100%);
+}
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 280px;
+  padding: 26px 22px;
+  color: #fff;
+  background: var(--bg-sidebar);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.brand-box {
+  padding: 22px 18px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.24), rgba(14, 165, 233, 0.16), rgba(124, 58, 237, 0.28));
+}
+.brand-box h2 { margin: 0; font-size: 1.45rem; }
+.brand-box p { margin: 10px 0 0; color: rgba(226, 232, 240, 0.88); line-height: 1.7; font-size: 0.95rem; }
+.menu { margin-top: 28px; }
+.menu-label { margin: 0 0 14px; padding-left: 10px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(148, 163, 184, 0.78); }
+.menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  color: #dbeafe;
+  text-decoration: none;
+  border-radius: 14px;
+}
+.menu a:hover { background: rgba(59, 130, 246, 0.16); }
+.menu a.active {
+  color: #fff;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.8), rgba(124, 58, 237, 0.8));
+  box-shadow: 0 14px 26px rgba(37, 99, 235, 0.22);
+}
+.main { flex: 1; padding: 26px; }
+.hero {
+  padding: 36px;
+  border-radius: 34px;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(29, 78, 216, 0.96), rgba(79, 70, 229, 0.92), rgba(14, 165, 233, 0.88));
+  box-shadow: var(--shadow-xl);
+}
+.eyebrow { display: inline-block; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,0.16); }
+.hero h1 { margin: 18px 0 0; font-size: clamp(2rem, 4vw, 3.2rem); }
+.hero p { margin: 14px 0 0; max-width: 760px; color: rgba(239, 246, 255, 0.9); line-height: 1.8; }
+.content-shell { max-width: 1280px; margin: 28px auto 0; }
+.chat-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 22px; }
+.panel {
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+}
+.toolbar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+input, textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(248, 250, 252, 0.92);
+  font: inherit;
+}
+textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+.order-list, .chat-list {
+  display: grid;
+  gap: 12px;
+}
+.order-item {
+  padding: 16px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid var(--line-soft);
+  cursor: pointer;
+}
+.order-item:hover,
+.order-item.active { background: #eef2ff; }
+.order-item strong { display: block; margin-bottom: 6px; }
+.order-meta {
+  color: var(--text-soft);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.chat-box {
+  display: grid;
+  gap: 14px;
+}
+.chat-list {
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.chat-message {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid var(--line-soft);
+}
+.chat-message.admin { background: #eef2ff; }
+.chat-message.customer { background: #ecfeff; }
+.chat-meta {
+  margin-bottom: 6px;
+  color: var(--text-soft);
+  font-size: 0.85rem;
+}
+.chat-send-button {
+  justify-self: start;
+  padding: 13px 16px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #0f766e, #0ea5a4);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+.note { color: var(--text-soft); font-size: 0.95rem; }
+footer {
+  margin-top: 26px;
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.96);
+  color: var(--text-muted);
+  text-align: center;
+}
+@media (max-width: 980px) {
+  .layout { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: relative; }
+  .chat-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand-box">
+        <h2>KOPC Admin</h2>
+        <p>รวมบทสนทนาจากหน้าแรกของเว็บไซต์ไว้ในหน้าเดียว เพื่อให้แอดมินตอบกลับลูกค้าได้ไวและตามต่อเรื่องได้ง่ายขึ้น</p>
+      </div>
+      <nav class="menu">
+        <p class="menu-label">Admin Navigation</p>
+        <a href="index.html">กลับหน้าหลัก</a>
+        <a href="admin_orders.html">จัดการออเดอร์</a>
+        <a href="admin_presence.html">สถานะผู้ใช้งาน</a>
+        <a href="admin_chat.html" class="active">แชทสนทนา</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <section class="hero">
+        <span class="eyebrow">Admin Chat</span>
+        <h1>แชทสนทนาจากหน้าแรก</h1>
+        <p>ลูกค้าจะเริ่มคุยจากหน้า Index โดยกรอกชื่อและอีเมลก่อน ระบบจะรวมข้อความเป็นห้องสนทนาตามอีเมล แล้วให้แอดมินตอบกลับจากหน้านี้ได้ทันที</p>
+      </section>
+
+      <div class="content-shell">
+        <section class="chat-grid">
+          <div class="panel">
+            <h2>เลือกลูกค้าสำหรับสนทนา</h2>
+            <div class="toolbar">
+              <input id="searchInput" type="text" placeholder="ค้นหาด้วยชื่อ อีเมล หรือข้อความล่าสุด">
+            </div>
+
+            <div id="orderList" class="order-list">
+              <div class="note">กำลังโหลดห้องแชท...</div>
+            </div>
+          </div>
+
+          <div class="panel chat-box">
+            <div>
+              <h2 id="chatOrderTitle">ห้องสนทนา</h2>
+              <p id="chatOrderMeta" class="note">เลือกลูกค้าจากฝั่งซ้ายเพื่อเริ่มดูแชท</p>
+            </div>
+
+            <div id="adminChatList" class="chat-list">
+              <div class="note">เลือกลูกค้าเพื่อดูข้อความสนทนา</div>
+            </div>
+
+            <textarea id="adminChatInput" placeholder="พิมพ์ข้อความตอบกลับลูกค้า"></textarea>
+            <button class="chat-send-button" type="button" onclick="sendAdminChatMessage()">ส่งข้อความถึงลูกค้า</button>
+          </div>
+        </section>
+
+        <footer>KOPC Service Admin</footer>
+      </div>
+    </main>
+  </div>
+
+  <script src="tracking.js"></script>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+  const ORDER_API_URL = "https://script.google.com/macros/s/AKfycbyPC-bIh5AYPp0PCTuQoC-XEMmmwJLVAHN7cBLEa8euDTSDgUtKGqGQQpth1bT_QtKS/exec";
+  const ADMIN_EMAILS = [
+    "kamponoxxviii@gmail.com",
+    "kampono@pwa.co.th"
+  ].map((email) => email.toLowerCase());
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBN02k5-YhZc1uitpEfMfVpsPLAPYKQs7A",
+    authDomain: "myshop-c3983.firebaseapp.com",
+    projectId: "myshop-c3983"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const AUTO_LOGOUT_MS = 30 * 60 * 1000;
+  const AUTO_LOGOUT_FLAG = "kopcAutoLogout";
+  let autoLogoutTimer = null;
+  let stopTracking = () => {};
+  let chatRefreshTimer = null;
+  let allThreads = [];
+  let selectedThread = null;
+
+  function clearAutoLogoutTimer() {
+    if (autoLogoutTimer) {
+      clearTimeout(autoLogoutTimer);
+    }
+  }
+
+  function resetAutoLogoutTimer() {
+    clearAutoLogoutTimer();
+    autoLogoutTimer = setTimeout(() => {
+      sessionStorage.setItem(AUTO_LOGOUT_FLAG, "1");
+      alert("ไม่มีการใช้งานเกิน 30 นาที ระบบออกจากระบบอัตโนมัติแล้ว");
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      });
+    }, AUTO_LOGOUT_MS);
+  }
+
+  function stopChatRefresh() {
+    if (chatRefreshTimer) {
+      clearInterval(chatRefreshTimer);
+      chatRefreshTimer = null;
+    }
+  }
+
+  ["click", "keydown", "mousemove", "scroll", "touchstart"].forEach((eventName) => {
+    window.addEventListener(eventName, resetAutoLogoutTimer, { passive: true });
+  });
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      if (sessionStorage.getItem(AUTO_LOGOUT_FLAG) === "1") {
+        sessionStorage.removeItem(AUTO_LOGOUT_FLAG);
+        window.location.href = "login.html";
+        return;
+      }
+
+      alert("กรุณา Login ก่อน");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const loginEmail = (user.email || "").toLowerCase();
+    if (!ADMIN_EMAILS.includes(loginEmail)) {
+      alert("คุณไม่มีสิทธิ์เข้าใช้งานหน้านี้");
+      window.location.href = "index.html";
+      return;
+    }
+
+    resetAutoLogoutTimer();
+    stopTracking();
+    stopTracking = window.KopcTracking
+      ? window.KopcTracking.startUserTracking(user, {
+          page: "admin_chat.html",
+          pageLabel: "หน้าแอดมินแชทสนทนา"
+        })
+      : () => {};
+
+    await loadThreads();
+  });
+
+  document.getElementById("searchInput").addEventListener("input", renderThreadList);
+
+  async function loadThreads() {
+    const response = await fetch(`${ORDER_API_URL}?action=getPublicChatThreads`);
+    const data = await response.json();
+    allThreads = data.threads || [];
+    renderThreadList();
+  }
+
+  function renderThreadList() {
+    const list = document.getElementById("orderList");
+    const search = (document.getElementById("searchInput").value || "").toLowerCase().trim();
+
+    const filtered = allThreads.filter((thread) => {
+      const text = `${thread.name || ""} ${thread.email || ""} ${thread.message || ""}`.toLowerCase();
+      return !search || text.includes(search);
+    });
+
+    if (!filtered.length) {
+      list.innerHTML = `<div class="note">ยังไม่พบห้องแชท</div>`;
+      return;
+    }
+
+    list.innerHTML = filtered.map((thread) => `
+      <div class="order-item ${selectedThread && selectedThread.threadId === thread.threadId ? "active" : ""}" onclick="selectThread('${thread.threadId}')">
+        <strong>${escapeHtml(thread.name || "ไม่ระบุชื่อ")}</strong>
+        <div class="order-meta">อีเมล: ${escapeHtml(thread.email || "-")}</div>
+        <div class="order-meta">ข้อความล่าสุด: ${escapeHtml((thread.message || "-").slice(0, 80))}</div>
+        <div class="order-meta">อัปเดต: ${formatDate(thread.createdAt)}</div>
+      </div>
+    `).join("");
+  }
+
+  window.selectThread = function(threadId) {
+    selectedThread = allThreads.find((thread) => thread.threadId === threadId) || null;
+    if (!selectedThread) return;
+
+    document.getElementById("chatOrderTitle").innerText = `ห้องของ ${selectedThread.name || "ลูกค้า"}`;
+    document.getElementById("chatOrderMeta").innerText = `${selectedThread.email || "-"} • อัปเดตล่าสุด ${formatDate(selectedThread.createdAt)}`;
+    renderThreadList();
+    loadThreadMessages(threadId);
+    stopChatRefresh();
+    chatRefreshTimer = setInterval(() => {
+      if (selectedThread && selectedThread.threadId === threadId) {
+        loadThreadMessages(threadId);
+        loadThreads();
+      }
+    }, 15000);
+  };
+
+  async function loadThreadMessages(threadId) {
+    const chatList = document.getElementById("adminChatList");
+    if (!chatList || !threadId) return;
+
+    try {
+      const response = await fetch(`${ORDER_API_URL}?action=getPublicChatMessages&threadId=${encodeURIComponent(threadId)}`);
+      const data = await response.json();
+      const messages = data.messages || [];
+
+      if (!messages.length) {
+        chatList.innerHTML = `<div class="note">ยังไม่มีข้อความในห้องนี้</div>`;
+        return;
+      }
+
+      chatList.innerHTML = messages.map((message) => `
+        <div class="chat-message ${message.senderType === "admin" ? "admin" : "customer"}">
+          <div class="chat-meta">${message.senderType === "admin" ? "แอดมิน" : escapeHtml(message.name || "ลูกค้า")} • ${formatDate(message.createdAt)}</div>
+          <div>${escapeHtml(message.message || "")}</div>
+        </div>
+      `).join("");
+      chatList.scrollTop = chatList.scrollHeight;
+    } catch (error) {
+      console.error(error);
+      chatList.innerHTML = `<div class="note">โหลดข้อความไม่สำเร็จ</div>`;
+    }
+  }
+
+  window.sendAdminChatMessage = async function() {
+    if (!selectedThread) {
+      alert("กรุณาเลือกลูกค้าก่อน");
+      return;
+    }
+
+    const user = auth.currentUser;
+    const input = document.getElementById("adminChatInput");
+    const message = (input.value || "").trim();
+
+    if (!message) {
+      alert("กรุณาพิมพ์ข้อความก่อนส่ง");
+      return;
+    }
+
+    try {
+      await fetch(ORDER_API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "sendPublicChatMessage",
+          threadId: selectedThread.threadId,
+          senderType: "admin",
+          name: user ? (user.displayName || "Admin") : "Admin",
+          email: selectedThread.email || "",
+          message: message
+        })
+      });
+
+      input.value = "";
+      await loadThreadMessages(selectedThread.threadId);
+      await loadThreads();
+    } catch (error) {
+      console.error(error);
+      alert("ส่งข้อความไม่สำเร็จ");
+    }
+  };
+
+  function formatDate(value) {
+    if (!value) return "-";
+    return new Date(value).toLocaleString("th-TH");
+  }
+
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+  </script>
+</body>
+</html>

@@ -81,50 +81,6 @@ body {
   padding: 24px;
   box-shadow: var(--shadow-md);
 }
-.admin-stack {
-  display: grid;
-  gap: 22px;
-}
-.presence-grid {
-  display: grid;
-  grid-template-columns: 0.92fr 1.08fr;
-  gap: 22px;
-}
-.presence-panel h2 {
-  margin: 0 0 8px;
-}
-.presence-sub {
-  margin: 0 0 18px;
-  color: var(--text-soft);
-}
-.presence-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: #eff6ff;
-  color: #2563eb;
-  font-weight: 700;
-}
-.presence-list {
-  display: grid;
-  gap: 12px;
-}
-.presence-item, .visit-item {
-  padding: 16px;
-  border-radius: 16px;
-  background: #f8fafc;
-  border: 1px solid var(--line-soft);
-}
-.presence-item strong, .visit-item strong {
-  display: block;
-  margin-bottom: 6px;
-}
-.presence-meta, .visit-meta {
-  color: var(--text-soft);
-  font-size: 0.95rem;
-  line-height: 1.7;
-}
 .toolbar {
   display: grid;
   grid-template-columns: 1fr 220px;
@@ -182,7 +138,6 @@ footer {
 @media (max-width: 980px) {
   .layout { flex-direction: column; }
   .sidebar { width: 100%; height: auto; position: relative; }
-  .presence-grid { grid-template-columns: 1fr; }
   .admin-grid { grid-template-columns: 1fr; }
   .toolbar { grid-template-columns: 1fr; }
 }
@@ -193,43 +148,25 @@ footer {
     <aside class="sidebar">
       <div class="brand-box">
         <h2>🛠 KOPC Admin</h2>
-        <p>หน้าสำหรับตรวจสอบออเดอร์ลูกค้า เปลี่ยนสถานะ และตอบกลับจากฝั่งผู้ดูแลระบบ</p>
+        <p>หน้าสำหรับดูแลออเดอร์ ลูกค้าออนไลน์ และแชทสนทนาแยกเป็นหมวดใช้งานง่าย</p>
       </div>
       <nav class="menu">
         <p class="menu-label">Admin Navigation</p>
         <a href="index.html">🏠 กลับหน้าหลัก</a>
-        <a href="admin_orders.html" class="active">🛠 Admin Orders</a>
+        <a href="admin_orders.html" class="active">📦 จัดการออเดอร์</a>
+        <a href="admin_presence.html">🟢 สถานะผู้ใช้งาน</a>
+        <a href="admin_chat.html">💬 แชทสนทนา</a>
       </nav>
     </aside>
 
     <main class="main">
       <section class="hero">
-        <span class="eyebrow">🛠 Admin Dashboard</span>
-        <h1>จัดการออเดอร์และสถานะลูกค้า</h1>
-        <p>แอดมินสามารถดูออเดอร์ทั้งหมด เปลี่ยนสถานะ และกรอกข้อความตอบกลับเพื่อให้ลูกค้าเห็นในหน้า My Orders</p>
+        <span class="eyebrow">📦 Admin Orders</span>
+        <h1>จัดการออเดอร์ลูกค้า</h1>
+        <p>หน้าเฉพาะสำหรับค้นหาออเดอร์ เปิดดูรายละเอียด และอัปเดตสถานะหรือข้อความตอบกลับให้ลูกค้า</p>
       </section>
 
       <div class="content-shell">
-        <div class="admin-stack">
-        <section class="presence-grid">
-          <div class="panel presence-panel">
-            <h2>ผู้ใช้ออนไลน์ตอนนี้</h2>
-            <p class="presence-sub">แสดงผู้ใช้ที่มีการใช้งานล่าสุดภายในไม่กี่นาที</p>
-            <div id="onlineCount" class="presence-badge">กำลังโหลด...</div>
-            <div id="onlineUsersList" class="presence-list" style="margin-top:16px;">
-              <div class="note">กำลังโหลดรายชื่อผู้ใช้ออนไลน์...</div>
-            </div>
-          </div>
-
-          <div class="panel presence-panel">
-            <h2>ประวัติการเข้าใช้งาน</h2>
-            <p class="presence-sub">บันทึกการ login, logout และการเปิดหน้าเว็บล่าสุด</p>
-            <div id="visitLogsList" class="presence-list">
-              <div class="note">กำลังโหลดประวัติการเข้าใช้งาน...</div>
-            </div>
-          </div>
-        </section>
-
         <section class="admin-grid">
           <div class="panel">
             <h2>รายการออเดอร์</h2>
@@ -304,7 +241,6 @@ footer {
             </div>
           </div>
         </section>
-        </div>
 
         <footer>KOPC Service Admin</footer>
       </div>
@@ -334,7 +270,6 @@ footer {
   const AUTO_LOGOUT_FLAG = "kopcAutoLogout";
   let autoLogoutTimer = null;
   let stopTracking = () => {};
-  let presenceRefreshTimer = null;
 
   let allOrders = [];
   let selectedOrder = null;
@@ -360,72 +295,6 @@ footer {
   ["click", "keydown", "mousemove", "scroll", "touchstart"].forEach((eventName) => {
     window.addEventListener(eventName, resetAutoLogoutTimer, { passive: true });
   });
-
-  async function loadPresenceDashboard() {
-    try {
-      const [onlineResponse, logsResponse] = await Promise.all([
-        fetch(`${ORDER_API_URL}?action=getOnlineUsers`),
-        fetch(`${ORDER_API_URL}?action=getVisitLogs&limit=30`)
-      ]);
-
-      const onlineData = await onlineResponse.json();
-      const logsData = await logsResponse.json();
-
-      renderOnlineUsers(onlineData.users || []);
-      renderVisitLogs(logsData.logs || []);
-    } catch (error) {
-      console.error(error);
-      document.getElementById("onlineCount").innerText = "โหลดไม่สำเร็จ";
-      document.getElementById("onlineUsersList").innerHTML = `<div class="note">โหลดรายชื่อผู้ใช้ออนไลน์ไม่สำเร็จ</div>`;
-      document.getElementById("visitLogsList").innerHTML = `<div class="note">โหลดประวัติการเข้าใช้งานไม่สำเร็จ</div>`;
-    }
-  }
-
-  function startPresenceRefresh() {
-    if (presenceRefreshTimer) {
-      clearInterval(presenceRefreshTimer);
-    }
-
-    presenceRefreshTimer = setInterval(() => {
-      loadPresenceDashboard();
-    }, 60000);
-  }
-
-  function renderOnlineUsers(users) {
-    document.getElementById("onlineCount").innerText = `${users.length} คน`;
-
-    const onlineUsersList = document.getElementById("onlineUsersList");
-    if (!users.length) {
-      onlineUsersList.innerHTML = `<div class="note">ยังไม่มีผู้ใช้ที่กำลังออนไลน์</div>`;
-      return;
-    }
-
-    onlineUsersList.innerHTML = users.map((onlineUser) => `
-      <div class="presence-item">
-        <strong>${onlineUser.displayName || onlineUser.email || onlineUser.uid}</strong>
-        <div class="presence-meta">อีเมล: ${onlineUser.email || "-"}</div>
-        <div class="presence-meta">หน้าที่เปิด: ${onlineUser.pageLabel || onlineUser.page || "-"}</div>
-        <div class="presence-meta">ล่าสุด: ${formatDate(onlineUser.lastSeen)}</div>
-      </div>
-    `).join("");
-  }
-
-  function renderVisitLogs(logs) {
-    const visitLogsList = document.getElementById("visitLogsList");
-    if (!logs.length) {
-      visitLogsList.innerHTML = `<div class="note">ยังไม่มีประวัติการเข้าใช้งาน</div>`;
-      return;
-    }
-
-    visitLogsList.innerHTML = logs.map((log) => `
-      <div class="visit-item">
-        <strong>${log.displayName || log.email || log.uid || "-"}</strong>
-        <div class="visit-meta">เหตุการณ์: ${log.eventType || "-"}</div>
-        <div class="visit-meta">หน้า: ${log.pageLabel || log.page || "-"}</div>
-        <div class="visit-meta">เวลา: ${formatDate(log.createdAt)}</div>
-      </div>
-    `).join("");
-  }
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -453,11 +322,9 @@ footer {
     stopTracking = window.KopcTracking
       ? window.KopcTracking.startUserTracking(user, {
           page: "admin_orders.html",
-          pageLabel: "หน้าแอดมินออเดอร์"
+          pageLabel: "หน้าแอดมินจัดการออเดอร์"
         })
       : () => {};
-    await loadPresenceDashboard();
-    startPresenceRefresh();
     await loadOrders();
   });
 
@@ -465,11 +332,6 @@ footer {
   document.getElementById("statusFilter").addEventListener("change", renderOrderList);
 
   async function loadOrders() {
-    if (ORDER_API_URL.includes("PASTE_YOUR")) {
-      document.getElementById("orderList").innerHTML = `<div class="note">ยังไม่ได้ใส่ Web App URL ของ Apps Script</div>`;
-      return;
-    }
-
     const response = await fetch(`${ORDER_API_URL}?action=getAllOrders`);
     const data = await response.json();
     allOrders = data.orders || [];
@@ -502,17 +364,6 @@ footer {
       </div>
     `).join("");
   }
-
-  window.logout = function () {
-    if (auth.currentUser) {
-      if (window.KopcTracking) {
-        window.KopcTracking.trackLogout(auth.currentUser, "admin_orders.html", "หน้าแอดมินออเดอร์");
-      }
-    }
-    signOut(auth).then(() => {
-      window.location.href = "login.html";
-    });
-  };
 
   window.selectOrder = function(orderId) {
     selectedOrder = allOrders.find(order => order.orderId === orderId);
@@ -555,11 +406,6 @@ footer {
     alert("บันทึกเรียบร้อย");
     await loadOrders();
   };
-
-  function formatDate(value) {
-    if (!value) return "-";
-    return new Date(value).toLocaleString("th-TH");
-  }
   </script>
 </body>
 </html>

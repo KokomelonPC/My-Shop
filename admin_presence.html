@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOPC Service | Admin Presence</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+:root {
+  --bg-sidebar: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.96));
+  --text-main: #0f172a;
+  --text-soft: #475569;
+  --text-muted: #94a3b8;
+  --line-soft: rgba(148, 163, 184, 0.18);
+  --shadow-xl: 0 28px 70px rgba(15, 23, 42, 0.18);
+  --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.18), transparent 26%),
+    radial-gradient(circle at right center, rgba(79, 70, 229, 0.14), transparent 24%),
+    linear-gradient(180deg, #f8fbff 0%, #eef4ff 48%, #f8fafc 100%);
+}
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 280px;
+  padding: 26px 22px;
+  color: #fff;
+  background: var(--bg-sidebar);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.brand-box {
+  padding: 22px 18px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.24), rgba(14, 165, 233, 0.16), rgba(124, 58, 237, 0.28));
+}
+.brand-box h2 { margin: 0; font-size: 1.45rem; }
+.brand-box p { margin: 10px 0 0; color: rgba(226, 232, 240, 0.88); line-height: 1.7; font-size: 0.95rem; }
+.menu { margin-top: 28px; }
+.menu-label { margin: 0 0 14px; padding-left: 10px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(148, 163, 184, 0.78); }
+.menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  color: #dbeafe;
+  text-decoration: none;
+  border-radius: 14px;
+}
+.menu a:hover { background: rgba(59, 130, 246, 0.16); }
+.menu a.active {
+  color: #fff;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.8), rgba(124, 58, 237, 0.8));
+  box-shadow: 0 14px 26px rgba(37, 99, 235, 0.22);
+}
+.main { flex: 1; padding: 26px; }
+.hero {
+  padding: 36px;
+  border-radius: 34px;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(29, 78, 216, 0.96), rgba(79, 70, 229, 0.92), rgba(14, 165, 233, 0.88));
+  box-shadow: var(--shadow-xl);
+}
+.eyebrow { display: inline-block; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,0.16); }
+.hero h1 { margin: 18px 0 0; font-size: clamp(2rem, 4vw, 3.2rem); }
+.hero p { margin: 14px 0 0; max-width: 760px; color: rgba(239, 246, 255, 0.9); line-height: 1.8; }
+.content-shell { max-width: 1280px; margin: 28px auto 0; }
+.presence-grid {
+  display: grid;
+  grid-template-columns: 0.92fr 1.08fr;
+  gap: 22px;
+}
+.panel {
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+}
+.panel h2 { margin: 0 0 8px; }
+.sub { margin: 0 0 18px; color: var(--text-soft); }
+.presence-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 700;
+}
+.presence-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+.presence-item, .visit-item {
+  padding: 16px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid var(--line-soft);
+}
+.presence-item strong, .visit-item strong {
+  display: block;
+  margin-bottom: 6px;
+}
+.presence-meta, .visit-meta {
+  color: var(--text-soft);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.note { color: var(--text-soft); font-size: 0.95rem; }
+footer {
+  margin-top: 26px;
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.96);
+  color: var(--text-muted);
+  text-align: center;
+}
+@media (max-width: 980px) {
+  .layout { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: relative; }
+  .presence-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand-box">
+        <h2>🛠 KOPC Admin</h2>
+        <p>แยกหน้าตรวจสอบผู้ใช้ออนไลน์และประวัติการเข้าใช้งานให้ติดตามสถานะได้ง่ายขึ้น</p>
+      </div>
+      <nav class="menu">
+        <p class="menu-label">Admin Navigation</p>
+        <a href="index.html">🏠 กลับหน้าหลัก</a>
+        <a href="admin_orders.html">📦 จัดการออเดอร์</a>
+        <a href="admin_presence.html" class="active">🟢 สถานะผู้ใช้งาน</a>
+        <a href="admin_chat.html">💬 แชทสนทนา</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <section class="hero">
+        <span class="eyebrow">🟢 Admin Presence</span>
+        <h1>สถานะผู้ใช้งานและประวัติการเข้า</h1>
+        <p>ดูได้ทั้งคนที่กำลังออนไลน์ล่าสุดและประวัติการใช้งานที่เกิดขึ้นในระบบจากหน้าเดียว</p>
+      </section>
+
+      <div class="content-shell">
+        <section class="presence-grid">
+          <div class="panel">
+            <h2>ผู้ใช้ออนไลน์ตอนนี้</h2>
+            <p class="sub">อ้างอิงจากการใช้งานล่าสุดภายในไม่กี่นาที</p>
+            <div id="onlineCount" class="presence-badge">กำลังโหลด...</div>
+            <div id="onlineUsersList" class="presence-list">
+              <div class="note">กำลังโหลดรายชื่อผู้ใช้ออนไลน์...</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>ประวัติการเข้าใช้งาน</h2>
+            <p class="sub">รวมเหตุการณ์ login, logout และการเปิดหน้าเว็บล่าสุด</p>
+            <div id="visitLogsList" class="presence-list">
+              <div class="note">กำลังโหลดประวัติการเข้าใช้งาน...</div>
+            </div>
+          </div>
+        </section>
+
+        <footer>KOPC Service Admin</footer>
+      </div>
+    </main>
+  </div>
+
+  <script src="tracking.js"></script>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+  const ORDER_API_URL = "https://script.google.com/macros/s/AKfycbyPC-bIh5AYPp0PCTuQoC-XEMmmwJLVAHN7cBLEa8euDTSDgUtKGqGQQpth1bT_QtKS/exec";
+  const ADMIN_EMAILS = [
+    "kamponoxxviii@gmail.com",
+    "kampono@pwa.co.th"
+  ].map(email => email.toLowerCase());
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBN02k5-YhZc1uitpEfMfVpsPLAPYKQs7A",
+    authDomain: "myshop-c3983.firebaseapp.com",
+    projectId: "myshop-c3983"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const AUTO_LOGOUT_MS = 30 * 60 * 1000;
+  const AUTO_LOGOUT_FLAG = "kopcAutoLogout";
+  let autoLogoutTimer = null;
+  let stopTracking = () => {};
+  let refreshTimer = null;
+
+  function clearAutoLogoutTimer() {
+    if (autoLogoutTimer) {
+      clearTimeout(autoLogoutTimer);
+    }
+  }
+
+  function resetAutoLogoutTimer() {
+    clearAutoLogoutTimer();
+    autoLogoutTimer = setTimeout(() => {
+      sessionStorage.setItem(AUTO_LOGOUT_FLAG, "1");
+      alert("ไม่มีการใช้งานเกิน 30 นาที ระบบออกจากระบบอัตโนมัติแล้ว");
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      });
+    }, AUTO_LOGOUT_MS);
+  }
+
+  ["click", "keydown", "mousemove", "scroll", "touchstart"].forEach((eventName) => {
+    window.addEventListener(eventName, resetAutoLogoutTimer, { passive: true });
+  });
+
+  async function loadPresenceDashboard() {
+    try {
+      const [onlineResponse, logsResponse] = await Promise.all([
+        fetch(`${ORDER_API_URL}?action=getOnlineUsers`),
+        fetch(`${ORDER_API_URL}?action=getVisitLogs&limit=40`)
+      ]);
+
+      const onlineData = await onlineResponse.json();
+      const logsData = await logsResponse.json();
+      renderOnlineUsers(onlineData.users || []);
+      renderVisitLogs(logsData.logs || []);
+    } catch (error) {
+      console.error(error);
+      document.getElementById("onlineCount").innerText = "โหลดไม่สำเร็จ";
+      document.getElementById("onlineUsersList").innerHTML = `<div class="note">โหลดรายชื่อผู้ใช้ออนไลน์ไม่สำเร็จ</div>`;
+      document.getElementById("visitLogsList").innerHTML = `<div class="note">โหลดประวัติการเข้าใช้งานไม่สำเร็จ</div>`;
+    }
+  }
+
+  function renderOnlineUsers(users) {
+    document.getElementById("onlineCount").innerText = `${users.length} คน`;
+    const onlineUsersList = document.getElementById("onlineUsersList");
+
+    if (!users.length) {
+      onlineUsersList.innerHTML = `<div class="note">ยังไม่มีผู้ใช้ที่กำลังออนไลน์</div>`;
+      return;
+    }
+
+    onlineUsersList.innerHTML = users.map((onlineUser) => `
+      <div class="presence-item">
+        <strong>${onlineUser.displayName || onlineUser.email || onlineUser.uid}</strong>
+        <div class="presence-meta">อีเมล: ${onlineUser.email || "-"}</div>
+        <div class="presence-meta">หน้าที่เปิด: ${onlineUser.pageLabel || onlineUser.page || "-"}</div>
+        <div class="presence-meta">ล่าสุด: ${formatDate(onlineUser.lastSeen)}</div>
+      </div>
+    `).join("");
+  }
+
+  function renderVisitLogs(logs) {
+    const visitLogsList = document.getElementById("visitLogsList");
+
+    if (!logs.length) {
+      visitLogsList.innerHTML = `<div class="note">ยังไม่มีประวัติการเข้าใช้งาน</div>`;
+      return;
+    }
+
+    visitLogsList.innerHTML = logs.map((log) => `
+      <div class="visit-item">
+        <strong>${log.displayName || log.email || log.uid || "-"}</strong>
+        <div class="visit-meta">เหตุการณ์: ${log.eventType || "-"}</div>
+        <div class="visit-meta">หน้า: ${log.pageLabel || log.page || "-"}</div>
+        <div class="visit-meta">เวลา: ${formatDate(log.createdAt)}</div>
+      </div>
+    `).join("");
+  }
+
+  function startRefresh() {
+    if (refreshTimer) {
+      clearInterval(refreshTimer);
+    }
+    refreshTimer = setInterval(loadPresenceDashboard, 60000);
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      if (sessionStorage.getItem(AUTO_LOGOUT_FLAG) === "1") {
+        sessionStorage.removeItem(AUTO_LOGOUT_FLAG);
+        window.location.href = "login.html";
+        return;
+      }
+
+      alert("กรุณา Login ก่อน");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const loginEmail = (user.email || "").toLowerCase();
+    if (!ADMIN_EMAILS.includes(loginEmail)) {
+      alert("คุณไม่มีสิทธิ์เข้าใช้งานหน้านี้");
+      window.location.href = "index.html";
+      return;
+    }
+
+    resetAutoLogoutTimer();
+    stopTracking();
+    stopTracking = window.KopcTracking
+      ? window.KopcTracking.startUserTracking(user, {
+          page: "admin_presence.html",
+          pageLabel: "หน้าแอดมินสถานะผู้ใช้งาน"
+        })
+      : () => {};
+    await loadPresenceDashboard();
+    startRefresh();
+  });
+
+  function formatDate(value) {
+    if (!value) return "-";
+    return new Date(value).toLocaleString("th-TH");
+  }
+  </script>
+</body>
+</html>

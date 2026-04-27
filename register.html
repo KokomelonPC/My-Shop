@@ -59,6 +59,48 @@ button {
   cursor: pointer;
   font-size: 16px;
 }
+.social-button {
+  margin-top: 12px;
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+.social-button:hover { background: #f8fafc; }
+.social-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.social-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.social-icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+}
+.social-button.disabled {
+  opacity: 0.55;
+}
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(148, 163, 184, 0.28);
+}
 .login-link { text-align: center; margin-top: 18px; color: #64748b; }
 .login-link a { color: #4f46e5; text-decoration: none; font-weight: 700; }
 .back-home { display: inline-block; margin-top: 18px; color: #475569; text-decoration: none; }
@@ -97,6 +139,25 @@ button {
       <input type="password" id="confirmPassword" placeholder="Confirm Password">
 
       <button onclick="register()">Register</button>
+      <div class="divider">หรือใช้งานด้วย</div>
+      <div class="social-grid">
+        <button class="social-button" type="button" onclick="registerWithGoogle()">
+          <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#EA4335" d="M12 10.2v3.9h5.4c-.2 1.3-1.5 3.9-5.4 3.9-3.2 0-5.9-2.7-5.9-6s2.7-6 5.9-6c1.8 0 3 .8 3.7 1.4l2.5-2.4C16.6 3.5 14.5 2.6 12 2.6 6.9 2.6 2.8 6.8 2.8 12s4.1 9.4 9.2 9.4c5.3 0 8.8-3.7 8.8-9 0-.6-.1-1.1-.1-1.6H12z"/>
+            <path fill="#34A853" d="M3.8 7.9l3.2 2.3C7.8 8 9.7 6.6 12 6.6c1.8 0 3 .8 3.7 1.4l2.5-2.4C16.6 3.5 14.5 2.6 12 2.6c-3.5 0-6.6 2-8.2 5.3z"/>
+            <path fill="#FBBC05" d="M12 21.4c2.4 0 4.5-.8 6-2.2l-2.8-2.2c-.8.6-1.8 1-3.2 1-2.4 0-4.5-1.6-5.2-3.9l-3.3 2.5c1.6 3.1 4.7 4.8 8.5 4.8z"/>
+            <path fill="#4285F4" d="M3.8 16.6l3.3-2.5c-.2-.6-.3-1.3-.3-2.1s.1-1.4.3-2.1L3.8 7.4C3.1 8.8 2.8 10.4 2.8 12s.4 3.2 1 4.6z"/>
+          </svg>
+          <span>Google</span>
+        </button>
+        <button class="social-button disabled" type="button" onclick="alert('Facebook จะเพิ่มให้ขั้นถัดไปครับ')" title="Facebook coming soon">
+          <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" fill="#1877F2"/>
+            <path fill="#fff" d="M13.3 20v-7h2.3l.4-2.7h-2.7V8.6c0-.8.2-1.3 1.3-1.3H16V4.9c-.3 0-1.1-.1-2-.1-2 0-3.3 1.2-3.3 3.5v2H8.5V13h2.2v7h2.6z"/>
+          </svg>
+          <span>Facebook</span>
+        </button>
+      </div>
 
       <div class="login-link">
         มีบัญชีแล้ว? <a href="login.html">Login</a>
@@ -110,7 +171,9 @@ button {
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import {
     getAuth,
+    GoogleAuthProvider,
     createUserWithEmailAndPassword,
+    signInWithPopup,
     updateProfile
   } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
@@ -122,6 +185,8 @@ button {
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+  googleProvider.setCustomParameters({ prompt: "select_account" });
 
   window.register = function() {
     const name = document.getElementById("name").value;
@@ -148,6 +213,17 @@ button {
       .then(() => {
         alert("สมัครสำเร็จ");
         window.location.href = "login.html";
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
+
+  window.registerWithGoogle = function() {
+    signInWithPopup(auth, googleProvider)
+      .then(() => {
+        alert("เข้าสู่ระบบด้วย Google สำเร็จ");
+        window.location.href = "index.html";
       })
       .catch((error) => {
         alert(error.message);

@@ -409,6 +409,167 @@ button {
   margin: 28px auto 0;
 }
 
+.floating-chat-button {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 18px 38px rgba(37, 99, 235, 0.28);
+}
+
+.floating-chat-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 42px rgba(37, 99, 235, 0.34);
+}
+
+.floating-chat-panel {
+  position: fixed;
+  right: 24px;
+  bottom: 92px;
+  z-index: 51;
+  width: min(380px, calc(100vw - 28px));
+  padding: 20px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  box-shadow: 0 28px 60px rgba(15, 23, 42, 0.22);
+  backdrop-filter: blur(14px);
+}
+
+.floating-chat-panel.hidden {
+  display: none;
+}
+
+.floating-chat-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.floating-chat-head h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.floating-chat-head p {
+  margin: 6px 0 0;
+  color: var(--text-soft);
+  line-height: 1.6;
+  font-size: 0.94rem;
+}
+
+.floating-chat-close {
+  border: none;
+  background: transparent;
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.public-chat-form,
+.public-chat-box {
+  display: grid;
+  gap: 14px;
+}
+
+.public-chat-form input,
+.public-chat-box textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(248, 250, 252, 0.92);
+  font: inherit;
+}
+
+.public-chat-box textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.chat-primary-btn {
+  justify-self: start;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 12px 26px rgba(37, 99, 235, 0.18);
+}
+
+.chat-primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(37, 99, 235, 0.24);
+}
+
+.public-chat-status {
+  min-height: 22px;
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.94rem;
+}
+
+.public-chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.public-chat-list {
+  display: grid;
+  gap: 10px;
+  max-height: 340px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.public-chat-message {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid var(--line-soft);
+}
+
+.public-chat-message.admin {
+  background: #eef2ff;
+}
+
+.public-chat-message.customer {
+  background: #ecfeff;
+}
+
+.public-chat-meta {
+  margin-bottom: 6px;
+  color: var(--text-soft);
+  font-size: 0.85rem;
+}
+
+.public-chat-empty {
+  padding: 18px;
+  border-radius: 16px;
+  background: #f8fafc;
+  color: var(--text-soft);
+  text-align: center;
+}
+
 .section-head {
   display: flex;
   justify-content: space-between;
@@ -681,6 +842,17 @@ footer {
   .section-head {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .floating-chat-button {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .floating-chat-panel {
+    right: 14px;
+    bottom: 82px;
+    width: calc(100vw - 28px);
   }
 }
 
@@ -1236,6 +1408,40 @@ footer {
     </main>
   </div>
 
+  <button id="floatingChatButton" class="floating-chat-button" type="button" onclick="togglePublicChat()">
+    แชท
+  </button>
+
+  <div id="floatingChatPanel" class="floating-chat-panel hidden">
+    <div class="floating-chat-head">
+      <div>
+        <h2>แชทสอบถามก่อนเช่า</h2>
+        <p>กรอกชื่อและอีเมลก่อนเริ่มคุยกับแอดมิน</p>
+      </div>
+      <button class="floating-chat-close" type="button" onclick="togglePublicChat(false)">×</button>
+    </div>
+
+    <div id="publicChatIdentity" class="public-chat-form">
+      <input id="publicChatName" type="text" placeholder="ชื่อผู้ติดต่อ">
+      <input id="publicChatEmail" type="email" placeholder="อีเมลสำหรับใช้คุยกับแอดมิน">
+      <button class="chat-primary-btn" type="button" onclick="startPublicChat()">เริ่มแชท</button>
+      <p id="publicChatStatus" class="public-chat-status"></p>
+    </div>
+
+    <div id="publicChatBox" class="public-chat-box" style="display:none;">
+      <div class="public-chat-header">
+        <strong>ห้องสนทนาของคุณ</strong>
+        <button class="chat-primary-btn" type="button" onclick="resetPublicChatIdentity()">เปลี่ยนชื่อ / อีเมล</button>
+      </div>
+      <p id="publicChatIdentityText" class="public-chat-status"></p>
+      <div id="publicChatList" class="public-chat-list">
+        <div class="public-chat-empty">ยังไม่มีข้อความ เริ่มส่งข้อความแรกได้เลย</div>
+      </div>
+      <textarea id="publicChatMessage" placeholder="พิมพ์ข้อความถึงแอดมิน"></textarea>
+      <button class="chat-primary-btn" type="button" onclick="sendPublicChatMessage()">ส่งข้อความ</button>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
   function formatDate(dateStr) {
@@ -1372,6 +1578,8 @@ footer {
     signOut
   } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
+  const ORDER_API_URL = "https://script.google.com/macros/s/AKfycbyPC-bIh5AYPp0PCTuQoC-XEMmmwJLVAHN7cBLEa8euDTSDgUtKGqGQQpth1bT_QtKS/exec";
+
   const firebaseConfig = {
     apiKey: "AIzaSyBN02k5-YhZc1uitpEfMfVpsPLAPYKQs7A",
     authDomain: "myshop-c3983.firebaseapp.com",
@@ -1383,6 +1591,8 @@ footer {
   const AUTO_LOGOUT_MS = 30 * 60 * 1000;
   let autoLogoutTimer = null;
   let stopTracking = () => {};
+  let publicChatThreadId = "";
+  let publicChatRefreshTimer = null;
 
   window.currentUser = null;
 
@@ -1425,7 +1635,180 @@ footer {
     return resetAutoLogoutTimer;
   }
 
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function createPublicThreadId(email) {
+    return `public-${String(email || "").trim().toLowerCase().replace(/[^a-z0-9@._-]/g, "_")}`;
+  }
+
+  function stopPublicChatRefresh() {
+    if (publicChatRefreshTimer) {
+      clearInterval(publicChatRefreshTimer);
+      publicChatRefreshTimer = null;
+    }
+  }
+
+  function setPublicChatStatus(message) {
+    const status = document.getElementById("publicChatStatus");
+    if (status) {
+      status.innerText = message || "";
+    }
+  }
+
+  function setPublicChatOpen(isOpen) {
+    const panel = document.getElementById("floatingChatPanel");
+    const button = document.getElementById("floatingChatButton");
+    if (!panel || !button) return;
+
+    panel.classList.toggle("hidden", !isOpen);
+    button.innerText = isOpen ? "ปิดแชท" : "แชท";
+  }
+
+  window.togglePublicChat = function (forceState) {
+    const panel = document.getElementById("floatingChatPanel");
+    if (!panel) return;
+
+    const isOpen = typeof forceState === "boolean"
+      ? forceState
+      : panel.classList.contains("hidden");
+
+    setPublicChatOpen(isOpen);
+  };
+
+  function renderPublicChatIdentity() {
+    const name = localStorage.getItem("kopcPublicChatName") || "";
+    const email = localStorage.getItem("kopcPublicChatEmail") || "";
+    const hasIdentity = Boolean(name && email);
+    const identityBox = document.getElementById("publicChatIdentity");
+    const chatBox = document.getElementById("publicChatBox");
+    const identityText = document.getElementById("publicChatIdentityText");
+
+    if (!identityBox || !chatBox || !identityText) return;
+
+    if (hasIdentity) {
+      publicChatThreadId = createPublicThreadId(email);
+      identityBox.style.display = "none";
+      chatBox.style.display = "grid";
+      identityText.innerText = `${name} • ${email}`;
+      loadPublicChatMessages();
+      stopPublicChatRefresh();
+      publicChatRefreshTimer = setInterval(loadPublicChatMessages, 15000);
+    } else {
+      publicChatThreadId = "";
+      identityBox.style.display = "grid";
+      chatBox.style.display = "none";
+      stopPublicChatRefresh();
+      setPublicChatStatus("กรอกชื่อและอีเมลก่อนเริ่มแชท");
+    }
+  }
+
+  window.startPublicChat = async function () {
+    const nameInput = document.getElementById("publicChatName");
+    const emailInput = document.getElementById("publicChatEmail");
+    const name = (nameInput?.value || "").trim();
+    const email = (emailInput?.value || "").trim().toLowerCase();
+
+    if (!name) {
+      alert("กรุณากรอกชื่อก่อนเริ่มแชท");
+      return;
+    }
+
+    if (!email) {
+      alert("กรุณากรอกอีเมลก่อนเริ่มแชท");
+      return;
+    }
+
+    localStorage.setItem("kopcPublicChatName", name);
+    localStorage.setItem("kopcPublicChatEmail", email);
+    setPublicChatStatus("");
+    setPublicChatOpen(true);
+    renderPublicChatIdentity();
+  };
+
+  window.resetPublicChatIdentity = function () {
+    localStorage.removeItem("kopcPublicChatName");
+    localStorage.removeItem("kopcPublicChatEmail");
+    document.getElementById("publicChatName").value = "";
+    document.getElementById("publicChatEmail").value = "";
+    document.getElementById("publicChatMessage").value = "";
+    setPublicChatOpen(true);
+    renderPublicChatIdentity();
+  };
+
+  async function loadPublicChatMessages() {
+    const email = localStorage.getItem("kopcPublicChatEmail") || "";
+    const list = document.getElementById("publicChatList");
+    if (!publicChatThreadId || !list) return;
+
+    try {
+      const response = await fetch(`${ORDER_API_URL}?action=getPublicChatMessages&threadId=${encodeURIComponent(publicChatThreadId)}&email=${encodeURIComponent(email)}`);
+      const data = await response.json();
+      const messages = data.messages || [];
+
+      if (!messages.length) {
+        list.innerHTML = `<div class="public-chat-empty">ยังไม่มีข้อความ เริ่มส่งข้อความแรกได้เลย</div>`;
+        return;
+      }
+
+      list.innerHTML = messages.map((message) => `
+        <div class="public-chat-message ${message.senderType === "admin" ? "admin" : "customer"}">
+          <div class="public-chat-meta">${message.senderType === "admin" ? "แอดมิน" : escapeHtml(message.name || "คุณ")} • ${formatDate(message.createdAt)}</div>
+          <div>${escapeHtml(message.message || "")}</div>
+        </div>
+      `).join("");
+      list.scrollTop = list.scrollHeight;
+    } catch (error) {
+      console.error(error);
+      list.innerHTML = `<div class="public-chat-empty">โหลดข้อความไม่สำเร็จ ลองใหม่อีกครั้ง</div>`;
+    }
+  }
+
+  window.sendPublicChatMessage = async function () {
+    const name = localStorage.getItem("kopcPublicChatName") || "";
+    const email = localStorage.getItem("kopcPublicChatEmail") || "";
+    const input = document.getElementById("publicChatMessage");
+    const message = (input?.value || "").trim();
+
+    if (!name || !email) {
+      renderPublicChatIdentity();
+      return;
+    }
+
+    if (!message) {
+      alert("กรุณาพิมพ์ข้อความก่อนส่ง");
+      return;
+    }
+
+    try {
+      await fetch(ORDER_API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "sendPublicChatMessage",
+          threadId: publicChatThreadId || createPublicThreadId(email),
+          senderType: "customer",
+          name: name,
+          email: email,
+          message: message
+        })
+      });
+
+      input.value = "";
+      await loadPublicChatMessages();
+    } catch (error) {
+      console.error(error);
+      alert("ส่งข้อความไม่สำเร็จ");
+    }
+  };
+
   const resetAutoLogoutTimer = setupAutoLogout();
+  renderPublicChatIdentity();
   onAuthStateChanged(auth, (user) => {
     window.currentUser = user;
 

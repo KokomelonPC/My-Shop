@@ -262,6 +262,7 @@ footer {
   const AUTO_LOGOUT_FLAG = "kopcAutoLogout";
   let autoLogoutTimer = null;
   let stopTracking = () => {};
+  let currentUser = null;
 
   function clearAutoLogoutTimer() {
     if (autoLogoutTimer) {
@@ -306,6 +307,7 @@ footer {
           pageLabel: "หน้า My Orders"
         })
       : () => {};
+    currentUser = user;
     document.getElementById("orderWelcome").innerText = "รายการเช่าของ " + (user.displayName || user.email);
 
     if (ORDER_API_URL.includes("PASTE_YOUR")) {
