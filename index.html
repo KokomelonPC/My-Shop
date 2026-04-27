@@ -1363,6 +1363,7 @@ footer {
     .catch(err => console.error(err));
   </script>
 
+  <script src="tracking.js"></script>
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import {
@@ -1379,18 +1380,69 @@ footer {
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const AUTO_LOGOUT_MS = 30 * 60 * 1000;
+  let autoLogoutTimer = null;
+  let stopTracking = () => {};
 
   window.currentUser = null;
 
   window.logout = function () {
+    if (window.KopcTracking) {
+      window.KopcTracking.trackLogout(window.currentUser, "index.html", "หน้าหลัก");
+    }
     signOut(auth).then(() => {
       alert("ออกจากระบบแล้ว");
       window.location.reload();
     });
   };
 
+  function clearAutoLogoutTimer() {
+    if (autoLogoutTimer) {
+      clearTimeout(autoLogoutTimer);
+    }
+  }
+
+  function setupAutoLogout() {
+    const resetAutoLogoutTimer = () => {
+      clearAutoLogoutTimer();
+
+      if (!window.currentUser) {
+        return;
+      }
+
+      autoLogoutTimer = setTimeout(() => {
+        alert("ไม่มีการใช้งานเกิน 30 นาที ระบบออกจากระบบอัตโนมัติแล้ว");
+        signOut(auth).then(() => {
+          window.location.reload();
+        });
+      }, AUTO_LOGOUT_MS);
+    };
+
+    ["click", "keydown", "mousemove", "scroll", "touchstart"].forEach((eventName) => {
+      window.addEventListener(eventName, resetAutoLogoutTimer, { passive: true });
+    });
+
+    return resetAutoLogoutTimer;
+  }
+
+  const resetAutoLogoutTimer = setupAutoLogout();
   onAuthStateChanged(auth, (user) => {
     window.currentUser = user;
+
+    if (user) {
+      resetAutoLogoutTimer();
+      stopTracking();
+      stopTracking = window.KopcTracking
+        ? window.KopcTracking.startUserTracking(user, {
+            page: "index.html",
+            pageLabel: "หน้าหลัก"
+          })
+        : () => {};
+    } else {
+      clearAutoLogoutTimer();
+      stopTracking();
+      stopTracking = () => {};
+    }
 
     if (user) {
       document.querySelector(".hero-copy h1").innerText =

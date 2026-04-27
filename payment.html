@@ -123,9 +123,10 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
     </div>
   </div>
 
+  <script src="tracking.js"></script>
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
   const ORDER_API_URL = "https://script.google.com/macros/s/AKfycbyPC-bIh5AYPp0PCTuQoC-XEMmmwJLVAHN7cBLEa8euDTSDgUtKGqGQQpth1bT_QtKS/exec";
 
@@ -137,17 +138,57 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const AUTO_LOGOUT_MS = 30 * 60 * 1000;
+  const AUTO_LOGOUT_FLAG = "kopcAutoLogout";
+  let autoLogoutTimer = null;
+  let stopTracking = () => {};
 
   let currentUser = null;
 
+  function clearAutoLogoutTimer() {
+    if (autoLogoutTimer) {
+      clearTimeout(autoLogoutTimer);
+    }
+  }
+
+  function resetAutoLogoutTimer() {
+    clearAutoLogoutTimer();
+
+    autoLogoutTimer = setTimeout(() => {
+      sessionStorage.setItem(AUTO_LOGOUT_FLAG, "1");
+      alert("ไม่มีการใช้งานเกิน 30 นาที ระบบออกจากระบบอัตโนมัติแล้ว");
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      });
+    }, AUTO_LOGOUT_MS);
+  }
+
+  ["click", "keydown", "mousemove", "scroll", "touchstart"].forEach((eventName) => {
+    window.addEventListener(eventName, resetAutoLogoutTimer, { passive: true });
+  });
+
   onAuthStateChanged(auth, (user) => {
     if (!user) {
+      if (sessionStorage.getItem(AUTO_LOGOUT_FLAG) === "1") {
+        sessionStorage.removeItem(AUTO_LOGOUT_FLAG);
+        window.location.href = "login.html";
+        return;
+      }
+
       alert("กรุณา Login ก่อน");
       window.location.href = "login.html";
       return;
     }
 
     currentUser = user;
+    resetAutoLogoutTimer();
+    stopTracking();
+    stopTracking = window.KopcTracking
+      ? window.KopcTracking.startUserTracking(user, {
+          page: "payment.html",
+          pageLabel: "หน้าแจ้งโอนเงิน"
+        })
+      : () => {};
     document.getElementById("name").value = user.displayName || user.email;
   });
 

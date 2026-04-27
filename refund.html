@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คำขอคืนเงิน | KOPC Service</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #0f172a;
+  background:
+    radial-gradient(circle at top left, rgba(245, 158, 11, 0.16), transparent 24%),
+    radial-gradient(circle at right center, rgba(249, 115, 22, 0.16), transparent 24%),
+    linear-gradient(135deg, #fff7ed 0%, #eff6ff 52%, #f8fafc 100%);
+  padding: 24px;
+}
+.shell {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 460px;
+  gap: 22px;
+}
+.intro, .box {
+  border-radius: 30px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.14);
+}
+.intro {
+  padding: 38px;
+  color: white;
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.94), rgba(245, 158, 11, 0.9), rgba(37, 99, 235, 0.84));
+}
+.intro .badge {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.16);
+}
+.intro h1 { margin: 18px 0 12px; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; }
+.intro p { margin: 0; color: rgba(255, 247, 237, 0.94); line-height: 1.8; }
+.summary {
+  margin-top: 24px;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.14);
+}
+.summary h3 { margin-top: 0; }
+.summary p { margin: 8px 0; }
+.box {
+  background: rgba(255,255,255,0.86);
+  border: 1px solid rgba(255,255,255,0.92);
+  backdrop-filter: blur(14px);
+  padding: 30px;
+}
+.box h2 { margin: 0 0 8px; }
+.sub { margin: 0 0 22px; color: #64748b; }
+label { display: block; margin-bottom: 8px; font-weight: 600; }
+input, textarea {
+  width: 100%;
+  padding: 13px 14px;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(248, 250, 252, 0.92);
+}
+textarea { resize: vertical; min-height: 110px; }
+button {
+  width: 100%;
+  padding: 13px 16px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+}
+button:disabled { background: #94a3b8; cursor: not-allowed; }
+.back-home { display: inline-block; margin-top: 18px; color: #475569; text-decoration: none; }
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+  <div class="shell">
+    <section class="intro">
+      <span class="badge">Refund Request</span>
+      <h1>แจ้งคำขอคืนเงิน</h1>
+      <p>กรอกข้อมูลบัญชีที่จะใช้รับเงินคืนให้ครบถ้วน ระบบจะส่งคำขอไปให้แอดมินตรวจสอบและติดต่อกลับผ่านหน้า My Orders</p>
+
+      <div class="summary">
+        <h3>ข้อมูลรายการ</h3>
+        <p><strong>ออเดอร์อ้างอิง:</strong> <span id="refundOrderId">-</span></p>
+        <p><strong>รายการ:</strong> <span id="refundItemName">-</span></p>
+        <p><strong>ยอดที่อ้างอิง:</strong> <span id="refundAmount">-</span></p>
+      </div>
+    </section>
+
+    <div class="box">
+      <h2>แบบฟอร์มขอคืนเงิน</h2>
+      <p class="sub">กรอกเลขบัญชี ชื่อบัญชี และหมายเหตุให้ครบก่อนส่งคำขอ</p>
+
+      <label for="accountNumber">เลขบัญชี</label>
+      <input id="accountNumber" type="text" inputmode="numeric" placeholder="เช่น 123-4-56789-0">
+
+      <label for="bankName">ธนาคาร</label>
+      <input id="bankName" type="text" placeholder="เช่น กสิกรไทย / ไทยพาณิชย์ / กรุงไทย">
+
+      <label for="accountName">ชื่อบัญชี</label>
+      <input id="accountName" type="text" placeholder="ชื่อบัญชีผู้รับเงินคืน">
+
+      <label for="note">หมายเหตุ</label>
+      <textarea id="note" placeholder="รายละเอียดเพิ่มเติมสำหรับการคืนเงิน"></textarea>
+
+      <button id="submitBtn" type="button" onclick="submitRefund()">ส่งคำขอคืนเงิน</button>
+      <a class="back-home" href="My_Order.html">← กลับไปหน้า My Orders</a>
+    </div>
+  </div>
+
+  <script src="tracking.js"></script>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+  const ORDER_API_URL = "https://script.google.com/macros/s/AKfycbyPC-bIh5AYPp0PCTuQoC-XEMmmwJLVAHN7cBLEa8euDTSDgUtKGqGQQpth1bT_QtKS/exec";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBN02k5-YhZc1uitpEfMfVpsPLAPYKQs7A",
+    authDomain: "myshop-c3983.firebaseapp.com",
+    projectId: "myshop-c3983"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const AUTO_LOGOUT_MS = 30 * 60 * 1000;
+  const AUTO_LOGOUT_FLAG = "kopcAutoLogout";
+  let autoLogoutTimer = null;
+  let stopTracking = () => {};
+
+  const params = new URLSearchParams(location.search);
+  const parentOrderId = params.get("orderId") || "";
+  const refundItem = params.get("item") || (params.get("set") ? `ชุดคอม ${params.get("set")}` : "-");
+  const refundAmount = params.get("amount") || "";
+
+  let currentUser = null;
+
+  function clearAutoLogoutTimer() {
+    if (autoLogoutTimer) {
+      clearTimeout(autoLogoutTimer);
+    }
+  }
+
+  function resetAutoLogoutTimer() {
+    clearAutoLogoutTimer();
+
+    autoLogoutTimer = setTimeout(() => {
+      sessionStorage.setItem(AUTO_LOGOUT_FLAG, "1");
+      alert("ไม่มีการใช้งานเกิน 30 นาที ระบบออกจากระบบอัตโนมัติแล้ว");
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      });
+    }, AUTO_LOGOUT_MS);
+  }
+
+  ["click", "keydown", "mousemove", "scroll", "touchstart"].forEach((eventName) => {
+    window.addEventListener(eventName, resetAutoLogoutTimer, { passive: true });
+  });
+
+  document.getElementById("refundOrderId").innerText = parentOrderId || "-";
+  document.getElementById("refundItemName").innerText = refundItem || "-";
+  document.getElementById("refundAmount").innerText = refundAmount ? `${refundAmount} บาท` : "-";
+  document.getElementById("note").value = parentOrderId ? `คำขอคืนเงินจากออเดอร์ ${parentOrderId}` : "";
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      if (sessionStorage.getItem(AUTO_LOGOUT_FLAG) === "1") {
+        sessionStorage.removeItem(AUTO_LOGOUT_FLAG);
+        window.location.href = "login.html";
+        return;
+      }
+
+      alert("กรุณา Login ก่อน");
+      window.location.href = "login.html";
+      return;
+    }
+
+    currentUser = user;
+    resetAutoLogoutTimer();
+    stopTracking();
+    stopTracking = window.KopcTracking
+      ? window.KopcTracking.startUserTracking(user, {
+          page: "refund.html",
+          pageLabel: "หน้าขอคืนเงิน"
+        })
+      : () => {};
+  });
+
+  window.submitRefund = async function () {
+    if (ORDER_API_URL.includes("PASTE_YOUR")) {
+      alert("ยังไม่ได้ใส่ Web App URL ของ Apps Script ในไฟล์ refund.html");
+      return;
+    }
+
+    if (!currentUser) {
+      alert("ยัง login ไม่เสร็จ");
+      return;
+    }
+
+    const accountNumber = document.getElementById("accountNumber").value.trim();
+    const bankName = document.getElementById("bankName").value.trim();
+    const accountName = document.getElementById("accountName").value.trim();
+    const note = document.getElementById("note").value.trim();
+
+    if (!accountNumber || !bankName || !accountName) {
+      alert("กรุณากรอกเลขบัญชี ธนาคาร และชื่อบัญชีให้ครบ");
+      return;
+    }
+
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true;
+    btn.innerText = "กำลังส่ง...";
+
+    const orderId = "REFUND-" + Date.now();
+    const requestNote = [
+      `ธนาคาร: ${bankName}`,
+      `เลขบัญชี: ${accountNumber}`,
+      `ชื่อบัญชี: ${accountName}`,
+      note ? `หมายเหตุ: ${note}` : ""
+    ].filter(Boolean).join("\n");
+
+    try {
+      await fetch(ORDER_API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "createOrder",
+          orderId: orderId,
+          uid: currentUser.uid,
+          email: currentUser.email || "",
+          customerName: currentUser.displayName || currentUser.email || "",
+          item: `คำขอคืนเงิน - ${refundItem || "-"}`,
+          setNumber: params.get("set") || "",
+          orderType: "refund",
+          parentOrderId: parentOrderId,
+          amount: refundAmount || "",
+          note: requestNote,
+          image: "",
+          status: "รอตรวจสอบ",
+          adminReply: "",
+          code: ""
+        })
+      });
+
+      alert("ส่งคำขอคืนเงินเรียบร้อย สามารถติดตามสถานะได้ที่ My Orders");
+      window.location.href = "My_Order.html";
+    } catch (error) {
+      console.error(error);
+      alert("ส่งคำขอคืนเงินไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      btn.disabled = false;
+      btn.innerText = "ส่งคำขอคืนเงิน";
+    }
+  };
+  </script>
+</body>
+</html>

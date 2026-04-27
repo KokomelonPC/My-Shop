@@ -123,6 +123,7 @@ button:hover { opacity: 0.96; }
     </div>
   </div>
 
+  <script src="tracking.js"></script>
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword }
@@ -137,6 +138,15 @@ button:hover { opacity: 0.96; }
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
+  ["email", "password"].forEach((fieldId) => {
+    document.getElementById(fieldId).addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        window.login();
+      }
+    });
+  });
+
   window.login = function() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
@@ -147,7 +157,10 @@ button:hover { opacity: 0.96; }
     }
 
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
+      .then((userCredential) => {
+        if (window.KopcTracking) {
+          window.KopcTracking.trackLoginSuccess(userCredential.user);
+        }
         alert("Login สำเร็จ");
         window.location.href = "index.html";
       })

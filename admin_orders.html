@@ -81,6 +81,50 @@ body {
   padding: 24px;
   box-shadow: var(--shadow-md);
 }
+.admin-stack {
+  display: grid;
+  gap: 22px;
+}
+.presence-grid {
+  display: grid;
+  grid-template-columns: 0.92fr 1.08fr;
+  gap: 22px;
+}
+.presence-panel h2 {
+  margin: 0 0 8px;
+}
+.presence-sub {
+  margin: 0 0 18px;
+  color: var(--text-soft);
+}
+.presence-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 700;
+}
+.presence-list {
+  display: grid;
+  gap: 12px;
+}
+.presence-item, .visit-item {
+  padding: 16px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid var(--line-soft);
+}
+.presence-item strong, .visit-item strong {
+  display: block;
+  margin-bottom: 6px;
+}
+.presence-meta, .visit-meta {
+  color: var(--text-soft);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
 .toolbar {
   display: grid;
   grid-template-columns: 1fr 220px;
@@ -138,6 +182,7 @@ footer {
 @media (max-width: 980px) {
   .layout { flex-direction: column; }
   .sidebar { width: 100%; height: auto; position: relative; }
+  .presence-grid { grid-template-columns: 1fr; }
   .admin-grid { grid-template-columns: 1fr; }
   .toolbar { grid-template-columns: 1fr; }
 }
@@ -165,6 +210,26 @@ footer {
       </section>
 
       <div class="content-shell">
+        <div class="admin-stack">
+        <section class="presence-grid">
+          <div class="panel presence-panel">
+            <h2>ผู้ใช้ออนไลน์ตอนนี้</h2>
+            <p class="presence-sub">แสดงผู้ใช้ที่มีการใช้งานล่าสุดภายในไม่กี่นาที</p>
+            <div id="onlineCount" class="presence-badge">กำลังโหลด...</div>
+            <div id="onlineUsersList" class="presence-list" style="margin-top:16px;">
+              <div class="note">กำลังโหลดรายชื่อผู้ใช้ออนไลน์...</div>
+            </div>
+          </div>
+
+          <div class="panel presence-panel">
+            <h2>ประวัติการเข้าใช้งาน</h2>
+            <p class="presence-sub">บันทึกการ login, logout และการเปิดหน้าเว็บล่าสุด</p>
+            <div id="visitLogsList" class="presence-list">
+              <div class="note">กำลังโหลดประวัติการเข้าใช้งาน...</div>
+            </div>
+          </div>
+        </section>
+
         <section class="admin-grid">
           <div class="panel">
             <h2>รายการออเดอร์</h2>
@@ -209,6 +274,11 @@ footer {
             </div>
 
             <div class="detail-row">
+              <label>หมายเหตุ / ข้อมูลเพิ่มเติม</label>
+              <div id="detailNote" class="detail-value">-</div>
+            </div>
+
+            <div class="detail-row">
               <label>สลิป</label>
               <a id="detailSlip" href="#" target="_blank">-</a>
             </div>
@@ -234,15 +304,17 @@ footer {
             </div>
           </div>
         </section>
+        </div>
 
         <footer>KOPC Service Admin</footer>
       </div>
     </main>
   </div>
 
+  <script src="tracking.js"></script>
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
   const ORDER_API_URL = "https://script.google.com/macros/s/AKfycbyPC-bIh5AYPp0PCTuQoC-XEMmmwJLVAHN7cBLEa8euDTSDgUtKGqGQQpth1bT_QtKS/exec";
   const ADMIN_EMAILS = [
@@ -258,12 +330,111 @@ footer {
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const AUTO_LOGOUT_MS = 30 * 60 * 1000;
+  const AUTO_LOGOUT_FLAG = "kopcAutoLogout";
+  let autoLogoutTimer = null;
+  let stopTracking = () => {};
+  let presenceRefreshTimer = null;
 
   let allOrders = [];
   let selectedOrder = null;
 
+  function clearAutoLogoutTimer() {
+    if (autoLogoutTimer) {
+      clearTimeout(autoLogoutTimer);
+    }
+  }
+
+  function resetAutoLogoutTimer() {
+    clearAutoLogoutTimer();
+
+    autoLogoutTimer = setTimeout(() => {
+      sessionStorage.setItem(AUTO_LOGOUT_FLAG, "1");
+      alert("ไม่มีการใช้งานเกิน 30 นาที ระบบออกจากระบบอัตโนมัติแล้ว");
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      });
+    }, AUTO_LOGOUT_MS);
+  }
+
+  ["click", "keydown", "mousemove", "scroll", "touchstart"].forEach((eventName) => {
+    window.addEventListener(eventName, resetAutoLogoutTimer, { passive: true });
+  });
+
+  async function loadPresenceDashboard() {
+    try {
+      const [onlineResponse, logsResponse] = await Promise.all([
+        fetch(`${ORDER_API_URL}?action=getOnlineUsers`),
+        fetch(`${ORDER_API_URL}?action=getVisitLogs&limit=30`)
+      ]);
+
+      const onlineData = await onlineResponse.json();
+      const logsData = await logsResponse.json();
+
+      renderOnlineUsers(onlineData.users || []);
+      renderVisitLogs(logsData.logs || []);
+    } catch (error) {
+      console.error(error);
+      document.getElementById("onlineCount").innerText = "โหลดไม่สำเร็จ";
+      document.getElementById("onlineUsersList").innerHTML = `<div class="note">โหลดรายชื่อผู้ใช้ออนไลน์ไม่สำเร็จ</div>`;
+      document.getElementById("visitLogsList").innerHTML = `<div class="note">โหลดประวัติการเข้าใช้งานไม่สำเร็จ</div>`;
+    }
+  }
+
+  function startPresenceRefresh() {
+    if (presenceRefreshTimer) {
+      clearInterval(presenceRefreshTimer);
+    }
+
+    presenceRefreshTimer = setInterval(() => {
+      loadPresenceDashboard();
+    }, 60000);
+  }
+
+  function renderOnlineUsers(users) {
+    document.getElementById("onlineCount").innerText = `${users.length} คน`;
+
+    const onlineUsersList = document.getElementById("onlineUsersList");
+    if (!users.length) {
+      onlineUsersList.innerHTML = `<div class="note">ยังไม่มีผู้ใช้ที่กำลังออนไลน์</div>`;
+      return;
+    }
+
+    onlineUsersList.innerHTML = users.map((onlineUser) => `
+      <div class="presence-item">
+        <strong>${onlineUser.displayName || onlineUser.email || onlineUser.uid}</strong>
+        <div class="presence-meta">อีเมล: ${onlineUser.email || "-"}</div>
+        <div class="presence-meta">หน้าที่เปิด: ${onlineUser.pageLabel || onlineUser.page || "-"}</div>
+        <div class="presence-meta">ล่าสุด: ${formatDate(onlineUser.lastSeen)}</div>
+      </div>
+    `).join("");
+  }
+
+  function renderVisitLogs(logs) {
+    const visitLogsList = document.getElementById("visitLogsList");
+    if (!logs.length) {
+      visitLogsList.innerHTML = `<div class="note">ยังไม่มีประวัติการเข้าใช้งาน</div>`;
+      return;
+    }
+
+    visitLogsList.innerHTML = logs.map((log) => `
+      <div class="visit-item">
+        <strong>${log.displayName || log.email || log.uid || "-"}</strong>
+        <div class="visit-meta">เหตุการณ์: ${log.eventType || "-"}</div>
+        <div class="visit-meta">หน้า: ${log.pageLabel || log.page || "-"}</div>
+        <div class="visit-meta">เวลา: ${formatDate(log.createdAt)}</div>
+      </div>
+    `).join("");
+  }
+
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
+      if (sessionStorage.getItem(AUTO_LOGOUT_FLAG) === "1") {
+        sessionStorage.removeItem(AUTO_LOGOUT_FLAG);
+        window.location.href = "login.html";
+        return;
+      }
+
       alert("กรุณา Login ก่อน");
       window.location.href = "login.html";
       return;
@@ -277,6 +448,16 @@ footer {
       return;
     }
 
+    resetAutoLogoutTimer();
+    stopTracking();
+    stopTracking = window.KopcTracking
+      ? window.KopcTracking.startUserTracking(user, {
+          page: "admin_orders.html",
+          pageLabel: "หน้าแอดมินออเดอร์"
+        })
+      : () => {};
+    await loadPresenceDashboard();
+    startPresenceRefresh();
     await loadOrders();
   });
 
@@ -322,6 +503,17 @@ footer {
     `).join("");
   }
 
+  window.logout = function () {
+    if (auth.currentUser) {
+      if (window.KopcTracking) {
+        window.KopcTracking.trackLogout(auth.currentUser, "admin_orders.html", "หน้าแอดมินออเดอร์");
+      }
+    }
+    signOut(auth).then(() => {
+      window.location.href = "login.html";
+    });
+  };
+
   window.selectOrder = function(orderId) {
     selectedOrder = allOrders.find(order => order.orderId === orderId);
     if (!selectedOrder) return;
@@ -330,6 +522,7 @@ footer {
     document.getElementById("detailCustomer").innerText = selectedOrder.email || selectedOrder.customerName || "-";
     document.getElementById("detailItem").innerText = selectedOrder.item || "-";
     document.getElementById("detailAmount").innerText = selectedOrder.amount ? `${selectedOrder.amount} บาท` : "-";
+    document.getElementById("detailNote").innerText = selectedOrder.note || "-";
     document.getElementById("detailStatus").value = selectedOrder.status || "รอตรวจสอบ";
     document.getElementById("detailReply").value = selectedOrder.adminReply || "";
 
@@ -362,6 +555,11 @@ footer {
     alert("บันทึกเรียบร้อย");
     await loadOrders();
   };
+
+  function formatDate(value) {
+    if (!value) return "-";
+    return new Date(value).toLocaleString("th-TH");
+  }
   </script>
 </body>
 </html>
