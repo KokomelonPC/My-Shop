@@ -163,6 +163,48 @@ body {
   font-size: 0.94rem;
   line-height: 1.6;
 }
+.notify-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.notify-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4338ca;
+  font-weight: 700;
+}
+.notify-meta {
+  color: var(--text-soft);
+  font-size: 0.95rem;
+}
+.notify-button {
+  padding: 11px 16px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 700;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #fff;
+}
+.notify-banner {
+  display: none;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #eff6ff;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  color: #1d4ed8;
+  font-weight: 700;
+}
+.notify-banner.show {
+  display: block;
+}
 .empty-state {
   text-align: center;
   padding: 30px 16px;
@@ -232,6 +274,11 @@ footer {
 
           <div class="panel">
             <h2>รายการล่าสุด</h2>
+            <div class="notify-tools">
+              <button id="notificationBtn" type="button" class="notify-button">🔔 แจ้งเตือน</button>
+              <span id="lastUpdatedAt" class="notify-meta">ยังไม่เคยอัปเดต</span>
+            </div>
+            <div id="orderNoticeBanner" class="notify-banner"></div>
             <div id="ordersContainer" class="order-list">
               <div class="empty-state">กำลังโหลดรายการ...</div>
             </div>
@@ -260,9 +307,15 @@ footer {
   const auth = getAuth(app);
   const AUTO_LOGOUT_MS = 30 * 60 * 1000;
   const AUTO_LOGOUT_FLAG = "kopcAutoLogout";
+  const ORDER_REFRESH_MS = 30000;
   let autoLogoutTimer = null;
   let stopTracking = () => {};
   let currentUser = null;
+  let orderRefreshTimer = null;
+  let previousOrdersMap = new Map();
+  let hasLoadedOrdersOnce = false;
+  let unreadNotifications = [];
+  let notificationPanelOpen = false;
 
   function clearAutoLogoutTimer() {
     if (autoLogoutTimer) {
@@ -285,6 +338,153 @@ footer {
   ["click", "keydown", "mousemove", "scroll", "touchstart"].forEach((eventName) => {
     window.addEventListener(eventName, resetAutoLogoutTimer, { passive: true });
   });
+
+  function startOrderRefresh() {
+    if (orderRefreshTimer) {
+      clearInterval(orderRefreshTimer);
+    }
+
+    orderRefreshTimer = setInterval(() => {
+      loadOrders({ notifyChanges: true, silent: true });
+    }, ORDER_REFRESH_MS);
+  }
+
+  function updateLastUpdatedLabel() {
+    document.getElementById("lastUpdatedAt").innerText =
+      `อัปเดตล่าสุด ${new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}`;
+  }
+
+  function updateNotificationButton() {
+    const button = document.getElementById("notificationBtn");
+    const unreadCount = unreadNotifications.length;
+    const suffix = unreadCount ? ` (${unreadCount})` : "";
+
+    if (!("Notification" in window)) {
+      button.disabled = true;
+      button.innerText = `🔕 ไม่รองรับแจ้งเตือน${suffix}`;
+      return;
+    }
+
+    if (Notification.permission === "granted") {
+      button.innerText = `🔔 แจ้งเตือน${suffix}`;
+      return;
+    }
+
+    if (Notification.permission === "denied") {
+      button.innerText = `🔕 แจ้งเตือนถูกบล็อก${suffix}`;
+      return;
+    }
+
+    button.innerText = `🔔 แจ้งเตือน${suffix}`;
+  }
+
+  async function requestNotificationPermission() {
+    if (!("Notification" in window)) {
+      alert("เบราว์เซอร์นี้ไม่รองรับการแจ้งเตือน");
+      return;
+    }
+
+    const permission = await Notification.requestPermission();
+    updateNotificationButton();
+
+    if (permission === "granted") {
+      new Notification("KOPC Service", {
+        body: "ระบบพร้อมแจ้งเตือนสถานะออเดอร์ของคุณแล้ว"
+      });
+    }
+  }
+
+  function showOrderNotice(message) {
+    const banner = document.getElementById("orderNoticeBanner");
+
+    if (!message) {
+      banner.classList.remove("show");
+      banner.innerText = "";
+      return;
+    }
+
+    banner.innerText = message;
+    banner.classList.add("show");
+  }
+
+  function showStoredNotifications() {
+    if (!unreadNotifications.length) {
+      showOrderNotice("");
+      notificationPanelOpen = false;
+      updateNotificationButton();
+      return;
+    }
+
+    const banner = document.getElementById("orderNoticeBanner");
+    banner.innerHTML = unreadNotifications.map(message => `<div>${message}</div>`).join("");
+    banner.classList.add("show");
+    unreadNotifications = [];
+    notificationPanelOpen = true;
+    updateNotificationButton();
+  }
+
+  async function handleNotificationButtonClick() {
+    if (notificationPanelOpen) {
+      showOrderNotice("");
+      notificationPanelOpen = false;
+      return;
+    }
+
+    showStoredNotifications();
+  }
+
+  function notifyOrderChanges(changedOrders) {
+    if (!changedOrders.length) {
+      return;
+    }
+
+    const latest = changedOrders[0];
+    const message = latest.adminReply
+      ? `ออเดอร์ ${latest.orderId || "-"} มีการอัปเดตสถานะหรือข้อความจากแอดมิน`
+      : `ออเดอร์ ${latest.orderId || "-"} มีการอัปเดตสถานะ`;
+
+    unreadNotifications.unshift(message);
+    unreadNotifications = unreadNotifications.slice(0, 5);
+    notificationPanelOpen = false;
+    updateNotificationButton();
+
+    if ("Notification" in window && Notification.permission === "granted") {
+      new Notification("KOPC Service: ออเดอร์อัปเดต", {
+        body: message
+      });
+    }
+  }
+
+  function buildOrdersMap(orders) {
+    return new Map(orders.map(order => [
+      order.orderId || `${order.item || ""}-${order.createdAt || ""}`,
+      {
+        status: order.status || "",
+        adminReply: order.adminReply || "",
+        amount: order.amount || "",
+        item: order.item || ""
+      }
+    ]));
+  }
+
+  function findChangedOrders(orders) {
+    if (!hasLoadedOrdersOnce) {
+      return [];
+    }
+
+    return orders.filter(order => {
+      const key = order.orderId || `${order.item || ""}-${order.createdAt || ""}`;
+      const previous = previousOrdersMap.get(key);
+
+      if (!previous) {
+        return true;
+      }
+
+      return previous.status !== (order.status || "") ||
+        previous.adminReply !== (order.adminReply || "") ||
+        previous.amount !== (order.amount || "");
+    });
+  }
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -309,6 +509,7 @@ footer {
       : () => {};
     currentUser = user;
     document.getElementById("orderWelcome").innerText = "รายการเช่าของ " + (user.displayName || user.email);
+    updateNotificationButton();
 
     if (ORDER_API_URL.includes("PASTE_YOUR")) {
       document.getElementById("ordersContainer").innerHTML = `
@@ -317,19 +518,50 @@ footer {
       return;
     }
 
+    startOrderRefresh();
+    await loadOrders({ notifyChanges: false, silent: false });
+  });
+
+  document.getElementById("notificationBtn").addEventListener("click", handleNotificationButtonClick);
+
+  async function loadOrders({ notifyChanges = false, silent = false } = {}) {
+    if (!currentUser) {
+      return;
+    }
+
     try {
-      const response = await fetch(`${ORDER_API_URL}?action=getOrdersByUid&uid=${encodeURIComponent(user.uid)}`);
+      const response = await fetch(`${ORDER_API_URL}?action=getOrdersByUid&uid=${encodeURIComponent(currentUser.uid)}`);
       const data = await response.json();
       const orders = data.orders || [];
+      const changedOrders = findChangedOrders(orders);
+
       renderSummary(orders);
       renderOrders(orders);
+      updateLastUpdatedLabel();
+
+      if (notifyChanges) {
+        if (changedOrders.length) {
+          notifyOrderChanges(changedOrders);
+        } else {
+          showOrderNotice("");
+          notificationPanelOpen = false;
+        }
+      } else {
+        showOrderNotice("");
+        notificationPanelOpen = false;
+      }
+
+      previousOrdersMap = buildOrdersMap(orders);
+      hasLoadedOrdersOnce = true;
     } catch (error) {
       console.error(error);
-      document.getElementById("ordersContainer").innerHTML = `
-        <div class="empty-state">โหลดรายการไม่สำเร็จ กรุณาลองใหม่อีกครั้ง</div>
-      `;
+      if (!silent) {
+        document.getElementById("ordersContainer").innerHTML = `
+          <div class="empty-state">โหลดรายการไม่สำเร็จ กรุณาลองใหม่อีกครั้ง</div>
+        `;
+      }
     }
-  });
+  }
 
   function renderSummary(orders) {
     document.getElementById("totalOrders").innerText = orders.length;
@@ -364,18 +596,11 @@ footer {
 
   function getOrderActions(order) {
     const canRenew = order.status === "อนุมัติแล้ว" || order.status === "เสร็จสิ้น";
+    const canRefund = order.status === "รอตรวจสอบ" || order.status === "กำลังตรวจสอบ" || canRenew;
 
-    if (!canRenew) {
+    if (!canRenew && !canRefund) {
       return "";
     }
-
-    const params = new URLSearchParams({
-      renew: "1",
-      orderId: order.orderId || "",
-      set: order.setNumber || getSetNumberFromItem(order.item),
-      item: order.item || "",
-      amount: order.amount || ""
-    });
 
     const refundParams = new URLSearchParams({
       refund: "1",
@@ -385,12 +610,29 @@ footer {
       amount: order.amount || ""
     });
 
+    const renewLink = canRenew
+      ? `<a class="renew-btn" href="payment.html?${new URLSearchParams({
+          renew: "1",
+          orderId: order.orderId || "",
+          set: order.setNumber || getSetNumberFromItem(order.item),
+          item: order.item || "",
+          amount: order.amount || ""
+        }).toString()}">ต่ออายุ</a>`
+      : "";
+
+    const refundLink = canRefund
+      ? `<a class="refund-btn" href="refund.html?${refundParams.toString()}">ขอคืนเงิน</a>`
+      : "";
+
     return `
       <div class="order-actions">
-        <a class="renew-btn" href="payment.html?${params.toString()}">ต่ออายุ</a>
-        <a class="refund-btn" href="refund.html?${refundParams.toString()}">ขอคืนเงิน</a>
+        ${renewLink}
+        ${refundLink}
       </div>
-      <p class="renew-note">การต่ออายุหลังหมดสัญญาแล้ว ให้ตรวจสอบสถานะคอมพิวเตอร์ก่อนโอนเงิน</p>
+      <p class="renew-note">
+        ${canRenew ? "การต่ออายุหลังหมดสัญญาแล้ว ให้ตรวจสอบสถานะคอมพิวเตอร์ก่อนโอนเงิน<br>" : ""}
+        หากออเดอร์ไม่ถูกอัพเดตเกิน 10 นาที โปรดติดต่อสอบถามแอดมิน หรือสอบถามไปที่ Facebook Fanpage
+      </p>
     `;
   }
 

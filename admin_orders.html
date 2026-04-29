@@ -87,6 +87,54 @@ body {
   gap: 12px;
   margin-bottom: 18px;
 }
+.toolbar-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: -4px 0 18px;
+}
+.toolbar-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4338ca;
+  font-weight: 700;
+}
+.toolbar-meta {
+  color: var(--text-soft);
+  font-size: 0.95rem;
+}
+.toolbar-button {
+  padding: 11px 16px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.toolbar-button.primary {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #fff;
+}
+.toolbar-button.secondary {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+.notice-banner {
+  display: none;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #ecfdf5;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: #065f46;
+  font-weight: 700;
+}
+.notice-banner.show {
+  display: block;
+}
 input, select, textarea {
   width: 100%;
   padding: 12px 14px;
@@ -182,6 +230,15 @@ footer {
               </select>
             </div>
 
+            <div class="toolbar-tools">
+              <button id="notificationPermissionBtn" type="button" class="toolbar-button secondary">🔐 เปิดสิทธิ์แจ้งเตือน</button>
+              <button id="notificationBtn" type="button" class="toolbar-button secondary">🔔 แจ้งเตือน</button>
+              <span id="lastUpdatedAt" class="toolbar-meta">ยังไม่เคยอัปเดต</span>
+              <button id="manualRefreshBtn" type="button" class="toolbar-button primary">รีเฟรชตอนนี้</button>
+            </div>
+
+            <div id="newOrderBanner" class="notice-banner"></div>
+
             <div id="orderList" class="order-list">
               <div class="note">กำลังโหลดออเดอร์...</div>
             </div>
@@ -254,6 +311,7 @@ footer {
 
   const ORDER_API_URL = "https://script.google.com/macros/s/AKfycbyPC-bIh5AYPp0PCTuQoC-XEMmmwJLVAHN7cBLEa8euDTSDgUtKGqGQQpth1bT_QtKS/exec";
   const ADMIN_EMAILS = [
+    "kampono@pwa.co.th",
     "kamponoxxviii@gmail.com",
     "gossdotds@gmail.com"
   ].map(email => email.toLowerCase());
@@ -268,11 +326,17 @@ footer {
   const auth = getAuth(app);
   const AUTO_LOGOUT_MS = 30 * 60 * 1000;
   const AUTO_LOGOUT_FLAG = "kopcAutoLogout";
+  const ORDER_REFRESH_MS = 30000;
   let autoLogoutTimer = null;
   let stopTracking = () => {};
+  let orderRefreshTimer = null;
+  let unreadNotifications = [];
+  let notificationPanelOpen = false;
 
   let allOrders = [];
   let selectedOrder = null;
+  let knownOrderIds = new Set();
+  let hasLoadedOrdersOnce = false;
 
   function clearAutoLogoutTimer() {
     if (autoLogoutTimer) {
@@ -295,6 +359,124 @@ footer {
   ["click", "keydown", "mousemove", "scroll", "touchstart"].forEach((eventName) => {
     window.addEventListener(eventName, resetAutoLogoutTimer, { passive: true });
   });
+
+  function startOrderRefresh() {
+    if (orderRefreshTimer) {
+      clearInterval(orderRefreshTimer);
+    }
+
+    orderRefreshTimer = setInterval(() => {
+      loadOrders({ notifyOnNew: true, silent: true });
+    }, ORDER_REFRESH_MS);
+  }
+
+  function updateLastUpdatedLabel() {
+    document.getElementById("lastUpdatedAt").innerText =
+      `อัปเดตล่าสุด ${new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}`;
+  }
+
+  function updateNotificationButton() {
+    const button = document.getElementById("notificationBtn");
+    const permissionButton = document.getElementById("notificationPermissionBtn");
+    const unreadCount = unreadNotifications.length;
+    const suffix = unreadCount ? ` (${unreadCount})` : "";
+
+    if (!("Notification" in window)) {
+      button.disabled = true;
+      permissionButton.disabled = true;
+      button.innerText = `🔕 ไม่รองรับแจ้งเตือน${suffix}`;
+      permissionButton.innerText = "🔕 ไม่รองรับสิทธิ์แจ้งเตือน";
+      return;
+    }
+
+    if (Notification.permission === "granted") {
+      button.innerText = `🔔 แจ้งเตือน${suffix}`;
+      permissionButton.innerText = "🔐 อนุญาตแล้ว";
+      return;
+    }
+
+    if (Notification.permission === "denied") {
+      button.innerText = `🔕 แจ้งเตือนถูกบล็อก${suffix}`;
+      permissionButton.innerText = "🔐 สิทธิ์ถูกบล็อก";
+      return;
+    }
+
+    button.innerText = `🔔 แจ้งเตือน${suffix}`;
+    permissionButton.innerText = "🔐 เปิดสิทธิ์แจ้งเตือน";
+  }
+
+  async function requestNotificationPermission() {
+    if (!("Notification" in window)) {
+      alert("เบราว์เซอร์นี้ไม่รองรับการแจ้งเตือน");
+      return;
+    }
+
+    const permission = await Notification.requestPermission();
+    updateNotificationButton();
+
+    if (permission === "granted") {
+      new Notification("KOPC Admin", {
+        body: "ระบบพร้อมแจ้งเตือนออเดอร์ใหม่แล้ว"
+      });
+    }
+  }
+
+  function showNewOrderBanner(newOrders) {
+    const banner = document.getElementById("newOrderBanner");
+
+    if (!newOrders.length) {
+      banner.classList.remove("show");
+      banner.innerText = "";
+      return;
+    }
+
+    banner.innerText = `มีออเดอร์ใหม่ ${newOrders.length} รายการ กรุณาตรวจสอบด้านล่าง`;
+    banner.classList.add("show");
+  }
+
+  function showStoredNotifications() {
+    if (!unreadNotifications.length) {
+      showNewOrderBanner([]);
+      notificationPanelOpen = false;
+      updateNotificationButton();
+      return;
+    }
+
+    const banner = document.getElementById("newOrderBanner");
+    banner.innerHTML = unreadNotifications.map(message => `<div>${message}</div>`).join("");
+    banner.classList.add("show");
+    unreadNotifications = [];
+    notificationPanelOpen = true;
+    updateNotificationButton();
+  }
+
+  async function handleNotificationButtonClick() {
+    if (notificationPanelOpen) {
+      showNewOrderBanner([]);
+      notificationPanelOpen = false;
+      return;
+    }
+
+    showStoredNotifications();
+  }
+
+  function notifyNewOrders(newOrders) {
+    if (!newOrders.length) {
+      return;
+    }
+
+    const latestOrder = newOrders[0];
+    unreadNotifications.unshift(`มีออเดอร์ใหม่ ${newOrders.length} รายการ ล่าสุด: ${latestOrder.orderId || latestOrder.item || "รายการใหม่"}`);
+    unreadNotifications = unreadNotifications.slice(0, 5);
+    notificationPanelOpen = false;
+    updateNotificationButton();
+
+    if ("Notification" in window && Notification.permission === "granted") {
+      new Notification("KOPC Admin: มีออเดอร์ใหม่", {
+        body: `${newOrders.length} รายการ ล่าสุด: ${latestOrder.orderId || latestOrder.item || "รายการใหม่"}`
+      });
+    }
+  }
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -325,17 +507,49 @@ footer {
           pageLabel: "หน้าแอดมินจัดการออเดอร์"
         })
       : () => {};
-    await loadOrders();
+    updateNotificationButton();
+    startOrderRefresh();
+    await loadOrders({ notifyOnNew: false, silent: false });
   });
 
   document.getElementById("searchInput").addEventListener("input", renderOrderList);
   document.getElementById("statusFilter").addEventListener("change", renderOrderList);
+  document.getElementById("notificationPermissionBtn").addEventListener("click", requestNotificationPermission);
+  document.getElementById("notificationBtn").addEventListener("click", handleNotificationButtonClick);
+  document.getElementById("manualRefreshBtn").addEventListener("click", () => {
+    loadOrders({ notifyOnNew: true, silent: false });
+  });
 
-  async function loadOrders() {
-    const response = await fetch(`${ORDER_API_URL}?action=getAllOrders`);
-    const data = await response.json();
-    allOrders = data.orders || [];
-    renderOrderList();
+  async function loadOrders({ notifyOnNew = false, silent = false } = {}) {
+    try {
+      const response = await fetch(`${ORDER_API_URL}?action=getAllOrders`);
+      const data = await response.json();
+      const nextOrders = data.orders || [];
+      const nextOrderIds = new Set(nextOrders.map(order => order.orderId).filter(Boolean));
+      const newOrders = hasLoadedOrdersOnce
+        ? nextOrders.filter(order => order.orderId && !knownOrderIds.has(order.orderId))
+        : [];
+
+      allOrders = nextOrders;
+      knownOrderIds = nextOrderIds;
+      hasLoadedOrdersOnce = true;
+
+      renderOrderList();
+      syncSelectedOrder();
+      updateLastUpdatedLabel();
+
+      if (notifyOnNew) {
+        notifyNewOrders(newOrders);
+      } else {
+        showNewOrderBanner([]);
+        notificationPanelOpen = false;
+      }
+    } catch (error) {
+      console.error(error);
+      if (!silent) {
+        alert("โหลดออเดอร์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      }
+    }
   }
 
   function renderOrderList() {
@@ -363,6 +577,20 @@ footer {
         <div class="order-meta">สถานะ: ${order.status || "-"}</div>
       </div>
     `).join("");
+  }
+
+  function syncSelectedOrder() {
+    if (!selectedOrder || !selectedOrder.orderId) {
+      return;
+    }
+
+    const refreshedOrder = allOrders.find(order => order.orderId === selectedOrder.orderId);
+    if (!refreshedOrder) {
+      return;
+    }
+
+    selectedOrder = refreshedOrder;
+    window.selectOrder(refreshedOrder.orderId);
   }
 
   window.selectOrder = function(orderId) {
@@ -404,7 +632,7 @@ footer {
     });
 
     alert("บันทึกเรียบร้อย");
-    await loadOrders();
+    await loadOrders({ notifyOnNew: false, silent: false });
   };
   </script>
 </body>
