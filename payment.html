@@ -80,6 +80,130 @@ button {
   font-size: 16px;
 }
 button:disabled { background: #94a3b8; cursor: not-allowed; }
+.payment-options {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+}
+.payment-card {
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.payment-card h3 {
+  margin: 0 0 12px;
+  font-size: 1.05rem;
+}
+.payment-card p {
+  margin: 8px 0;
+}
+.bank-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.bank-logo {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #138f43;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 1.2rem;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.18);
+}
+.bank-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
+}
+.bank-logo-fallback {
+  display: none;
+}
+.bank-name {
+  margin: 0;
+  font-weight: 800;
+}
+.payment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.qr-frame {
+  overflow: hidden;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  color: #0f172a;
+}
+.qr-frame img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1.18;
+  object-fit: contain;
+  padding: 12px;
+  background: #ffffff;
+}
+.qr-caption {
+  padding: 12px 14px 14px;
+  border-top: 1px solid rgba(226, 232, 240, 0.85);
+}
+.qr-caption strong {
+  display: block;
+  margin-bottom: 4px;
+}
+.qr-caption span {
+  color: #64748b;
+  font-size: 0.92rem;
+}
+.qr-missing {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  padding: 18px;
+  text-align: center;
+  color: #64748b;
+  background: #f8fafc;
+}
+.method-select {
+  margin: 18px 0;
+  padding: 16px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+}
+.method-select h3 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+}
+.method-options {
+  display: grid;
+  gap: 10px;
+}
+.method-options label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  cursor: pointer;
+}
+.method-options input {
+  width: auto;
+  margin: 0;
+}
+@media (max-width: 620px) {
+  .payment-grid { grid-template-columns: 1fr; }
+  .qr-frame img { aspect-ratio: 1 / 1.08; }
+}
 .back-home { display: inline-block; margin-top: 18px; color: #475569; text-decoration: none; }
 @media (max-width: 900px) {
   .shell { grid-template-columns: 1fr; }
@@ -94,11 +218,56 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
       <p id="paymentDescription">กรอกข้อมูลการโอนเงินให้ครบถ้วน แล้วแนบสลิปเพื่อส่งให้ระบบตรวจสอบ หลังส่งแล้วลูกค้าจะติดตามสถานะได้ที่หน้า My Orders</p>
 
       <div class="summary">
-        <h3>ข้อมูลบัญชี</h3>
+        <h3>รายการที่ต้องชำระ</h3>
         <p><strong>รายการ:</strong> <span id="itemName"></span></p>
-        <p><strong>ธนาคาร:</strong> TTB</p>
-        <p><strong>เลขบัญชี:</strong> 921-7-80960-8</p>
-        <p><strong>ชื่อบัญชี:</strong> นาย กัมพล องการ</p>
+      </div>
+
+      <div class="payment-options">
+        <div class="payment-card bank-card-list">
+          <div class="bank-row">
+            <div class="bank-logo" aria-label="TTB">
+              <img src="ttb-logo.png" alt="TTB" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <span class="bank-logo-fallback">TTB</span>
+            </div>
+            <div>
+              <p class="bank-name">ธนาคารทหารไทยธนชาต (TTB)</p>
+              <p>เลขบัญชี: <strong>921-7-80960-8</strong></p>
+              <p><strong>ชื่อบัญชี:</strong> นาย กัมพล องการ</p>
+            </div>
+          </div>
+
+          <div class="bank-row">
+            <div class="bank-logo" aria-label="Kasikornbank">
+              <img src="kasikorn-logo.png" alt="Kasikornbank" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <span class="bank-logo-fallback">K+</span>
+            </div>
+            <div>
+              <p class="bank-name">ธนาคารกสิกรไทย (KBank)</p>
+              <p>เลขบัญชี: <strong>554-2-31395-3</strong></p>
+              <p><strong>ชื่อบัญชี:</strong> นาย กัมพล องการ</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="payment-grid">
+          <div class="qr-frame">
+            <img src="promptpay-qr.jpg" alt="QR Code พร้อมเพย์" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+            <div class="qr-missing" style="display:none;">เพิ่มไฟล์รูป QR พร้อมเพย์ชื่อ<br><strong>promptpay-qr.jpg</strong></div>
+            <div class="qr-caption">
+              <strong>QR Code พร้อมเพย์</strong>
+              <span>สแกนเพื่อโอนเข้าบัญชี นาย กัมพล องการ</span>
+            </div>
+          </div>
+
+          <div class="qr-frame">
+            <img src="truemoney-qr.jpg" alt="QR Code TrueMoney" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+            <div class="qr-missing" style="display:none;">เพิ่มไฟล์รูป QR TrueMoney ชื่อ<br><strong>truemoney-qr.jpg</strong></div>
+            <div class="qr-caption">
+              <strong>QR Code TrueMoney</strong>
+              <span>สแกนชำระผ่าน TrueMoney Wallet</span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -106,6 +275,15 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
       <h2>แบบฟอร์มแจ้งโอน</h2>
       <p class="sub">ตรวจสอบข้อมูลให้ถูกต้องก่อนส่งทุกครั้ง</p>
 
+      <div class="method-select">
+        <h3>เลือกช่องทางชำระเงิน</h3>
+        <div class="method-options">
+          <label><input type="radio" name="paymentMethod" value="โอนธนาคารทหารไทยธนชาต (TTB)" checked> โอนธนาคารทหารไทยธนชาต (TTB)</label>
+          <label><input type="radio" name="paymentMethod" value="โอนธนาคารกสิกรไทย (KBank)"> โอนธนาคารกสิกรไทย (KBank)</label>
+          <label><input type="radio" name="paymentMethod" value="QR พร้อมเพย์"> QR Code พร้อมเพย์</label>
+          <label><input type="radio" name="paymentMethod" value="QR TrueMoney"> QR Code TrueMoney</label>
+        </div>
+      </div>
       <label for="name">ชื่อผู้โอน</label>
       <input id="name" type="text" placeholder="กรอกชื่อผู้โอน">
 
@@ -242,8 +420,10 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
     }
 
     const name = document.getElementById("name").value;
+    const paymentMethod = document.querySelector("input[name=\"paymentMethod\"]:checked")?.value || "โอนธนาคารทหารไทยธนชาต (TTB)";
     const amount = document.getElementById("amount").value;
     const note = document.getElementById("note").value;
+    const orderNote = `[ช่องทางชำระเงิน: ${paymentMethod}]${note ? " " + note : ""}`;
     const slip = document.getElementById("slip").files[0];
 
     if (!name || !amount || !slip) {
@@ -272,7 +452,8 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
             orderType: isRenewal ? "renewal" : "new",
             parentOrderId: parentOrderId,
             amount: amount,
-            note: note,
+            paymentMethod: paymentMethod,
+            note: orderNote,
             image: base64Image,
             status: "รอตรวจสอบ",
             adminReply: "",
