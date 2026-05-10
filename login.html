@@ -73,12 +73,6 @@ button {
   font-size: 16px;
 }
 button:hover { opacity: 0.96; }
-.secondary-auth-button {
-  margin-top: 10px;
-  background: #e2e8f0;
-  color: #0f172a;
-}
-.secondary-auth-button:hover { background: #cbd5e1; }
 .social-button {
   margin-top: 12px;
   background: #ffffff;
@@ -159,7 +153,6 @@ button:hover { opacity: 0.96; }
       <input type="password" id="password" placeholder="Password">
 
       <button onclick="login()">Login</button>
-      <button class="secondary-auth-button" type="button" onclick="resendVerificationEmail()">ส่งอีเมลยืนยันอีกครั้ง</button>
       <div class="divider">หรือเข้าสู่ระบบด้วย</div>
       <div class="social-grid">
         <button class="social-button" type="button" onclick="loginWithGoogle()">
@@ -195,10 +188,8 @@ button:hover { opacity: 0.96; }
     FacebookAuthProvider,
     getAuth,
     GoogleAuthProvider,
-    sendEmailVerification,
     signInWithEmailAndPassword,
     signInWithPopup,
-    signOut
   } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
   const firebaseConfig = {
@@ -214,6 +205,23 @@ button:hover { opacity: 0.96; }
   googleProvider.setCustomParameters({ prompt: "select_account" });
   facebookProvider.setCustomParameters({ display: "popup" });
 
+
+  function getFriendlyAuthError(error) {
+    const messages = {
+      "auth/invalid-email": "รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบอีเมลอีกครั้ง",
+      "auth/user-not-found": "ไม่พบบัญชีนี้ในระบบ กรุณาสมัครสมาชิกก่อนใช้งาน",
+      "auth/wrong-password": "รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง",
+      "auth/invalid-credential": "อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง",
+      "auth/missing-password": "กรุณากรอกรหัสผ่าน",
+      "auth/email-already-in-use": "อีเมลนี้ถูกสมัครไว้แล้ว กรุณาเข้าสู่ระบบ หรือใช้เมนูลืมรหัสผ่าน",
+      "auth/weak-password": "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
+      "auth/too-many-requests": "ระบบล็อกการลองเข้าสู่ระบบชั่วคราว เพราะลองหลายครั้งเกินไป กรุณารอสักพักแล้วลองใหม่",
+      "auth/popup-closed-by-user": "หน้าต่างเข้าสู่ระบบถูกปิดก่อนดำเนินการเสร็จ",
+      "auth/network-request-failed": "เชื่อมต่อเครือข่ายไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ต"
+    };
+
+    return messages[error.code] || "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง";
+  }
   ["email", "password"].forEach((fieldId) => {
     document.getElementById(fieldId).addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
@@ -236,46 +244,14 @@ button:hover { opacity: 0.96; }
       .then(async (userCredential) => {
         const user = userCredential.user;
 
-        if (!user.emailVerified) {
-          await sendEmailVerification(user);
-          await signOut(auth);
-          alert("บัญชีนี้ยังไม่ได้ยืนยันอีเมล ระบบส่งลิงก์ยืนยันให้ใหม่แล้ว กรุณาตรวจสอบ Inbox หรือ Spam ก่อน Login อีกครั้ง");
-          return;
-        }
-
         if (window.KopcTracking) {
           window.KopcTracking.trackLoginSuccess(user);
         }
         alert("Login สำเร็จ");
         window.location.href = "index.html";
       })
-      .catch(err => alert(err.message));
+      .catch(err => alert(getFriendlyAuthError(err)));
   };
-  window.resendVerificationEmail = function() {
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-
-    if (!email || !password) {
-      alert("กรุณากรอก Email และ Password ก่อนส่งอีเมลยืนยันอีกครั้ง");
-      return;
-    }
-
-    signInWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
-
-        if (user.emailVerified) {
-          alert("อีเมลนี้ยืนยันแล้ว สามารถ Login ได้เลย");
-          return;
-        }
-
-        await sendEmailVerification(user);
-        await signOut(auth);
-        alert("ส่งอีเมลยืนยันให้แล้ว กรุณาตรวจสอบ Inbox, Spam หรือ Promotions");
-      })
-      .catch((err) => alert(err.message));
-  };
-
   window.loginWithGoogle = function() {
     signInWithPopup(auth, googleProvider)
       .then((result) => {
@@ -285,7 +261,7 @@ button:hover { opacity: 0.96; }
         alert("เข้าสู่ระบบด้วย Google สำเร็จ");
         window.location.href = "index.html";
       })
-      .catch((err) => alert(err.message));
+      .catch((err) => alert(getFriendlyAuthError(err)));
   };
 
   window.loginWithFacebook = function() {
@@ -297,7 +273,7 @@ button:hover { opacity: 0.96; }
         alert("เข้าสู่ระบบด้วย Facebook สำเร็จ");
         window.location.href = "index.html";
       })
-      .catch((err) => alert(err.message));
+      .catch((err) => alert(getFriendlyAuthError(err)));
   };
   </script>
 </body>

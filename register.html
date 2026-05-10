@@ -171,9 +171,7 @@ button {
     FacebookAuthProvider,
     GoogleAuthProvider,
     createUserWithEmailAndPassword,
-    sendEmailVerification,
     signInWithPopup,
-    signOut,
     updateProfile
   } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
@@ -190,6 +188,23 @@ button {
   googleProvider.setCustomParameters({ prompt: "select_account" });
   facebookProvider.setCustomParameters({ display: "popup" });
 
+
+  function getFriendlyAuthError(error) {
+    const messages = {
+      "auth/invalid-email": "รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบอีเมลอีกครั้ง",
+      "auth/user-not-found": "ไม่พบบัญชีนี้ในระบบ กรุณาสมัครสมาชิกก่อนใช้งาน",
+      "auth/wrong-password": "รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง",
+      "auth/invalid-credential": "อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง",
+      "auth/missing-password": "กรุณากรอกรหัสผ่าน",
+      "auth/email-already-in-use": "อีเมลนี้ถูกสมัครไว้แล้ว กรุณาเข้าสู่ระบบ หรือใช้เมนูลืมรหัสผ่าน",
+      "auth/weak-password": "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
+      "auth/too-many-requests": "ระบบล็อกการลองเข้าสู่ระบบชั่วคราว เพราะลองหลายครั้งเกินไป กรุณารอสักพักแล้วลองใหม่",
+      "auth/popup-closed-by-user": "หน้าต่างเข้าสู่ระบบถูกปิดก่อนดำเนินการเสร็จ",
+      "auth/network-request-failed": "เชื่อมต่อเครือข่ายไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ต"
+    };
+
+    return messages[error.code] || "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง";
+  }
   window.register = function() {
     const name = document.getElementById("name").value;
     const email = document.getElementById("email").value;
@@ -207,19 +222,17 @@ button {
     }
 
     createUserWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        await updateProfile(userCredential.user, {
+      .then((userCredential) => {
+        return updateProfile(userCredential.user, {
           displayName: name
         });
-        await sendEmailVerification(userCredential.user);
-        await signOut(auth);
       })
       .then(() => {
-        alert("สมัครสำเร็จ ระบบส่งลิงก์ยืนยันอีเมลให้แล้ว กรุณายืนยันอีเมลก่อน Login");
+        alert("สมัครสำเร็จ");
         window.location.href = "login.html";
       })
       .catch((error) => {
-        alert(error.message);
+        alert(getFriendlyAuthError(error));
       });
   };
 
@@ -230,7 +243,7 @@ button {
         window.location.href = "index.html";
       })
       .catch((error) => {
-        alert(error.message);
+        alert(getFriendlyAuthError(error));
       });
   };
 
@@ -241,7 +254,7 @@ button {
         window.location.href = "index.html";
       })
       .catch((error) => {
-        alert(error.message);
+        alert(getFriendlyAuthError(error));
       });
   };
   </script>
