@@ -372,6 +372,23 @@ window.logout = function () {
 
 const PRODUCT_API_URL = "https://script.google.com/macros/s/AKfycbxmE38FRHagWNxzFz8htUBh_2V212bvEOElHwQbYZThoQQJyXcI9JAJI-b3b0u279g/exec";
 
+
+function getProductImageUrl(product) {
+  const fileId = product.imageFileId || extractDriveFileId(product.imageUrl || "");
+  if (fileId) {
+    return `https://drive.google.com/thumbnail?id=${encodeURIComponent(fileId)}&sz=w1000`;
+  }
+  return product.imageUrl || "";
+}
+
+function extractDriveFileId(url) {
+  const text = String(url || "");
+  const byQuery = text.match(/[?&]id=([^&]+)/);
+  if (byQuery) return byQuery[1];
+  const byPath = text.match(/\/d\/([^/]+)/);
+  if (byPath) return byPath[1];
+  return "";
+}
 async function loadProducts() {
   const grid = document.getElementById("productGrid");
   if (!grid) return;
@@ -388,7 +405,7 @@ async function loadProducts() {
 
     grid.innerHTML = products.map(product => `
       <article class="product-card">
-        <img src="${product.imageUrl || ""}" alt="${product.name || "สินค้า KOPC"}">
+        <img src="${getProductImageUrl(product)}" alt="${product.name || "สินค้า KOPC"}" loading="lazy" onerror="this.style.display='none';">
         <div class="product-card-body">
           <h3>${product.name || "ไม่มีชื่อสินค้า"}</h3>
           <p>${product.description || ""}</p>
