@@ -174,7 +174,7 @@ button:hover { opacity: 0.96; }
       </div>
 
       <div class="register-link">
-        ยังไม่มีบัญชี? <a href="register.html">Register</a>
+        ยังไม่มีบัญชี? <a href="register.html">Register</a><br><a href="forgot_password.html">ลืมรหัสผ่าน?</a>
       </div>
 
       <a class="back-home" href="index.html">← กลับหน้าหลัก</a>
@@ -184,8 +184,15 @@ button:hover { opacity: 0.96; }
   <script src="tracking.js"></script>
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-  import { FacebookAuthProvider, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup }
-  from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+  import {
+    FacebookAuthProvider,
+    getAuth,
+    GoogleAuthProvider,
+    sendEmailVerification,
+    signInWithEmailAndPassword,
+    signInWithPopup,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBN02k5-YhZc1uitpEfMfVpsPLAPYKQs7A",
@@ -219,9 +226,18 @@ button:hover { opacity: 0.96; }
     }
 
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+
+        if (!user.emailVerified) {
+          await sendEmailVerification(user);
+          await signOut(auth);
+          alert("บัญชีนี้ยังไม่ได้ยืนยันอีเมล ระบบส่งลิงก์ยืนยันให้ใหม่แล้ว กรุณาตรวจสอบ Inbox หรือ Spam ก่อน Login อีกครั้ง");
+          return;
+        }
+
         if (window.KopcTracking) {
-          window.KopcTracking.trackLoginSuccess(userCredential.user);
+          window.KopcTracking.trackLoginSuccess(user);
         }
         alert("Login สำเร็จ");
         window.location.href = "index.html";

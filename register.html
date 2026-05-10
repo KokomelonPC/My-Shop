@@ -171,7 +171,9 @@ button {
     FacebookAuthProvider,
     GoogleAuthProvider,
     createUserWithEmailAndPassword,
+    sendEmailVerification,
     signInWithPopup,
+    signOut,
     updateProfile
   } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
@@ -205,13 +207,15 @@ button {
     }
 
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        return updateProfile(userCredential.user, {
+      .then(async (userCredential) => {
+        await updateProfile(userCredential.user, {
           displayName: name
         });
+        await sendEmailVerification(userCredential.user);
+        await signOut(auth);
       })
       .then(() => {
-        alert("สมัครสำเร็จ");
+        alert("สมัครสำเร็จ ระบบส่งลิงก์ยืนยันอีเมลให้แล้ว กรุณายืนยันอีเมลก่อน Login");
         window.location.href = "login.html";
       })
       .catch((error) => {

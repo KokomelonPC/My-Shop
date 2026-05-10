@@ -258,13 +258,7 @@ footer {
 
   function resetAutoLogoutTimer() {
     clearAutoLogoutTimer();
-    autoLogoutTimer = setTimeout(() => {
-      sessionStorage.setItem(AUTO_LOGOUT_FLAG, "1");
-      alert("ไม่มีการใช้งานเกิน 30 นาที ระบบออกจากระบบอัตโนมัติแล้ว");
-      signOut(auth).then(() => {
-        window.location.href = "login.html";
-      });
-    }, AUTO_LOGOUT_MS);
+    sessionStorage.removeItem(AUTO_LOGOUT_FLAG);
   }
 
   function stopChatRefresh() {
