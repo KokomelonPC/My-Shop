@@ -73,6 +73,12 @@ button {
   font-size: 16px;
 }
 button:hover { opacity: 0.96; }
+.secondary-auth-button {
+  margin-top: 10px;
+  background: #e2e8f0;
+  color: #0f172a;
+}
+.secondary-auth-button:hover { background: #cbd5e1; }
 .social-button {
   margin-top: 12px;
   background: #ffffff;
@@ -153,6 +159,7 @@ button:hover { opacity: 0.96; }
       <input type="password" id="password" placeholder="Password">
 
       <button onclick="login()">Login</button>
+      <button class="secondary-auth-button" type="button" onclick="resendVerificationEmail()">ส่งอีเมลยืนยันอีกครั้ง</button>
       <div class="divider">หรือเข้าสู่ระบบด้วย</div>
       <div class="social-grid">
         <button class="social-button" type="button" onclick="loginWithGoogle()">
@@ -243,6 +250,30 @@ button:hover { opacity: 0.96; }
         window.location.href = "index.html";
       })
       .catch(err => alert(err.message));
+  };
+  window.resendVerificationEmail = function() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!email || !password) {
+      alert("กรุณากรอก Email และ Password ก่อนส่งอีเมลยืนยันอีกครั้ง");
+      return;
+    }
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+
+        if (user.emailVerified) {
+          alert("อีเมลนี้ยืนยันแล้ว สามารถ Login ได้เลย");
+          return;
+        }
+
+        await sendEmailVerification(user);
+        await signOut(auth);
+        alert("ส่งอีเมลยืนยันให้แล้ว กรุณาตรวจสอบ Inbox, Spam หรือ Promotions");
+      })
+      .catch((err) => alert(err.message));
   };
 
   window.loginWithGoogle = function() {
