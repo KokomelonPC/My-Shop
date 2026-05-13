@@ -47,7 +47,7 @@
         <aside class="panel summary-box">
           <h2>สรุปยอด</h2>
           <div class="summary-line"><span>จำนวนสินค้า</span><strong id="totalQty">0</strong></div>
-          <div class="summary-line summary-total"><span>ยอดรวม</span><strong id="totalAmount">0 บาท</strong></div>
+          <div class="summary-line"><span>ยอดสินค้า</span><strong id="subtotalAmount">0 บาท</strong></div><div class="summary-line"><span>ค่าส่ง</span><strong id="shippingFee">0 บาท</strong></div><div class="summary-line summary-total"><span>ยอดรวม</span><strong id="totalAmount">0 บาท</strong></div>
           <button class="primary" type="button" onclick="checkoutCart()">ไปชำระเงิน</button>
           <a class="secondary" href="kopc_products.html">เลือกสินค้าเพิ่ม</a>
           <button class="secondary" type="button" onclick="clearCart()">ล้างตะกร้า</button>
@@ -60,6 +60,8 @@
 
 <script>
 const CART_KEY = "kopcProductCart";
+const SHIPPING_FEE = 50;
+const FREE_SHIPPING_MINIMUM = 1000;
 
 function getCart() {
   try {
@@ -77,6 +79,12 @@ function formatBaht(value) {
   return `${Number(value || 0).toLocaleString("th-TH")} บาท`;
 }
 
+function getCartSummary(cart) {
+  const subtotal = cart.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 0), 0);
+  const shipping = subtotal > 0 && subtotal < FREE_SHIPPING_MINIMUM ? SHIPPING_FEE : 0;
+  return { subtotal, shipping, total: subtotal + shipping };
+}
+
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
     "&": "&amp;",
@@ -91,10 +99,12 @@ function renderCart() {
   const cart = getCart();
   const list = document.getElementById("cartList");
   const totalQty = cart.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
-  const totalAmount = cart.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 0), 0);
+  const summary = getCartSummary(cart);
 
   document.getElementById("totalQty").innerText = totalQty.toLocaleString("th-TH");
-  document.getElementById("totalAmount").innerText = formatBaht(totalAmount);
+  document.getElementById("subtotalAmount").innerText = formatBaht(summary.subtotal);
+  document.getElementById("shippingFee").innerText = summary.subtotal >= FREE_SHIPPING_MINIMUM ? "ฟรี" : formatBaht(summary.shipping);
+  document.getElementById("totalAmount").innerText = formatBaht(summary.total);
 
   if (!cart.length) {
     list.innerHTML = `<div class="empty-state">ยังไม่มีสินค้าในตะกร้า กลับไปเลือกสินค้าก่อนชำระเงิน</div>`;
@@ -147,7 +157,7 @@ function checkoutCart() {
     return;
   }
 
-  const totalAmount = cart.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 0), 0);
+  const summary = getCartSummary(cart);
   const itemText = cart.map(item => `${item.name || "สินค้า KOPC"} x${Number(item.quantity || 1)}`).join(", ");
   const productIds = cart.map(item => item.productId || "").filter(Boolean).join(",");
 
@@ -155,7 +165,9 @@ function checkoutCart() {
     type: "product",
     productId: productIds || "CART",
     item: itemText,
-    amount: totalAmount
+    amount: summary.total,
+    subtotal: summary.subtotal,
+    shipping: summary.shipping
   }).toString()}`;
 }
 

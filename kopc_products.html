@@ -535,6 +535,8 @@ window.logout = function () {
 
 const PRODUCT_API_URL = "https://script.google.com/macros/s/AKfycbxmE38FRHagWNxzFz8htUBh_2V212bvEOElHwQbYZThoQQJyXcI9JAJI-b3b0u279g/exec";
 const productById = new Map();
+const SHIPPING_FEE = 50;
+const FREE_SHIPPING_MINIMUM = 1000;
 
 
 function getProductImageUrl(product) {
@@ -572,6 +574,12 @@ function getProductStatus(product) {
   return String(product.status || "active").toLowerCase();
 }
 
+function getProductCheckoutSummary(price) {
+  const subtotal = Number(price || 0);
+  const shipping = subtotal > 0 && subtotal < FREE_SHIPPING_MINIMUM ? SHIPPING_FEE : 0;
+  return { subtotal, shipping, total: subtotal + shipping };
+}
+
 window.buyProduct = async function (productId) {
   const product = productById.get(productId);
   if (!product) {
@@ -590,11 +598,14 @@ window.buyProduct = async function (productId) {
     return;
   }
 
+  const summary = getProductCheckoutSummary(product.price);
   window.location.href = `payment.html?${new URLSearchParams({
     type: "product",
     productId: product.productId || productId,
     item: product.name || "สินค้า KOPC",
-    amount: Number(product.price || 0)
+    amount: summary.total,
+    subtotal: summary.subtotal,
+    shipping: summary.shipping
   }).toString()}`;
 };
 
