@@ -344,6 +344,35 @@ body {
   grid-template-columns: 48px 1fr;
   gap: 10px;
 }
+.qty-picker {
+  display: grid;
+  grid-template-columns: 40px 1fr 40px;
+  align-items: center;
+  gap: 8px;
+}
+.qty-picker button,
+.qty-picker input {
+  min-height: 38px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--text-main);
+  font: inherit;
+  font-weight: 800;
+  text-align: center;
+}
+.qty-picker button {
+  cursor: pointer;
+  background: #f8fafc;
+}
+.qty-picker input {
+  -moz-appearance: textfield;
+}
+.qty-picker input::-webkit-outer-spin-button,
+.qty-picker input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
 .cart-button {
   min-height: 44px;
   border: 1px solid rgba(37, 99, 235, 0.22);
@@ -592,6 +621,27 @@ function getProductCheckoutSummary(price) {
   return { subtotal, shipping, total: subtotal + shipping };
 }
 
+function getSelectedQuantity(productId) {
+  const product = productById.get(productId);
+  const stock = Math.max(1, getProductStock(product || {}));
+  const input = document.getElementById(`qty-${productId}`);
+  const quantity = Math.max(1, Math.min(stock, Number(input?.value || 1)));
+  if (input) input.value = quantity;
+  return quantity;
+}
+
+window.changeProductQty = function (productId, delta) {
+  const product = productById.get(productId);
+  const stock = Math.max(1, getProductStock(product || {}));
+  const input = document.getElementById(`qty-${productId}`);
+  if (!input) return;
+  input.value = Math.max(1, Math.min(stock, Number(input.value || 1) + delta));
+};
+
+window.normalizeProductQty = function (productId) {
+  getSelectedQuantity(productId);
+};
+
 window.buyProduct = async function (productId) {
   const product = productById.get(productId);
   if (!product) {
@@ -610,11 +660,13 @@ window.buyProduct = async function (productId) {
     return;
   }
 
-  const summary = getProductCheckoutSummary(product.price);
+  const quantity = getSelectedQuantity(productId);
+  const summary = getProductCheckoutSummary(Number(product.price || 0) * quantity);
   window.location.href = `payment.html?${new URLSearchParams({
     type: "product",
     productId: product.productId || productId,
-    item: product.name || "สินค้า KOPC",
+    item: `${product.name || "สินค้า KOPC"} x${quantity}`,
+    quantity,
     amount: summary.total,
     subtotal: summary.subtotal,
     shipping: summary.shipping
@@ -633,17 +685,18 @@ window.addProductToCart = function (productId) {
     return;
   }
 
+  const quantity = getSelectedQuantity(productId);
   const cart = JSON.parse(localStorage.getItem("kopcProductCart") || "[]");
   const existing = cart.find(item => item.productId === (product.productId || productId));
   if (existing) {
-    existing.quantity = Number(existing.quantity || 1) + 1;
+    existing.quantity = Math.min(getProductStock(product), Number(existing.quantity || 1) + quantity);
   } else {
     cart.push({
       productId: product.productId || productId,
       name: product.name || "สินค้า KOPC",
       price: Number(product.price || 0),
       imageUrl: getProductImageUrl(product),
-      quantity: 1
+      quantity
     });
   }
 
@@ -684,6 +737,11 @@ async function loadProducts() {
             <div class="product-card-meta">
               <span class="product-price">${Number(product.price || 0).toLocaleString("th-TH")} บาท</span>
               <span class="product-stock">${soldOut ? "สินค้าหมด" : `คงเหลือ ${stock}`}</span>
+            </div>
+            <div class="qty-picker" aria-label="เลือกจำนวนสินค้า">
+              <button type="button" onclick="changeProductQty('${escapeHTML(productId)}', -1)" ${soldOut ? "disabled" : ""} aria-label="ลดจำนวน">-</button>
+              <input id="qty-${escapeHTML(productId)}" type="number" min="1" max="${stock}" value="1" inputmode="numeric" onchange="normalizeProductQty('${escapeHTML(productId)}')" ${soldOut ? "disabled" : ""} aria-label="จำนวนสินค้า">
+              <button type="button" onclick="changeProductQty('${escapeHTML(productId)}', 1)" ${soldOut ? "disabled" : ""} aria-label="เพิ่มจำนวน">+</button>
             </div>
             <div class="product-actions">
               <button class="cart-button" type="button" onclick="addProductToCart('${escapeHTML(productId)}')" ${soldOut ? "disabled" : ""} title="เพิ่มลงตะกร้า" aria-label="เพิ่มลงตะกร้า">🛒</button>
