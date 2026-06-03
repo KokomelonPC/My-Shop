@@ -265,6 +265,7 @@ body {
 }
 .product-card {
   display: grid;
+  grid-template-rows: auto 1fr;
   overflow: hidden;
   border: 1px solid rgba(148, 163, 184, 0.22);
   border-radius: 18px;
@@ -272,11 +273,12 @@ body {
   box-shadow: 0 12px 28px rgba(15, 23, 42, 0.07);
 }
 .product-card img {
+  display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  max-height: 220px;
-  object-fit: cover;
-  background: #e2e8f0;
+  height: 220px;
+  object-fit: contain;
+  padding: 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
 }
 .product-image-link {
   display: block;
@@ -302,6 +304,10 @@ body {
   margin: 0;
   color: var(--text-soft);
   line-height: 1.65;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .product-card-meta {
   display: flex;
@@ -574,6 +580,12 @@ function getProductStatus(product) {
   return String(product.status || "active").toLowerCase();
 }
 
+function getShortDescription(value, maxLength = 70) {
+  const text = String(value || "").replace(/\s+/g, " ").trim();
+  if (!text) return "ดูรายละเอียดสินค้าเพิ่มเติม";
+  return text.length > maxLength ? `${text.slice(0, maxLength).trim()}...` : text;
+}
+
 function getProductCheckoutSummary(price) {
   const subtotal = Number(price || 0);
   const shipping = subtotal > 0 && subtotal < FREE_SHIPPING_MINIMUM ? SHIPPING_FEE : 0;
@@ -658,6 +670,7 @@ async function loadProducts() {
       const productId = String(product.productId || product.name || Date.now());
       const stock = getProductStock(product);
       const soldOut = getProductStatus(product) === "soldout" || stock <= 0;
+      const shortDescription = getShortDescription(product.description);
       productById.set(productId, product);
 
       return `
@@ -667,7 +680,7 @@ async function loadProducts() {
           </a>
           <div class="product-card-body">
             <h3><a href="product_detail.html?productId=${encodeURIComponent(productId)}">${escapeHTML(product.name || "ไม่มีชื่อสินค้า")}</a></h3>
-            <p>${escapeHTML(product.description || "ยังไม่มีรายละเอียดสินค้า")}</p>
+            <p>${escapeHTML(shortDescription)}</p>
             <div class="product-card-meta">
               <span class="product-price">${Number(product.price || 0).toLocaleString("th-TH")} บาท</span>
               <span class="product-stock">${soldOut ? "สินค้าหมด" : `คงเหลือ ${stock}`}</span>
