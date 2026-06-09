@@ -1643,6 +1643,8 @@ footer {
     }
 
     return rows.sort((a, b) => {
+      if (a.setNumber === 28) return 1;
+      if (b.setNumber === 28) return -1;
       const priceDifference = toPrice(b.dayPrice) - toPrice(a.dayPrice);
       return priceDifference || a.setNumber - b.setNumber;
     });
