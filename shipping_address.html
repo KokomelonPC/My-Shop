@@ -237,6 +237,14 @@ function storageKey() {
   return activeUser ? "kopcShippingAddress_" + activeUser.uid : "kopcShippingAddress";
 }
 
+function getReturnDestination() {
+  const next = new URLSearchParams(window.location.search).get("next") || "";
+  if (!next || next.startsWith("//") || /^[a-z]+:/i.test(next)) {
+    return "";
+  }
+  return next;
+}
+
 function loadAddress() {
   const saved = localStorage.getItem(storageKey());
   if (!saved) return;
@@ -256,12 +264,17 @@ document.getElementById("addressForm").addEventListener("submit", (event) => {
   };
   localStorage.setItem(storageKey(), JSON.stringify(data));
   alert("บันทึกที่อยู่จัดส่งแล้ว");
+  const destination = getReturnDestination();
+  if (destination) {
+    window.location.href = destination;
+  }
 });
 
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     alert("กรุณา Login ก่อน");
-    window.location.href = "login.html";
+    const returnUrl = location.pathname.split("/").pop() + location.search;
+    window.location.href = "login.html?next=" + encodeURIComponent(returnUrl);
     return;
   }
   activeUser = user;

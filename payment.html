@@ -413,6 +413,22 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
 
     try {
       const draft = JSON.parse(raw);
+      const addressRaw = localStorage.getItem("kopcShippingAddress_" + user.uid);
+      let address = null;
+      try {
+        address = addressRaw ? JSON.parse(addressRaw) : null;
+      } catch (error) {
+        console.error(error);
+        localStorage.removeItem("kopcShippingAddress_" + user.uid);
+      }
+      if (!address?.name || !address?.phone || !address?.address) {
+        alert("กรุณาบันทึกที่อยู่จัดส่งก่อนชำระเงิน");
+        const returnUrl = location.pathname.split("/").pop() + location.search;
+        window.location.href = "shipping_address.html?next=" + encodeURIComponent(returnUrl);
+        return null;
+      }
+      draft.address = address;
+      localStorage.setItem("kopc3dOrderDraft_" + user.uid, JSON.stringify(draft));
       document.getElementById("paymentTitle").innerText = "ชำระเงินค่าสั่งปั้นรูปวางโต๊ะคอม";
       document.getElementById("paymentDescription").innerText =
         "รูปอ้างอิงถูกบันทึกลง Google Drive แล้ว กรุณาชำระยอดตามขนาดที่เลือกและแนบสลิปเพื่อสร้างออเดอร์";
