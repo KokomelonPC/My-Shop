@@ -37,13 +37,11 @@ button,input,textarea{font:inherit}.layout{display:flex;min-height:100vh}.sideba
         <div>
           <span class="eyebrow">🖨️ Custom 3D Figure</span>
           <h1>สั่งปั้นรูปวางโต๊ะคอม</h1>
-          <p>อัปโหลดรูป เลือกขนาด และชำระเงินได้ในหน้าเดียว ระบบจะเก็บรูปอ้างอิงลง Google Drive เพื่อให้ร้านนำไปออกแบบโมเดลก่อนสั่งพิมพ์จริง</p>
           <div class="hero-actions"><a class="button button-primary" href="#order">เริ่มสั่งปั้น</a><a class="button button-secondary" href="#process">ดูขั้นตอน</a></div>
         </div>
         <div class="account-card">
           <span class="account-pill" id="accountPill">กำลังตรวจสอบบัญชี...</span>
           <h3 id="accountTitle">ใช้บัญชี KOPC เดิมได้เลย</h3>
-          <p id="accountText">ต้อง Login ก่อนอัปโหลดรูปและไปหน้าชำระเงิน</p>
           <div class="account-actions" id="accountActions">
             <button class="button button-primary" type="button" onclick="goLogin()">Login</button>
             <a class="button button-secondary" href="register.html">Register</a>
@@ -158,7 +156,7 @@ window.prepareCheckout=async function(){
   }catch(error){console.error(error);alert("บันทึกรูปไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");button.disabled=false;button.innerText="บันทึกรูปและไปชำระเงิน";status.innerText=""}
 };
 
-onAuthStateChanged(auth,user=>{currentUser=user||null;if(user){document.getElementById("accountPill").innerText="เข้าสู่ระบบแล้ว";document.getElementById("accountTitle").innerText=user.displayName||user.email||"บัญชีของคุณ";document.getElementById("accountText").innerText="พร้อมสร้างออเดอร์และบันทึกรูปลง Drive";document.getElementById("accountActions").innerHTML='<button class="button button-primary" type="button" onclick="logout()">Log Out</button>'}else{document.getElementById("accountPill").innerText="ยังไม่ได้ Login"}});
+onAuthStateChanged(auth,user=>{currentUser=user||null;if(user){document.getElementById("accountPill").innerText="เข้าสู่ระบบแล้ว";document.getElementById("accountTitle").innerText=user.displayName||user.email||"บัญชีของคุณ";document.getElementById("accountActions").innerHTML='<button class="button button-primary" type="button" onclick="logout()">Log Out</button>'}else{document.getElementById("accountPill").innerText="ยังไม่ได้ Login"}});
 updateSummary();
 </script>
 </body>
