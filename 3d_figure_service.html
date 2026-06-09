@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สั่งปั้นรูปวางโต๊ะคอม | KOPC Service</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+:root {
+  --text-main: #0f172a;
+  --text-soft: #475569;
+  --text-muted: #94a3b8;
+  --line-soft: rgba(148, 163, 184, 0.2);
+  --brand-blue: #2563eb;
+  --brand-indigo: #4f46e5;
+  --brand-violet: #7c3aed;
+  --shadow-xl: 0 28px 70px rgba(15, 23, 42, 0.18);
+  --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.18), transparent 26%),
+    radial-gradient(circle at right center, rgba(124, 58, 237, 0.16), transparent 26%),
+    linear-gradient(180deg, #f8fbff 0%, #eef4ff 48%, #f8fafc 100%);
+}
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 280px;
+  padding: 26px 22px;
+  color: #fff;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.96));
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.brand-box {
+  padding: 22px 18px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.24), rgba(14, 165, 233, 0.16), rgba(124, 58, 237, 0.28));
+}
+.brand-box h2 { margin: 0; font-size: 1.45rem; }
+.brand-box p { margin: 10px 0 0; color: rgba(226, 232, 240, 0.88); line-height: 1.7; font-size: 0.95rem; }
+.menu { margin-top: 28px; }
+.menu-label { margin: 0 0 14px; padding-left: 10px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(148, 163, 184, 0.78); }
+.menu a { display: flex; align-items: center; gap: 12px; padding: 14px 16px; margin-bottom: 10px; color: #dbeafe; text-decoration: none; border-radius: 14px; }
+.menu a:hover { background: rgba(59, 130, 246, 0.16); }
+.menu a.active { color: #fff; background: linear-gradient(135deg, rgba(37, 99, 235, 0.8), rgba(124, 58, 237, 0.8)); box-shadow: 0 14px 26px rgba(37, 99, 235, 0.22); }
+.main { flex: 1; padding: 26px; min-width: 0; }
+.hero {
+  padding: 42px;
+  border-radius: 34px;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(29, 78, 216, 0.97), rgba(79, 70, 229, 0.94), rgba(124, 58, 237, 0.9));
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  position: relative;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 290px;
+  height: 290px;
+  right: -70px;
+  top: -80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr); align-items: center; gap: 34px; position: relative; z-index: 1; }
+.eyebrow { display: inline-block; padding: 8px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.16); font-size: 0.92rem; }
+.hero h1 { margin: 18px 0 0; font-size: clamp(2.2rem, 5vw, 4rem); line-height: 1.15; }
+.hero p { margin: 16px 0 0; max-width: 760px; line-height: 1.8; color: rgba(239, 246, 255, 0.92); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px; border-radius: 14px; text-decoration: none; font-weight: 700; }
+.button-primary { background: #fff; color: var(--brand-indigo); box-shadow: 0 12px 26px rgba(15, 23, 42, 0.18); }
+.button-secondary { color: #fff; border: 1px solid rgba(255, 255, 255, 0.35); background: rgba(255, 255, 255, 0.1); }
+.figure-preview {
+  min-height: 280px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 28px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+.figure-art { position: relative; width: 170px; height: 220px; }
+.figure-head { position: absolute; width: 92px; height: 92px; top: 8px; left: 39px; border-radius: 46% 46% 42% 42%; background: linear-gradient(145deg, #f8fafc, #c7d2fe); box-shadow: 0 14px 26px rgba(15, 23, 42, 0.2); }
+.figure-body { position: absolute; width: 128px; height: 112px; left: 21px; top: 90px; border-radius: 48px 48px 24px 24px; background: linear-gradient(145deg, #93c5fd, #6366f1); }
+.figure-base { position: absolute; width: 166px; height: 28px; left: 2px; bottom: 0; border-radius: 50%; background: linear-gradient(180deg, #e2e8f0, #94a3b8); box-shadow: 0 14px 20px rgba(15, 23, 42, 0.24); }
+.content-shell { max-width: 1180px; margin: 28px auto 0; }
+.section { margin-top: 30px; }
+.section-head h2 { margin: 0; font-size: 1.85rem; }
+.section-head p { margin: 10px 0 0; color: var(--text-soft); line-height: 1.7; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 20px; }
+.card { background: rgba(255, 255, 255, 0.84); border: 1px solid rgba(255, 255, 255, 0.94); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-md); }
+.card-number { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 14px; color: #fff; background: linear-gradient(135deg, var(--brand-blue), var(--brand-violet)); font-weight: 800; }
+.card h3 { margin: 16px 0 10px; font-size: 1.16rem; }
+.card p { margin: 0; color: var(--text-soft); line-height: 1.75; }
+.options { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.option-icon { font-size: 2rem; }
+.cta {
+  margin-top: 30px;
+  padding: 30px;
+  border-radius: 28px;
+  color: #fff;
+  background: linear-gradient(135deg, #0f172a, #312e81);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.cta h2 { margin: 0; }
+.cta p { margin: 10px 0 0; color: #cbd5e1; line-height: 1.7; }
+footer { margin-top: 26px; padding: 24px; border-radius: 24px; background: rgba(15, 23, 42, 0.96); color: var(--text-muted); text-align: center; }
+@media (max-width: 1020px) {
+  .layout { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: relative; }
+  .hero-grid { grid-template-columns: 1fr; }
+  .figure-preview { min-height: 240px; }
+  .options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .main { padding: 18px; }
+  .hero { padding: 30px 24px; border-radius: 28px; }
+  .grid, .options { grid-template-columns: 1fr; }
+  .cta { align-items: flex-start; flex-direction: column; }
+  .button { width: 100%; }
+}
+</style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand-box">
+        <h2>🛒 KOPC Service</h2>
+        <p>บริการผลิตโมเดล 3D สำหรับตกแต่งโต๊ะคอม ของขวัญ และของสะสมที่ออกแบบให้เป็นคุณ</p>
+      </div>
+      <nav class="menu">
+        <p class="menu-label">สินค้าและบริการของเรา</p>
+        <a href="index.html">🏠 คอมพิวเตอร์ให้เช่า</a>
+        <a href="kopc_products.html">🛒 สินค้า KOPC Service</a>
+        <a href="3d_figure_service.html" class="active">🗿 สั่งปั้นรูปวางโต๊ะคอม</a>
+        <a href="Other_MainPage.html">🧩 อื่นๆ</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <span class="eyebrow">🖨️ Custom 3D Figure</span>
+            <h1>สั่งปั้นรูปวางโต๊ะคอม</h1>
+            <p>ส่งรูปบุคคล สัตว์เลี้ยง ตัวละคร หรือไอเดียที่คุณชอบ ให้เราช่วยขึ้นแบบและปริ้นเป็นโมเดล 3D สำหรับวางข้างจอคอมในสไตล์เฉพาะของคุณ</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#order">เริ่มสั่งงาน</a>
+              <a class="button button-secondary" href="#process">ดูขั้นตอนการผลิต</a>
+            </div>
+          </div>
+          <div class="figure-preview" aria-label="ตัวอย่างโมเดลตั้งโต๊ะสามมิติ">
+            <div class="figure-art" aria-hidden="true">
+              <div class="figure-head"></div>
+              <div class="figure-body"></div>
+              <div class="figure-base"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="content-shell">
+        <section class="section" id="process">
+          <div class="section-head">
+            <h2>สั่งง่ายใน 3 ขั้นตอน</h2>
+            <p>ลูกค้าจะได้ตรวจแบบก่อนผลิตจริง เพื่อลดความคลาดเคลื่อนและเลือกงานให้เหมาะกับงบประมาณ</p>
+          </div>
+          <div class="grid">
+            <article class="card">
+              <span class="card-number">1</span>
+              <h3>ส่งรูปและรายละเอียด</h3>
+              <p>ส่งรูปอ้างอิงที่เห็นใบหน้าหรือวัตถุชัดเจน พร้อมระบุท่าทาง ชุด ข้อความบนฐาน และสไตล์ที่ต้องการ</p>
+            </article>
+            <article class="card">
+              <span class="card-number">2</span>
+              <h3>ประเมินราคาและอนุมัติแบบ</h3>
+              <p>ทีมงานประเมินความซับซ้อน ขนาด และวัสดุ จากนั้นส่งภาพตัวอย่างโมเดลให้ตรวจสอบก่อนยืนยันงาน</p>
+            </article>
+            <article class="card">
+              <span class="card-number">3</span>
+              <h3>ผลิตและจัดส่ง</h3>
+              <p>เริ่มปริ้น 3D เก็บรายละเอียด และแพ็กสินค้าอย่างเหมาะสม พร้อมแจ้งสถานะเมื่อจัดส่งเรียบร้อย</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-head">
+            <h2>ปรับแต่งได้ตามสไตล์คุณ</h2>
+            <p>รายการด้านล่างเป็นตัวเลือกเบื้องต้น ราคาจริงขึ้นอยู่กับขนาดและรายละเอียดของแต่ละแบบ</p>
+          </div>
+          <div class="grid options">
+            <article class="card"><div class="option-icon">📏</div><h3>เลือกขนาด</h3><p>ขนาดเล็กสำหรับข้างคีย์บอร์ด หรือขนาดเด่นสำหรับมุมโชว์บนโต๊ะ</p></article>
+            <article class="card"><div class="option-icon">🎨</div><h3>เลือกสี</h3><p>สีวัสดุแบบเรียบ งานหลายสี หรือสอบถามตัวเลือกลงสีเพิ่มเติม</p></article>
+            <article class="card"><div class="option-icon">🪧</div><h3>ใส่ชื่อบนฐาน</h3><p>เพิ่มชื่อ เกมแท็ก ข้อความสั้น หรือวันที่สำคัญบนฐานโมเดล</p></article>
+            <article class="card"><div class="option-icon">🎁</div><h3>ทำเป็นของขวัญ</h3><p>เหมาะสำหรับวันเกิด ของขวัญคู่รัก ทีมเกม หรือของที่ระลึกเฉพาะบุคคล</p></article>
+          </div>
+        </section>
+
+        <section class="cta" id="order">
+          <div>
+            <h2>พร้อมเปลี่ยนไอเดียให้เป็นโมเดลแล้วหรือยัง?</h2>
+            <p>ติดต่อทีมงานพร้อมแนบรูปอ้างอิง 2-4 รูป และแจ้งขนาดที่ต้องการ เพื่อรับการประเมินราคาเบื้องต้น</p>
+          </div>
+          <a class="button button-primary" href="Other_MainPage.html">ติดต่อเพื่อสั่งงาน</a>
+        </section>
+
+        <footer>KOPC Service</footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
