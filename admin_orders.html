@@ -272,7 +272,7 @@ footer {
 
               <div class="detail-row">
                 <label>ข้อความตอบกลับจากแอดมิน</label>
-                <textarea id="detailReply" rows="5" placeholder="ตัวอย่าง: ตรวจสอบแล้ว ชำระเงินถูกต้อง ระบบจะเปิดใช้งานภายใน 10 นาที"></textarea>
+                <textarea id="detailReply" rows="16" placeholder="เมื่อเลือกสถานะอนุมัติแล้ว ระบบจะเตรียมข้อความส่งมอบเครื่องให้อัตโนมัติ"></textarea>
               </div>
 
               <div class="admin-actions">
@@ -523,7 +523,7 @@ footer {
   document.getElementById("statusFilter").addEventListener("change", renderOrderList);
   document.getElementById("notificationPermissionBtn").addEventListener("click", requestNotificationPermission);
   document.getElementById("notificationBtn").addEventListener("click", handleNotificationButtonClick);
-  document.getElementById("detailStatus").addEventListener("change", markOrderFormDirty);
+  document.getElementById("detailStatus").addEventListener("change", handleOrderStatusChange);
   document.getElementById("detailReply").addEventListener("input", markOrderFormDirty);
   document.getElementById("manualRefreshBtn").addEventListener("click", () => {
     loadOrders({ notifyOnNew: true, silent: false });
@@ -533,6 +533,57 @@ footer {
     if (!selectedOrder) return;
     isOrderFormDirty = true;
     document.getElementById("draftStatus").classList.add("show");
+  }
+
+  function formatApprovalDateTime() {
+    const parts = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Bangkok",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    }).formatToParts(new Date());
+    const value = type => parts.find(part => part.type === type)?.value || "";
+    return `${value("hour")}.${value("minute")} ${value("day")}-${value("month")}-${value("year")}`;
+  }
+
+  function buildApprovalReply() {
+    return `Time/Date : ${formatApprovalDateTime()}
+AnyDesk : [กรอกรหัส AnyDesk]
+Pass : [กรอกรหัสผ่าน]
+
+บริการการให้เช่า KOPC
+หัวข้อ เงื่อนไข
+1. ให้เช่าสำหรับบุคคล เล่นเกม รับออเดอร์ขุด หรืออื่นๆ
+2. ระบบเช่ารวมค่าไฟฟ้า
+3. ไม่อนุญาตให้นำไปใช้ในแนวทางหลอกลวง โกงผู้อื่น หรือผิดกฎหมาย
+4. ไม่วางเว็บพนัน
+5. ในกรณีผิดสัญญาหรือต้องการยกเลิกก่อน จะมีการคืนเงินตามจำนวนเวลาที่เหลือ
+6. ควรเก็บรายละเอียดและรหัสของผู้เช่าไว้เป็นหลักฐาน
+7. ไม่อนุญาตให้นำไปปรับแต่ง ID หรือ IP`;
+  }
+
+  function focusAnyDeskPlaceholder(replyInput) {
+    const placeholder = "[กรอกรหัส AnyDesk]";
+    const start = replyInput.value.indexOf(placeholder);
+    if (start < 0) return;
+    replyInput.focus();
+    replyInput.setSelectionRange(start, start + placeholder.length);
+  }
+
+  function handleOrderStatusChange() {
+    if (!selectedOrder) return;
+
+    const statusInput = document.getElementById("detailStatus");
+    const replyInput = document.getElementById("detailReply");
+    if (statusInput.value === "อนุมัติแล้ว" && !replyInput.value.trim()) {
+      replyInput.value = buildApprovalReply();
+      focusAnyDeskPlaceholder(replyInput);
+    }
+
+    markOrderFormDirty();
   }
 
   function clearOrderFormDirty() {
