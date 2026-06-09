@@ -153,7 +153,13 @@ input, select, textarea {
 .order-item:hover, .order-item.active { background: #eef2ff; }
 .order-item strong { display: block; margin-bottom: 6px; }
 .order-meta { color: var(--text-soft); font-size: 0.95rem; line-height: 1.6; }
-.detail-panel { display: grid; gap: 14px; }
+.detail-panel {
+  display: grid;
+  gap: 14px;
+  align-self: start;
+  align-content: start;
+}
+.detail-panel h2 { margin-bottom: 0; }
 .order-response-panel {
   padding: 18px;
   border: 1px solid rgba(37, 99, 235, 0.18);
@@ -181,6 +187,26 @@ input, select, textarea {
   font-weight: 600;
 }
 .detail-value { font-weight: 700; }
+.order-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 18px;
+}
+.order-details-grid .detail-row {
+  min-width: 0;
+  padding: 10px 0;
+}
+.order-details-grid .detail-row label {
+  margin-bottom: 4px;
+  font-size: 0.88rem;
+}
+.order-details-grid .detail-value,
+.order-details-grid a {
+  overflow-wrap: anywhere;
+}
+.order-details-grid .detail-row-wide {
+  grid-column: 1 / -1;
+}
 .admin-actions button {
   padding: 13px 16px;
   border: none;
@@ -203,6 +229,10 @@ footer {
   .sidebar { width: 100%; height: auto; position: relative; }
   .admin-grid { grid-template-columns: 1fr; }
   .toolbar { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .order-details-grid { grid-template-columns: 1fr; }
+  .order-details-grid .detail-row-wide { grid-column: auto; }
 }
 </style>
 </head>
@@ -280,34 +310,36 @@ footer {
               </div>
             </div>
 
-            <div class="detail-row">
-              <label>Order ID</label>
-              <div id="detailOrderId" class="detail-value">-</div>
-            </div>
+            <div class="order-details-grid">
+              <div class="detail-row">
+                <label>Order ID</label>
+                <div id="detailOrderId" class="detail-value">-</div>
+              </div>
 
-            <div class="detail-row">
-              <label>ลูกค้า</label>
-              <div id="detailCustomer" class="detail-value">-</div>
-            </div>
+              <div class="detail-row">
+                <label>ลูกค้า</label>
+                <div id="detailCustomer" class="detail-value">-</div>
+              </div>
 
-            <div class="detail-row">
-              <label>รายการเช่า</label>
-              <div id="detailItem" class="detail-value">-</div>
-            </div>
+              <div class="detail-row">
+                <label>รายการเช่า</label>
+                <div id="detailItem" class="detail-value">-</div>
+              </div>
 
-            <div class="detail-row">
-              <label>จำนวนเงิน</label>
-              <div id="detailAmount" class="detail-value">-</div>
-            </div>
+              <div class="detail-row">
+                <label>จำนวนเงิน</label>
+                <div id="detailAmount" class="detail-value">-</div>
+              </div>
 
-            <div class="detail-row">
-              <label>หมายเหตุ / ข้อมูลเพิ่มเติม</label>
-              <div id="detailNote" class="detail-value">-</div>
-            </div>
+              <div class="detail-row detail-row-wide">
+                <label>หมายเหตุ / ข้อมูลเพิ่มเติม</label>
+                <div id="detailNote" class="detail-value">-</div>
+              </div>
 
-            <div class="detail-row">
-              <label>สลิป</label>
-              <a id="detailSlip" href="#" target="_blank">-</a>
+              <div class="detail-row detail-row-wide">
+                <label>สลิป</label>
+                <a id="detailSlip" href="#" target="_blank">-</a>
+              </div>
             </div>
           </div>
         </section>
