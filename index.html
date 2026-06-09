@@ -1006,6 +1006,7 @@ footer {
         </div>
 
         <section class="products" id="computerProducts">
+          <template>
           <div class="card">
             <div class="card-image">
               <img src="https://lh3.googleusercontent.com/d/1iAsTX4Ri2Q5qiuRp905Riy8w2elnk231" alt="Computer Set 1">
@@ -1455,6 +1456,7 @@ footer {
               <button class="rent-btn" data-set="18">สนใจเช่า</button>
             </div>
           </div>
+          </template>
         </section>
 <footer>
           KOPC Service
@@ -1545,33 +1547,33 @@ footer {
   let statusChart = null;
 
   const COMPUTER_IMAGE_URLS = {
-    1: "https://lh3.googleusercontent.com/d/1iAsTX4Ri2Q5qiuRp905Riy8w2elnk231",
-    2: "https://lh3.googleusercontent.com/d/13hDlY3fJZHC3L5J4w4NDSrC7aObe7WbN",
-    3: "https://lh3.googleusercontent.com/d/1h0RCCyyOwH2__Qp2QM1gp7s26k-4-c0r",
-    4: "https://lh3.googleusercontent.com/d/1WoXYgHyYGHKYnQvuab_z67VRKoBzznzR",
-    5: "https://lh3.googleusercontent.com/d/1gevPnfGgvoxb2c23s0ckawQHzDDnoar3",
-    6: "https://lh3.googleusercontent.com/d/1X5A8ZedMkU5mX_QzLqQ22xH-QfWalCq6",
-    7: "https://lh3.googleusercontent.com/d/1d-LAL5OhdlwN1lJ76sbCpCC61ummS1o-",
-    8: "https://lh3.googleusercontent.com/d/1z7prwlryCX9SfgWgfAS_1wz5TIzD9lpl",
-    9: "https://lh3.googleusercontent.com/d/1UMf5-jYuN8XpMDUo64Rg5DfRgkulX4O2",
-    10: "https://lh3.googleusercontent.com/d/1FCT1QBla8tI0gLGOyonmJA3Rk2fFbugY",
-    11: "https://lh3.googleusercontent.com/d/10tJTOFfLCNqKtl4FZ8CK5GMf4ULmx7WS",
-    12: "https://lh3.googleusercontent.com/d/1kSCvTZ1YAgZxoUqPjU0FovS1X-SUx80t",
-    13: "https://lh3.googleusercontent.com/d/1j9hJZ4CVsw6V7WGSYRDlMrFnkUyyWNSo",
-    14: "https://lh3.googleusercontent.com/d/10CCfDvaedPT_Yn2ZyhQELJNKhqbN5tf2",
-    15: "https://lh3.googleusercontent.com/d/1MI7DQaDS6l0cBZxp1gaHxW66rdKKAM78",
-    16: "https://lh3.googleusercontent.com/d/13KIIyNAcDcS5N_3Ifdm8iPUgU5sW0J1m",
-    17: "https://lh3.googleusercontent.com/d/1WJuRumqTHM8tPwUw7bEZc5JRvbJ5HB82",
-    18: "https://lh3.googleusercontent.com/d/1VJk2HYClmQwctqnSYow9u_WjieB-2wyT",
-    19: "https://lh3.googleusercontent.com/d/11UgCzvIMXPdt9ala6m_kaEH0LlRxEEX2",
-    20: "https://lh3.googleusercontent.com/d/1stKpKsEShqhCYkKyOWVwGWGkae6Zr9_Y",
-    21: "https://lh3.googleusercontent.com/d/1xztXZ1hJRVMqRqszkcwLVUanfTKwo5OY",
-    22: "https://lh3.googleusercontent.com/d/1YvhJYxD1LNrukRxGBjNh-hauIuR_3i8R",
-    23: "https://lh3.googleusercontent.com/d/1NNxx7ZfEg6xVMwId53SRrYS_j6btDjKR",
-    24: "https://lh3.googleusercontent.com/d/1BhXzlm4pKgC3yg1g7KDIRQ-EobljVmeX",
-    25: "https://lh3.googleusercontent.com/d/15O19_Lwepwp90YD-JbWluQFVvaDtmW2F",
-    26: "https://lh3.googleusercontent.com/d/1Yr6dROK8PjYgudyGPS7JOX8_7jKYba8J",
-    27: "https://lh3.googleusercontent.com/d/12lElSmQ5oFWlLERfkLLFfRc0KuOH8M-r"
+    1: "ComputerImage/optimized/1.jpg",
+    2: "ComputerImage/optimized/2.jpg",
+    3: "ComputerImage/optimized/3.jpg",
+    4: "ComputerImage/optimized/4.jpg",
+    5: "ComputerImage/optimized/5.jpg",
+    6: "ComputerImage/optimized/6.jpg",
+    7: "ComputerImage/optimized/7.jpg",
+    8: "ComputerImage/optimized/8.jpg",
+    9: "ComputerImage/optimized/9.jpg",
+    10: "ComputerImage/optimized/10.jpg",
+    11: "ComputerImage/optimized/11.jpg",
+    12: "ComputerImage/optimized/12.jpg",
+    13: "ComputerImage/optimized/13.jpg",
+    14: "ComputerImage/optimized/14.jpg",
+    15: "ComputerImage/optimized/15.jpg",
+    16: "ComputerImage/optimized/16.jpg",
+    17: "ComputerImage/optimized/17.jpg",
+    18: "ComputerImage/optimized/18.jpg",
+    19: "ComputerImage/optimized/19.jpg",
+    20: "ComputerImage/optimized/20.jpg",
+    21: "ComputerImage/optimized/21.jpg",
+    22: "ComputerImage/optimized/22.jpg",
+    23: "ComputerImage/optimized/23.jpg",
+    24: "ComputerImage/optimized/24.jpg",
+    25: "ComputerImage/optimized/25.jpg",
+    26: "ComputerImage/optimized/26.jpg",
+    27: "ComputerImage/optimized/27.jpg"
   };
 
   function escapeHtml(value) {
@@ -1595,10 +1597,8 @@ footer {
 
   function getComputerImage(data, row, setNumber) {
     const imageCell = String(getSheetValue(data, "W", row)).trim();
-    if (/^https?:\/\//i.test(imageCell)) {
-      return imageCell;
-    }
-    return COMPUTER_IMAGE_URLS[setNumber] || "favicon.png";
+    return COMPUTER_IMAGE_URLS[setNumber]
+      || (/^https?:\/\//i.test(imageCell) ? imageCell : "favicon.png");
   }
 
   function toPrice(value) {
@@ -1671,7 +1671,7 @@ footer {
       return `
         <div class="card">
           <div class="card-image">
-            <img src="${escapeHtml(computer.imageUrl)}" alt="Computer Set ${computer.setNumber}" onerror="this.src='favicon.png';">
+            <img src="${escapeHtml(computer.imageUrl)}" alt="Computer Set ${computer.setNumber}" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
             <span class="card-label">Set ${computer.setNumber}</span>
           </div>
           <div class="card-content">
