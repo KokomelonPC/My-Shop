@@ -1002,10 +1002,10 @@ footer {
             <h2>ชุดคอมพิวเตอร์สำหรับเช่า</h2>
             <p>แต่ละการ์ดจะแสดงข้อมูลสเปก ราคาเช่า และสถานะล่าสุดจากระบบ เพื่อให้คุณเลือกเครื่องที่เหมาะกับการใช้งานได้เร็วขึ้น</p>
           </div>
-          <div class="section-tag">18 Computer Sets</div>
+          <div class="section-tag" id="computerSetCount">กำลังโหลดรายการ...</div>
         </div>
 
-        <section class="products">
+        <section class="products" id="computerProducts">
           <div class="card">
             <div class="card-image">
               <img src="https://lh3.googleusercontent.com/d/1iAsTX4Ri2Q5qiuRp905Riy8w2elnk231" alt="Computer Set 1">
@@ -1542,6 +1542,168 @@ footer {
 
   let availableCount = 0;
   let unavailableCount = 0;
+  let statusChart = null;
+
+  const COMPUTER_IMAGE_URLS = {
+    1: "https://lh3.googleusercontent.com/d/1iAsTX4Ri2Q5qiuRp905Riy8w2elnk231",
+    2: "https://lh3.googleusercontent.com/d/13hDlY3fJZHC3L5J4w4NDSrC7aObe7WbN",
+    3: "https://lh3.googleusercontent.com/d/1h0RCCyyOwH2__Qp2QM1gp7s26k-4-c0r",
+    4: "https://lh3.googleusercontent.com/d/1WoXYgHyYGHKYnQvuab_z67VRKoBzznzR",
+    5: "https://lh3.googleusercontent.com/d/1gevPnfGgvoxb2c23s0ckawQHzDDnoar3",
+    6: "https://lh3.googleusercontent.com/d/1X5A8ZedMkU5mX_QzLqQ22xH-QfWalCq6",
+    7: "https://lh3.googleusercontent.com/d/1d-LAL5OhdlwN1lJ76sbCpCC61ummS1o-",
+    8: "https://lh3.googleusercontent.com/d/1z7prwlryCX9SfgWgfAS_1wz5TIzD9lpl",
+    9: "https://lh3.googleusercontent.com/d/1UMf5-jYuN8XpMDUo64Rg5DfRgkulX4O2",
+    10: "https://lh3.googleusercontent.com/d/1FCT1QBla8tI0gLGOyonmJA3Rk2fFbugY",
+    11: "https://lh3.googleusercontent.com/d/10tJTOFfLCNqKtl4FZ8CK5GMf4ULmx7WS",
+    12: "https://lh3.googleusercontent.com/d/1kSCvTZ1YAgZxoUqPjU0FovS1X-SUx80t",
+    13: "https://lh3.googleusercontent.com/d/1j9hJZ4CVsw6V7WGSYRDlMrFnkUyyWNSo",
+    14: "https://lh3.googleusercontent.com/d/10CCfDvaedPT_Yn2ZyhQELJNKhqbN5tf2",
+    15: "https://lh3.googleusercontent.com/d/1MI7DQaDS6l0cBZxp1gaHxW66rdKKAM78",
+    16: "https://lh3.googleusercontent.com/d/13KIIyNAcDcS5N_3Ifdm8iPUgU5sW0J1m",
+    17: "https://lh3.googleusercontent.com/d/1WJuRumqTHM8tPwUw7bEZc5JRvbJ5HB82",
+    18: "https://lh3.googleusercontent.com/d/1VJk2HYClmQwctqnSYow9u_WjieB-2wyT",
+    19: "https://lh3.googleusercontent.com/d/11UgCzvIMXPdt9ala6m_kaEH0LlRxEEX2",
+    20: "https://lh3.googleusercontent.com/d/1stKpKsEShqhCYkKyOWVwGWGkae6Zr9_Y",
+    21: "https://lh3.googleusercontent.com/d/1xztXZ1hJRVMqRqszkcwLVUanfTKwo5OY",
+    22: "https://lh3.googleusercontent.com/d/1YvhJYxD1LNrukRxGBjNh-hauIuR_3i8R",
+    23: "https://lh3.googleusercontent.com/d/1NNxx7ZfEg6xVMwId53SRrYS_j6btDjKR",
+    24: "https://lh3.googleusercontent.com/d/1BhXzlm4pKgC3yg1g7KDIRQ-EobljVmeX",
+    25: "https://lh3.googleusercontent.com/d/15O19_Lwepwp90YD-JbWluQFVvaDtmW2F",
+    26: "https://lh3.googleusercontent.com/d/1Yr6dROK8PjYgudyGPS7JOX8_7jKYba8J",
+    27: "https://lh3.googleusercontent.com/d/12lElSmQ5oFWlLERfkLLFfRc0KuOH8M-r"
+  };
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function getSheetValue(data, column, row) {
+    return data[column]?.[row] ?? "";
+  }
+
+  function getSetNumber(data, row, fallback) {
+    const numberCell = String(getSheetValue(data, "D", row));
+    const numberMatch = numberCell.match(/\d+/);
+    return numberMatch ? Number(numberMatch[0]) : fallback;
+  }
+
+  function getComputerImage(data, row, setNumber) {
+    const imageCell = String(getSheetValue(data, "W", row)).trim();
+    if (/^https?:\/\//i.test(imageCell)) {
+      return imageCell;
+    }
+    return COMPUTER_IMAGE_URLS[setNumber] || "favicon.png";
+  }
+
+  function toPrice(value) {
+    const number = Number(String(value ?? "").replace(/[^0-9.-]/g, ""));
+    return Number.isFinite(number) ? number : 0;
+  }
+
+  function formatPrice(value) {
+    const price = toPrice(value);
+    return price > 0 ? `฿${price.toLocaleString("th-TH")}` : "-";
+  }
+
+  function buildComputerRows(data) {
+    const startRow = 6;
+    const maxRow = Math.max(
+      ...Object.values(data)
+        .filter(column => column && typeof column === "object")
+        .flatMap(column => Object.keys(column).map(Number).filter(Number.isFinite)),
+      startRow
+    );
+
+    const rows = [];
+    for (let row = startRow; row <= maxRow; row++) {
+      const setNumber = getSetNumber(data, row, 0);
+      const cpu = String(getSheetValue(data, "E", row)).trim();
+      if (!setNumber || !cpu) continue;
+
+      rows.push({
+        row,
+        setNumber,
+        cpu,
+        gpu: getSheetValue(data, "G", row) || "-",
+        ram: getSheetValue(data, "H", row) || "-",
+        status: String(getSheetValue(data, "J", row)).trim(),
+        dayPrice: getSheetValue(data, "K", row),
+        weekPrice: getSheetValue(data, "L", row),
+        monthPrice: getSheetValue(data, "M", row),
+        endTime: getSheetValue(data, "P", row),
+        endDate: getSheetValue(data, "Q", row),
+        imageUrl: getComputerImage(data, row, setNumber)
+      });
+    }
+
+    return rows.sort((a, b) => {
+      const priceDifference = toPrice(b.dayPrice) - toPrice(a.dayPrice);
+      return priceDifference || a.setNumber - b.setNumber;
+    });
+  }
+
+  function renderComputerCards(rows) {
+    const products = document.getElementById("computerProducts");
+    const count = document.getElementById("computerSetCount");
+    if (!products || !count) return;
+
+    count.textContent = `${rows.length} Computer Sets`;
+    products.innerHTML = rows.map(computer => {
+      const isAvailable = computer.status.startsWith("ว่าง");
+      const isUnavailable = computer.status.startsWith("ไม่ว่าง");
+      const statusText = isUnavailable
+        ? `ไม่ว่าง | หมดเวลา : ${formatDate(computer.endDate)} ${formatTime(computer.endTime)}`.trim()
+        : isAvailable ? "ว่าง" : (computer.status || "Coming Soon");
+      const statusClass = isAvailable ? "status-green" : isUnavailable ? "status-red" : "status-yellow";
+      const buttonText = isAvailable ? "สนใจเช่า" : statusText;
+
+      if (isAvailable) availableCount++;
+      else unavailableCount++;
+
+      return `
+        <div class="card">
+          <div class="card-image">
+            <img src="${escapeHtml(computer.imageUrl)}" alt="Computer Set ${computer.setNumber}" onerror="this.src='favicon.png';">
+            <span class="card-label">Set ${computer.setNumber}</span>
+          </div>
+          <div class="card-content">
+            <h3>Computer Set ${computer.setNumber}</h3>
+            <div class="spec-list">
+              <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">${escapeHtml(computer.cpu)}</span></div>
+              <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">${escapeHtml(computer.gpu)}</span></div>
+              <div class="spec"><span class="spec-label">RAM</span><span class="spec-value">${escapeHtml(computer.ram)}</span></div>
+            </div>
+            <div class="price-grid">
+              <div class="price-item"><small>ต่อวัน</small><strong>${formatPrice(computer.dayPrice)}</strong></div>
+              <div class="price-item"><small>ต่อสัปดาห์</small><strong>${formatPrice(computer.weekPrice)}</strong></div>
+              <div class="price-item"><small>ต่อเดือน</small><strong>${formatPrice(computer.monthPrice)}</strong></div>
+            </div>
+            <div class="status-row">
+              <span class="status-title">สถานะ</span>
+              <span class="status ${statusClass}">${escapeHtml(statusText)}</span>
+            </div>
+            <button class="rent-btn" data-set="${computer.setNumber}" ${isAvailable ? "" : "disabled"}>${escapeHtml(buttonText)}</button>
+          </div>
+        </div>`;
+    }).join("");
+
+    products.querySelectorAll(".rent-btn:not(:disabled)").forEach(button => {
+      button.addEventListener("click", () => {
+        if (!window.currentUser) {
+          alert("กรุณา Login ก่อนเช่า");
+          window.location.href = "login.html";
+          return;
+        }
+        window.location.href = `payment.html?set=${encodeURIComponent(button.dataset.set)}`;
+      });
+    });
+  }
 
   function setStatus(id, value) {
     const el = document.getElementById(id);
@@ -1559,55 +1721,19 @@ footer {
     }
   }
 
+  document.getElementById("computerProducts").innerHTML =
+    '<div class="card"><div class="card-content"><h3>กำลังโหลดรายการคอมพิวเตอร์...</h3></div></div>';
+
   fetch("https://script.google.com/macros/s/AKfycbxKJLR5t17nJ3VeY_nZGSU0djtgD14fjMTkoqFL1l8tjKOuQnacJdFCyT4cA2pFz8jWMg/exec")
     .then(res => res.json())
     .then(data => {
-      const startRow = 6;
-      const total = 18;
+      availableCount = 0;
+      unavailableCount = 0;
+      const computers = buildComputerRows(data);
+      renderComputerCards(computers);
 
-      for (let i = 0; i < total; i++) {
-        const n = i + 1;
-        const row = startRow + i;
-
-        document.getElementById(`CPU${n}`).innerText = data["E"][row] || "-";
-        document.getElementById(`GPU${n}`).innerText = data["G"][row] || "-";
-        document.getElementById(`RAM${n}`).innerText = data["H"][row] || "-";
-        document.getElementById(`DayPrice${n}`).innerText = data["K"][row] ? `฿${data["K"][row]}` : "-";
-        document.getElementById(`WeekPrice${n}`).innerText = data["L"][row] ? `฿${data["L"][row]}` : "-";
-        document.getElementById(`MonthPrice${n}`).innerText = data["M"][row] ? `฿${data["M"][row]}` : "-";
-
-        const status = data["J"][row];
-        const endDate = formatDate(data["Q"][row]);
-        const endTime = formatTime(data["P"][row]);
-        const btn = document.querySelector(`.rent-btn[data-set="${n}"]`);
-
-        if (!btn) continue;
-
-        if (status === "ไม่ว่าง") {
-          setStatus(`Status${n}`, `ไม่ว่าง | หมดเวลา : ${endDate} ${endTime}`.trim());
-          btn.disabled = true;
-          btn.innerText = "ไม่ว่าง";
-          btn.style.opacity = "0.55";
-          btn.style.cursor = "not-allowed";
-          unavailableCount++;
-        } else {
-          setStatus(`Status${n}`, "ว่าง");
-          btn.disabled = false;
-          btn.innerText = "สนใจเช่า";
-          btn.onclick = () => {
-            if (!window.currentUser) {
-              alert("กรุณา Login ก่อนเช่า");
-              window.location.href = "login.html";
-              return;
-            }
-
-            window.location.href = `payment.html?set=${n}`;
-          };
-          availableCount++;
-        }
-      }
-
-      new Chart(document.getElementById("statusChart"), {
+      if (statusChart) statusChart.destroy();
+      statusChart = new Chart(document.getElementById("statusChart"), {
         type: "doughnut",
         data: {
           labels: ["ว่าง", "ไม่ว่าง"],
@@ -1627,7 +1753,12 @@ footer {
         }
       });
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      console.error(err);
+      document.getElementById("computerSetCount").textContent = "โหลดข้อมูลไม่สำเร็จ";
+      document.getElementById("computerProducts").innerHTML =
+        '<div class="card"><div class="card-content"><h3>ไม่สามารถโหลดรายการคอมพิวเตอร์ได้ กรุณาลองใหม่อีกครั้ง</h3></div></div>';
+    });
   </script>
 
   <script>
