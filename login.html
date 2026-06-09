@@ -205,6 +205,14 @@ button:hover { opacity: 0.96; }
   googleProvider.setCustomParameters({ prompt: "select_account" });
   facebookProvider.setCustomParameters({ display: "popup" });
 
+  function getLoginDestination() {
+    const next = new URLSearchParams(window.location.search).get("next") || "";
+    if (!next || next.startsWith("//") || /^[a-z]+:/i.test(next)) {
+      return "index.html";
+    }
+    return next;
+  }
+
 
   function getFriendlyAuthError(error) {
     const messages = {
@@ -248,7 +256,7 @@ button:hover { opacity: 0.96; }
           window.KopcTracking.trackLoginSuccess(user);
         }
         alert("Login สำเร็จ");
-        window.location.href = "index.html";
+        window.location.href = getLoginDestination();
       })
       .catch(err => alert(getFriendlyAuthError(err)));
   };
@@ -259,7 +267,7 @@ button:hover { opacity: 0.96; }
           window.KopcTracking.trackLoginSuccess(result.user);
         }
         alert("เข้าสู่ระบบด้วย Google สำเร็จ");
-        window.location.href = "index.html";
+        window.location.href = getLoginDestination();
       })
       .catch((err) => alert(getFriendlyAuthError(err)));
   };
@@ -271,7 +279,7 @@ button:hover { opacity: 0.96; }
           window.KopcTracking.trackLoginSuccess(result.user);
         }
         alert("เข้าสู่ระบบด้วย Facebook สำเร็จ");
-        window.location.href = "index.html";
+        window.location.href = getLoginDestination();
       })
       .catch((err) => alert(getFriendlyAuthError(err)));
   };

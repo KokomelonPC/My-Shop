@@ -6,220 +6,173 @@
 <title>สั่งปั้นรูปวางโต๊ะคอม | KOPC Service</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <style>
-:root {
-  --text-main: #0f172a;
-  --text-soft: #475569;
-  --text-muted: #94a3b8;
-  --line-soft: rgba(148, 163, 184, 0.2);
-  --brand-blue: #2563eb;
-  --brand-indigo: #4f46e5;
-  --brand-violet: #7c3aed;
-  --shadow-xl: 0 28px 70px rgba(15, 23, 42, 0.18);
-  --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.08);
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: var(--text-main);
-  background:
-    radial-gradient(circle at top left, rgba(14, 165, 233, 0.18), transparent 26%),
-    radial-gradient(circle at right center, rgba(124, 58, 237, 0.16), transparent 26%),
-    linear-gradient(180deg, #f8fbff 0%, #eef4ff 48%, #f8fafc 100%);
-}
-.layout { display: flex; min-height: 100vh; }
-.sidebar {
-  width: 280px;
-  padding: 26px 22px;
-  color: #fff;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.96));
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
-  position: sticky;
-  top: 0;
-  height: 100vh;
-}
-.brand-box {
-  padding: 22px 18px;
-  border-radius: 24px;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.24), rgba(14, 165, 233, 0.16), rgba(124, 58, 237, 0.28));
-}
-.brand-box h2 { margin: 0; font-size: 1.45rem; }
-.brand-box p { margin: 10px 0 0; color: rgba(226, 232, 240, 0.88); line-height: 1.7; font-size: 0.95rem; }
-.menu { margin-top: 28px; }
-.menu-label { margin: 0 0 14px; padding-left: 10px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(148, 163, 184, 0.78); }
-.menu a { display: flex; align-items: center; gap: 12px; padding: 14px 16px; margin-bottom: 10px; color: #dbeafe; text-decoration: none; border-radius: 14px; }
-.menu a:hover { background: rgba(59, 130, 246, 0.16); }
-.menu a.active { color: #fff; background: linear-gradient(135deg, rgba(37, 99, 235, 0.8), rgba(124, 58, 237, 0.8)); box-shadow: 0 14px 26px rgba(37, 99, 235, 0.22); }
-.main { flex: 1; padding: 26px; min-width: 0; }
-.hero {
-  padding: 42px;
-  border-radius: 34px;
-  color: #fff;
-  background: linear-gradient(135deg, rgba(29, 78, 216, 0.97), rgba(79, 70, 229, 0.94), rgba(124, 58, 237, 0.9));
-  box-shadow: var(--shadow-xl);
-  overflow: hidden;
-  position: relative;
-}
-.hero::after {
-  content: "";
-  position: absolute;
-  width: 290px;
-  height: 290px;
-  right: -70px;
-  top: -80px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-}
-.hero-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr); align-items: center; gap: 34px; position: relative; z-index: 1; }
-.eyebrow { display: inline-block; padding: 8px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.16); font-size: 0.92rem; }
-.hero h1 { margin: 18px 0 0; font-size: clamp(2.2rem, 5vw, 4rem); line-height: 1.15; }
-.hero p { margin: 16px 0 0; max-width: 760px; line-height: 1.8; color: rgba(239, 246, 255, 0.92); }
-.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
-.button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px; border-radius: 14px; text-decoration: none; font-weight: 700; }
-.button-primary { background: #fff; color: var(--brand-indigo); box-shadow: 0 12px 26px rgba(15, 23, 42, 0.18); }
-.button-secondary { color: #fff; border: 1px solid rgba(255, 255, 255, 0.35); background: rgba(255, 255, 255, 0.1); }
-.figure-preview {
-  min-height: 280px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 28px;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
-}
-.figure-art { position: relative; width: 170px; height: 220px; }
-.figure-head { position: absolute; width: 92px; height: 92px; top: 8px; left: 39px; border-radius: 46% 46% 42% 42%; background: linear-gradient(145deg, #f8fafc, #c7d2fe); box-shadow: 0 14px 26px rgba(15, 23, 42, 0.2); }
-.figure-body { position: absolute; width: 128px; height: 112px; left: 21px; top: 90px; border-radius: 48px 48px 24px 24px; background: linear-gradient(145deg, #93c5fd, #6366f1); }
-.figure-base { position: absolute; width: 166px; height: 28px; left: 2px; bottom: 0; border-radius: 50%; background: linear-gradient(180deg, #e2e8f0, #94a3b8); box-shadow: 0 14px 20px rgba(15, 23, 42, 0.24); }
-.content-shell { max-width: 1180px; margin: 28px auto 0; }
-.section { margin-top: 30px; }
-.section-head h2 { margin: 0; font-size: 1.85rem; }
-.section-head p { margin: 10px 0 0; color: var(--text-soft); line-height: 1.7; }
-.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 20px; }
-.card { background: rgba(255, 255, 255, 0.84); border: 1px solid rgba(255, 255, 255, 0.94); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-md); }
-.card-number { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 14px; color: #fff; background: linear-gradient(135deg, var(--brand-blue), var(--brand-violet)); font-weight: 800; }
-.card h3 { margin: 16px 0 10px; font-size: 1.16rem; }
-.card p { margin: 0; color: var(--text-soft); line-height: 1.75; }
-.options { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.option-icon { font-size: 2rem; }
-.cta {
-  margin-top: 30px;
-  padding: 30px;
-  border-radius: 28px;
-  color: #fff;
-  background: linear-gradient(135deg, #0f172a, #312e81);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-}
-.cta h2 { margin: 0; }
-.cta p { margin: 10px 0 0; color: #cbd5e1; line-height: 1.7; }
-footer { margin-top: 26px; padding: 24px; border-radius: 24px; background: rgba(15, 23, 42, 0.96); color: var(--text-muted); text-align: center; }
-@media (max-width: 1020px) {
-  .layout { flex-direction: column; }
-  .sidebar { width: 100%; height: auto; position: relative; }
-  .hero-grid { grid-template-columns: 1fr; }
-  .figure-preview { min-height: 240px; }
-  .options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 700px) {
-  .main { padding: 18px; }
-  .hero { padding: 30px 24px; border-radius: 28px; }
-  .grid, .options { grid-template-columns: 1fr; }
-  .cta { align-items: flex-start; flex-direction: column; }
-  .button { width: 100%; }
-}
+:root{--text:#0f172a;--soft:#475569;--muted:#94a3b8;--blue:#2563eb;--indigo:#4f46e5;--violet:#7c3aed;--line:rgba(148,163,184,.22);--shadow:0 18px 42px rgba(15,23,42,.1)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--text);background:radial-gradient(circle at top left,rgba(14,165,233,.18),transparent 26%),radial-gradient(circle at right center,rgba(124,58,237,.16),transparent 26%),linear-gradient(180deg,#f8fbff 0%,#eef4ff 48%,#f8fafc 100%)}
+button,input,textarea{font:inherit}.layout{display:flex;min-height:100vh}.sidebar{width:280px;padding:26px 22px;color:#fff;background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(30,41,59,.96));position:sticky;top:0;height:100vh}.brand-box{padding:22px 18px;border-radius:24px;background:linear-gradient(135deg,rgba(37,99,235,.24),rgba(14,165,233,.16),rgba(124,58,237,.28))}.brand-box h2{margin:0;font-size:1.45rem}.brand-box p{margin:10px 0 0;color:rgba(226,232,240,.88);line-height:1.7}.menu{margin-top:28px}.menu-label{margin:0 0 14px;padding-left:10px;font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(148,163,184,.78)}.menu a{display:flex;align-items:center;gap:12px;padding:14px 16px;margin-bottom:10px;color:#dbeafe;text-decoration:none;border-radius:14px}.menu a:hover{background:rgba(59,130,246,.16)}.menu a.active{color:#fff;background:linear-gradient(135deg,rgba(37,99,235,.8),rgba(124,58,237,.8));box-shadow:0 14px 26px rgba(37,99,235,.22)}
+.main{flex:1;padding:26px;min-width:0}.hero{padding:40px;border-radius:34px;color:#fff;background:linear-gradient(135deg,rgba(29,78,216,.97),rgba(79,70,229,.94),rgba(124,58,237,.9));box-shadow:0 28px 70px rgba(15,23,42,.18)}.hero-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.65fr);gap:30px;align-items:center}.eyebrow,.account-pill{display:inline-flex;align-items:center;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.16)}.hero h1{margin:18px 0 0;font-size:clamp(2.2rem,5vw,4rem);line-height:1.12}.hero p{margin:16px 0 0;max-width:760px;line-height:1.8;color:rgba(239,246,255,.92)}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}.button{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 20px;border:0;border-radius:14px;text-decoration:none;font-weight:800;cursor:pointer}.button-primary{background:#fff;color:var(--indigo)}.button-secondary{color:#fff;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1)}.account-card{padding:24px;border-radius:26px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18)}.account-card h3{margin:14px 0 6px}.account-card p{margin:0;font-size:.95rem}.account-actions{display:grid;gap:10px;margin-top:18px}
+.content{max-width:1180px;margin:28px auto 0}.order-shell{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);gap:22px;align-items:start}.panel{background:rgba(255,255,255,.88);border:1px solid rgba(255,255,255,.95);border-radius:26px;padding:26px;box-shadow:var(--shadow)}.panel h2{margin:0}.panel-copy{margin:8px 0 22px;color:var(--soft);line-height:1.7}.field{display:grid;gap:8px;margin-top:18px}.field label{font-weight:800}.field input,.field textarea{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:#f8fafc}.field textarea{min-height:92px;resize:vertical}.upload-box{display:grid;place-items:center;min-height:230px;padding:20px;border:2px dashed rgba(79,70,229,.28);border-radius:20px;background:#f8fafc;text-align:center;cursor:pointer;overflow:hidden}.upload-box img{display:none;max-width:100%;max-height:300px;border-radius:16px}.upload-box.has-image img{display:block}.upload-box.has-image .upload-copy{display:none}.upload-copy strong{display:block;font-size:1.05rem}.upload-copy span{display:block;margin-top:8px;color:var(--soft)}
+.size-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.size-option{position:relative}.size-option input{position:absolute;opacity:0}.size-card{display:block;padding:16px;border:2px solid var(--line);border-radius:18px;background:#fff;cursor:pointer;transition:.18s}.size-card strong,.size-card span{display:block}.size-card span{margin-top:6px;color:var(--soft)}.size-card b{display:block;margin-top:12px;color:var(--indigo);font-size:1.25rem}.size-option input:checked+.size-card{border-color:var(--indigo);background:#eef2ff;box-shadow:0 10px 24px rgba(79,70,229,.14)}
+.address-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.address-grid .wide{grid-column:1/-1}.summary{position:sticky;top:24px}.summary-preview{display:grid;place-items:center;min-height:210px;border-radius:20px;background:linear-gradient(145deg,#eef2ff,#f8fafc);overflow:hidden}.summary-preview img{display:none;width:100%;height:240px;object-fit:contain}.summary-preview.has-image img{display:block}.summary-preview.has-image span{display:none}.summary-row{display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line)}.summary-row.total{font-size:1.2rem;border-bottom:0}.summary-note{padding:14px;border-radius:14px;background:#fffbeb;color:#92400e;line-height:1.65;font-size:.92rem}.checkout-btn{width:100%;margin-top:16px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--violet))}.checkout-btn:disabled{cursor:not-allowed;background:#94a3b8}.form-status{min-height:24px;margin:12px 0 0;color:var(--soft)}
+.section{margin-top:30px}.section-head h2{margin:0;font-size:1.85rem}.section-head p{margin:8px 0 0;color:var(--soft)}.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:18px}.step{padding:20px;border-radius:20px;background:rgba(255,255,255,.84);box-shadow:var(--shadow)}.step-number{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--violet));font-weight:900}.step h3{margin:14px 0 8px}.step p{margin:0;color:var(--soft);line-height:1.65}footer{margin-top:26px;padding:24px;border-radius:24px;background:rgba(15,23,42,.96);color:var(--muted);text-align:center}
+@media(max-width:1020px){.layout{flex-direction:column}.sidebar{width:100%;height:auto;position:relative}.hero-grid,.order-shell{grid-template-columns:1fr}.summary{position:static}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.main{padding:18px}.hero{padding:28px 24px}.size-grid,.address-grid,.steps{grid-template-columns:1fr}.address-grid .wide{grid-column:auto}.button{width:100%}}
 </style>
 </head>
 <body>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="brand-box">
-        <h2>🛒 KOPC Service</h2>
-        <p>บริการผลิตโมเดล 3D สำหรับตกแต่งโต๊ะคอม ของขวัญ และของสะสมที่ออกแบบให้เป็นคุณ</p>
-      </div>
-      <nav class="menu">
-        <p class="menu-label">สินค้าและบริการของเรา</p>
-        <a href="index.html">🏠 คอมพิวเตอร์ให้เช่า</a>
-        <a href="kopc_products.html">🛒 สินค้า KOPC Service</a>
-        <a href="3d_figure_service.html" class="active">🗿 สั่งปั้นรูปวางโต๊ะคอม</a>
-        <a href="Other_MainPage.html">🧩 อื่นๆ</a>
-      </nav>
-    </aside>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand-box"><h2>🛒 KOPC Service</h2><p>บริการผลิตโมเดล 3D ขนาดสูงสุด 180 × 180 × 180 มม. สำหรับตกแต่งโต๊ะคอมและของขวัญเฉพาะบุคคล</p></div>
+    <nav class="menu">
+      <p class="menu-label">สินค้าและบริการของเรา</p>
+      <a href="index.html">🏠 คอมพิวเตอร์ให้เช่า</a>
+      <a href="kopc_products.html">🛒 สินค้า KOPC Service</a>
+      <a href="3d_figure_service.html" class="active">🗿 สั่งปั้นรูปวางโต๊ะคอม</a>
+      <a href="Other_MainPage.html">🧩 อื่นๆ</a>
+    </nav>
+  </aside>
 
-    <main class="main">
-      <section class="hero">
-        <div class="hero-grid">
-          <div>
-            <span class="eyebrow">🖨️ Custom 3D Figure</span>
-            <h1>สั่งปั้นรูปวางโต๊ะคอม</h1>
-            <p>ส่งรูปบุคคล สัตว์เลี้ยง ตัวละคร หรือไอเดียที่คุณชอบ ให้เราช่วยขึ้นแบบและปริ้นเป็นโมเดล 3D สำหรับวางข้างจอคอมในสไตล์เฉพาะของคุณ</p>
-            <div class="hero-actions">
-              <a class="button button-primary" href="#order">เริ่มสั่งงาน</a>
-              <a class="button button-secondary" href="#process">ดูขั้นตอนการผลิต</a>
+  <main class="main">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">🖨️ Custom 3D Figure</span>
+          <h1>สั่งปั้นรูปวางโต๊ะคอม</h1>
+          <p>อัปโหลดรูป เลือกขนาด และชำระเงินได้ในหน้าเดียว ระบบจะเก็บรูปอ้างอิงลง Google Drive เพื่อให้ร้านนำไปออกแบบโมเดลก่อนสั่งพิมพ์จริง</p>
+          <div class="hero-actions"><a class="button button-primary" href="#order">เริ่มสั่งปั้น</a><a class="button button-secondary" href="#process">ดูขั้นตอน</a></div>
+        </div>
+        <div class="account-card">
+          <span class="account-pill" id="accountPill">กำลังตรวจสอบบัญชี...</span>
+          <h3 id="accountTitle">ใช้บัญชี KOPC เดิมได้เลย</h3>
+          <p id="accountText">ต้อง Login ก่อนอัปโหลดรูปและไปหน้าชำระเงิน</p>
+          <div class="account-actions" id="accountActions">
+            <button class="button button-primary" type="button" onclick="goLogin()">Login</button>
+            <a class="button button-secondary" href="register.html">Register</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="content">
+      <section class="order-shell" id="order">
+        <div class="panel">
+          <h2>สร้างออเดอร์งานปั้น</h2>
+          <p class="panel-copy">รองรับไฟล์ JPG, PNG และ WebP รูปควรเห็นใบหน้าหรือวัตถุชัดเจน ระบบจะย่อรูปก่อนอัปโหลด</p>
+
+          <div class="field">
+            <label>1. ใส่รูปอ้างอิง</label>
+            <label class="upload-box" id="uploadBox" for="referenceImage">
+              <img id="imagePreview" alt="รูปอ้างอิงที่เลือก">
+              <span class="upload-copy"><strong>คลิกเพื่อเลือกรูป</strong><span>แนะนำรูปด้านหน้าและแสงสว่าง ขนาดไม่เกิน 10 MB</span></span>
+            </label>
+            <input id="referenceImage" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+          </div>
+
+          <div class="field">
+            <label>2. เลือกขนาดความสูง</label>
+            <div class="size-grid">
+              <label class="size-option"><input type="radio" name="figureSize" value="80" data-price="200" checked><span class="size-card"><strong>ขนาดเล็ก</strong><span>สูงไม่เกิน 80 มม.</span><b>200 บาท</b></span></label>
+              <label class="size-option"><input type="radio" name="figureSize" value="120" data-price="400"><span class="size-card"><strong>ขนาดกลาง</strong><span>สูงไม่เกิน 120 มม.</span><b>400 บาท</b></span></label>
+              <label class="size-option"><input type="radio" name="figureSize" value="180" data-price="600"><span class="size-card"><strong>ขนาดใหญ่</strong><span>สูงไม่เกิน 180 มม.</span><b>600 บาท</b></span></label>
             </div>
           </div>
-          <div class="figure-preview" aria-label="ตัวอย่างโมเดลตั้งโต๊ะสามมิติ">
-            <div class="figure-art" aria-hidden="true">
-              <div class="figure-head"></div>
-              <div class="figure-body"></div>
-              <div class="figure-base"></div>
+
+          <div class="field">
+            <label for="customerNote">รายละเอียดที่ต้องการ</label>
+            <textarea id="customerNote" placeholder="เช่น ท่าทาง เสื้อผ้า สีฐาน ชื่อบนฐาน หรือรายละเอียดเพิ่มเติม"></textarea>
+          </div>
+
+          <div class="field">
+            <label>ที่อยู่จัดส่ง</label>
+            <div class="address-grid">
+              <input id="receiverName" type="text" placeholder="ชื่อผู้รับ">
+              <input id="receiverPhone" type="tel" placeholder="เบอร์โทร">
+              <textarea id="receiverAddress" class="wide" placeholder="บ้านเลขที่ ถนน ตำบล/แขวง อำเภอ/เขต จังหวัด รหัสไปรษณีย์"></textarea>
             </div>
           </div>
         </div>
+
+        <aside class="panel summary">
+          <h2>สรุปคำสั่ง</h2>
+          <p class="panel-copy">ตรวจสอบรูป ขนาด และยอดชำระก่อนดำเนินการ</p>
+          <div class="summary-preview" id="summaryPreview"><img id="summaryImage" alt="รูปตัวอย่าง"><span>ยังไม่ได้เลือกรูป</span></div>
+          <div class="summary-row"><span>ขนาด</span><strong id="summarySize">80 มม.</strong></div>
+          <div class="summary-row"><span>ค่าปั้นและพิมพ์</span><strong id="summaryPrice">200 บาท</strong></div>
+          <div class="summary-row"><span>ค่าจัดส่ง</span><strong>50 บาท</strong></div>
+          <div class="summary-row total"><span>ยอดรวม</span><strong id="summaryTotal">250 บาท</strong></div>
+          <p class="summary-note">ราคานี้เป็นราคาเบื้องต้นสำหรับขนาดที่เลือก หากรูปมีรายละเอียดซับซ้อน ร้านจะแจ้งก่อนเริ่มออกแบบ</p>
+          <button id="checkoutButton" class="button checkout-btn" type="button" onclick="prepareCheckout()">บันทึกรูปและไปชำระเงิน</button>
+          <p id="formStatus" class="form-status"></p>
+        </aside>
       </section>
 
-      <div class="content-shell">
-        <section class="section" id="process">
-          <div class="section-head">
-            <h2>สั่งง่ายใน 3 ขั้นตอน</h2>
-            <p>ลูกค้าจะได้ตรวจแบบก่อนผลิตจริง เพื่อลดความคลาดเคลื่อนและเลือกงานให้เหมาะกับงบประมาณ</p>
-          </div>
-          <div class="grid">
-            <article class="card">
-              <span class="card-number">1</span>
-              <h3>ส่งรูปและรายละเอียด</h3>
-              <p>ส่งรูปอ้างอิงที่เห็นใบหน้าหรือวัตถุชัดเจน พร้อมระบุท่าทาง ชุด ข้อความบนฐาน และสไตล์ที่ต้องการ</p>
-            </article>
-            <article class="card">
-              <span class="card-number">2</span>
-              <h3>ประเมินราคาและอนุมัติแบบ</h3>
-              <p>ทีมงานประเมินความซับซ้อน ขนาด และวัสดุ จากนั้นส่งภาพตัวอย่างโมเดลให้ตรวจสอบก่อนยืนยันงาน</p>
-            </article>
-            <article class="card">
-              <span class="card-number">3</span>
-              <h3>ผลิตและจัดส่ง</h3>
-              <p>เริ่มปริ้น 3D เก็บรายละเอียด และแพ็กสินค้าอย่างเหมาะสม พร้อมแจ้งสถานะเมื่อจัดส่งเรียบร้อย</p>
-            </article>
-          </div>
-        </section>
+      <section class="section" id="process">
+        <div class="section-head"><h2>ขั้นตอนการสั่งปั้น</h2><p>ตั้งแต่ส่งรูปจนถึงจัดส่งโมเดลสำเร็จ</p></div>
+        <div class="steps">
+          <article class="step"><span class="step-number">1</span><h3>ใส่รูป</h3><p>อัปโหลดรูปอ้างอิงที่เห็นรายละเอียดชัดเจน</p></article>
+          <article class="step"><span class="step-number">2</span><h3>เลือกขนาด</h3><p>เลือกความสูง 80, 120 หรือ 180 มม.</p></article>
+          <article class="step"><span class="step-number">3</span><h3>ชำระเงิน</h3><p>ตรวจยอดรวมและแนบสลิปในหน้าชำระเงิน</p></article>
+          <article class="step"><span class="step-number">4</span><h3>ร้านดีไซน์รูปทรง</h3><p>ร้านขึ้นแบบโมเดลจากรูปและรายละเอียดที่ให้มา</p></article>
+          <article class="step"><span class="step-number">5</span><h3>จัดส่งรูปทรงให้ลูกค้า</h3><p>ส่งภาพแบบให้ลูกค้าตรวจสอบก่อนผลิตจริง</p></article>
+          <article class="step"><span class="step-number">6</span><h3>สั่งพิมพ์</h3><p>เริ่มพิมพ์โมเดล 3D ตามแบบที่ยืนยันแล้ว</p></article>
+          <article class="step"><span class="step-number">7</span><h3>ส่งของตามที่อยู่</h3><p>แพ็กและจัดส่งโมเดลไปยังที่อยู่ของลูกค้า</p></article>
+        </div>
+      </section>
+      <footer>KOPC Service</footer>
+    </div>
+  </main>
+</div>
 
-        <section class="section">
-          <div class="section-head">
-            <h2>ปรับแต่งได้ตามสไตล์คุณ</h2>
-            <p>รายการด้านล่างเป็นตัวเลือกเบื้องต้น ราคาจริงขึ้นอยู่กับขนาดและรายละเอียดของแต่ละแบบ</p>
-          </div>
-          <div class="grid options">
-            <article class="card"><div class="option-icon">📏</div><h3>เลือกขนาด</h3><p>ขนาดเล็กสำหรับข้างคีย์บอร์ด หรือขนาดเด่นสำหรับมุมโชว์บนโต๊ะ</p></article>
-            <article class="card"><div class="option-icon">🎨</div><h3>เลือกสี</h3><p>สีวัสดุแบบเรียบ งานหลายสี หรือสอบถามตัวเลือกลงสีเพิ่มเติม</p></article>
-            <article class="card"><div class="option-icon">🪧</div><h3>ใส่ชื่อบนฐาน</h3><p>เพิ่มชื่อ เกมแท็ก ข้อความสั้น หรือวันที่สำคัญบนฐานโมเดล</p></article>
-            <article class="card"><div class="option-icon">🎁</div><h3>ทำเป็นของขวัญ</h3><p>เหมาะสำหรับวันเกิด ของขวัญคู่รัก ทีมเกม หรือของที่ระลึกเฉพาะบุคคล</p></article>
-          </div>
-        </section>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth,onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
-        <section class="cta" id="order">
-          <div>
-            <h2>พร้อมเปลี่ยนไอเดียให้เป็นโมเดลแล้วหรือยัง?</h2>
-            <p>ติดต่อทีมงานพร้อมแนบรูปอ้างอิง 2-4 รูป และแจ้งขนาดที่ต้องการ เพื่อรับการประเมินราคาเบื้องต้น</p>
-          </div>
-          <a class="button button-primary" href="Other_MainPage.html">ติดต่อเพื่อสั่งงาน</a>
-        </section>
+const PRODUCT_API_URL="https://script.google.com/macros/s/AKfycbxmE38FRHagWNxzFz8htUBh_2V212bvEOElHwQbYZThoQQJyXcI9JAJI-b3b0u279g/exec";
+const SHIPPING_FEE=50;
+const firebaseConfig={apiKey:"AIzaSyBN02k5-YhZc1uitpEfMfVpsPLAPYKQs7A",authDomain:"myshop-c3983.firebaseapp.com",projectId:"myshop-c3983"};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+let currentUser=null;
+let selectedFile=null;
+let previewUrl="";
 
-        <footer>KOPC Service</footer>
-      </div>
-    </main>
-  </div>
+function addressKey(){return currentUser?"kopcShippingAddress_"+currentUser.uid:"kopcShippingAddress"}
+function loadAddress(){const saved=localStorage.getItem(addressKey());if(!saved)return;try{const data=JSON.parse(saved);document.getElementById("receiverName").value=data.name||"";document.getElementById("receiverPhone").value=data.phone||"";document.getElementById("receiverAddress").value=data.address||""}catch(error){console.error(error)}}
+function saveAddress(){const data={name:document.getElementById("receiverName").value.trim(),phone:document.getElementById("receiverPhone").value.trim(),address:document.getElementById("receiverAddress").value.trim(),updatedAt:new Date().toISOString()};localStorage.setItem(addressKey(),JSON.stringify(data));return data}
+function selectedSize(){const input=document.querySelector('input[name="figureSize"]:checked');return{size:Number(input?.value||80),price:Number(input?.dataset.price||200)}}
+function money(value){return Number(value||0).toLocaleString("th-TH")+" บาท"}
+function updateSummary(){const choice=selectedSize();document.getElementById("summarySize").innerText=choice.size+" มม.";document.getElementById("summaryPrice").innerText=money(choice.price);document.getElementById("summaryTotal").innerText=money(choice.price+SHIPPING_FEE)}
+
+document.querySelectorAll('input[name="figureSize"]').forEach(input=>input.addEventListener("change",updateSummary));
+document.getElementById("referenceImage").addEventListener("click",event=>{if(!currentUser){event.preventDefault();alert("กรุณา Login ก่อนใส่รูปอ้างอิง");window.goLogin()}});
+document.getElementById("referenceImage").addEventListener("change",event=>{const file=event.target.files[0];if(!file)return;if(file.size>10*1024*1024){alert("กรุณาเลือกรูปขนาดไม่เกิน 10 MB");event.target.value="";return}selectedFile=file;if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=URL.createObjectURL(file);["imagePreview","summaryImage"].forEach(id=>document.getElementById(id).src=previewUrl);document.getElementById("uploadBox").classList.add("has-image");document.getElementById("summaryPreview").classList.add("has-image")});
+
+function resizeReferenceImage(file){return new Promise((resolve,reject)=>{const reader=new FileReader();const image=new Image();reader.onerror=reject;image.onerror=reject;reader.onload=()=>image.src=reader.result;image.onload=()=>{const max=1200;const scale=Math.min(1,max/Math.max(image.width,image.height));const canvas=document.createElement("canvas");canvas.width=Math.round(image.width*scale);canvas.height=Math.round(image.height*scale);canvas.getContext("2d").drawImage(image,0,0,canvas.width,canvas.height);const dataUrl=canvas.toDataURL("image/jpeg",.82);resolve({base64:dataUrl.split(",")[1],type:"image/jpeg",name:(file.name||"reference").replace(/\.[^.]+$/,"")+".jpg"})};reader.readAsDataURL(file)})}
+
+window.goLogin=function(){window.location.href="login.html?next="+encodeURIComponent("3d_figure_service.html#order")};
+window.logout=function(){signOut(auth).then(()=>location.reload())};
+window.prepareCheckout=async function(){
+  if(!currentUser){window.goLogin();return}
+  if(!selectedFile){alert("กรุณาใส่รูปอ้างอิงก่อน");return}
+  const address=saveAddress();
+  if(!address.name||!address.phone||!address.address){alert("กรุณากรอกที่อยู่จัดส่งให้ครบ");return}
+  const choice=selectedSize();
+  const button=document.getElementById("checkoutButton");
+  const status=document.getElementById("formStatus");
+  button.disabled=true;button.innerText="กำลังบันทึกรูป...";status.innerText="กำลังอัปโหลดรูปอ้างอิงไปยัง Google Drive";
+  try{
+    const image=await resizeReferenceImage(selectedFile);
+    const response=await fetch(PRODUCT_API_URL,{method:"POST",body:JSON.stringify({action:"createProduct",name:"3D Reference - "+(currentUser.email||currentUser.uid),description:`รูปอ้างอิงงานปั้น ${choice.size} มม.`,price:0,stock:0,status:"hidden",imageBase64:image.base64,imageType:image.type,imageName:image.name,adminEmail:currentUser.email||""})});
+    const result=await response.json();
+    if(result.success===false||!result.imageUrl)throw new Error(result.message||"อัปโหลดรูปไม่สำเร็จ");
+    const draft={referenceProductId:result.productId||"",referenceImageUrl:result.imageUrl,size:choice.size,price:choice.price,shipping:SHIPPING_FEE,total:choice.price+SHIPPING_FEE,note:document.getElementById("customerNote").value.trim(),address,createdAt:new Date().toISOString()};
+    localStorage.setItem("kopc3dOrderDraft_"+currentUser.uid,JSON.stringify(draft));
+    const params=new URLSearchParams({type:"product",custom3d:"1",productId:"3D-"+(result.productId||Date.now()),item:`สั่งปั้นรูปวางโต๊ะคอม ขนาด ${choice.size} มม.`,amount:String(draft.total),subtotal:String(choice.price),shipping:String(SHIPPING_FEE)});
+    window.location.href="payment.html?"+params.toString();
+  }catch(error){console.error(error);alert("บันทึกรูปไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");button.disabled=false;button.innerText="บันทึกรูปและไปชำระเงิน";status.innerText=""}
+};
+
+onAuthStateChanged(auth,user=>{currentUser=user||null;if(user){document.getElementById("accountPill").innerText="เข้าสู่ระบบแล้ว";document.getElementById("accountTitle").innerText=user.displayName||user.email||"บัญชีของคุณ";document.getElementById("accountText").innerText="พร้อมสร้างออเดอร์และบันทึกรูปลง Drive";document.getElementById("accountActions").innerHTML='<button class="button button-primary" type="button" onclick="logout()">Log Out</button>';loadAddress()}else{document.getElementById("accountPill").innerText="ยังไม่ได้ Login"}});
+updateSummary();
+</script>
 </body>
 </html>

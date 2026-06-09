@@ -355,7 +355,8 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
       }
 
       alert("กรุณา Login ก่อน");
-      window.location.href = "login.html";
+      const paymentReturnUrl = location.pathname.split("/").pop() + location.search;
+      window.location.href = "login.html?next=" + encodeURIComponent(paymentReturnUrl);
       return;
     }
 
@@ -369,6 +370,7 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
         })
       : () => {};
     document.getElementById("name").value = user.displayName || user.email;
+    loadCustom3dDraft(user);
   });
 
   const params = new URLSearchParams(location.search);
@@ -381,6 +383,7 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
   const productAmount = params.get("amount") || "";
   const productSubtotal = params.get("subtotal") || "";
   const productShipping = params.get("shipping") || "";
+  const isCustom3dPayment = params.get("custom3d") === "1";
   const isCartPayment = productId.includes(",") || productId === "CART";
   const itemName = isProductPayment ? (productItem || "สินค้า KOPC") : (set ? `${isRenewal ? "ต่ออายุชุดคอม" : "ชุดคอม"} ${set}` : "-");
   document.getElementById("itemName").innerText = itemName;
@@ -397,6 +400,41 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
       productId ? `สั่งซื้อสินค้า ${itemName} (${productId})` : `สั่งซื้อสินค้า ${itemName}`,
       shippingNote
     ].filter(Boolean).join("\n");
+  }
+
+  function loadCustom3dDraft(user) {
+    if (!isCustom3dPayment || !user) return null;
+    const raw = localStorage.getItem("kopc3dOrderDraft_" + user.uid);
+    if (!raw) {
+      alert("ไม่พบข้อมูลรูปและขนาด กรุณากลับไปสร้างออเดอร์งานปั้นใหม่");
+      window.location.href = "3d_figure_service.html#order";
+      return null;
+    }
+
+    try {
+      const draft = JSON.parse(raw);
+      document.getElementById("paymentTitle").innerText = "ชำระเงินค่าสั่งปั้นรูปวางโต๊ะคอม";
+      document.getElementById("paymentDescription").innerText =
+        "รูปอ้างอิงถูกบันทึกลง Google Drive แล้ว กรุณาชำระยอดตามขนาดที่เลือกและแนบสลิปเพื่อสร้างออเดอร์";
+      document.getElementById("amount").value = draft.total || productAmount;
+      document.getElementById("amount").readOnly = true;
+      document.getElementById("note").value = [
+        `งานปั้น 3D ขนาด ${draft.size} มม.`,
+        `ค่าปั้นและพิมพ์ ${Number(draft.price || 0).toLocaleString("th-TH")} บาท`,
+        `ค่าจัดส่ง ${Number(draft.shipping || 0).toLocaleString("th-TH")} บาท`,
+        `รูปอ้างอิง: ${draft.referenceImageUrl || "-"}`,
+        `ผู้รับ: ${draft.address?.name || "-"}`,
+        `โทร: ${draft.address?.phone || "-"}`,
+        `ที่อยู่: ${draft.address?.address || "-"}`,
+        draft.note ? `รายละเอียด: ${draft.note}` : ""
+      ].filter(Boolean).join("\n");
+      return draft;
+    } catch (error) {
+      console.error(error);
+      alert("ข้อมูลออเดอร์งานปั้นไม่ถูกต้อง กรุณาสร้างรายการใหม่");
+      window.location.href = "3d_figure_service.html#order";
+      return null;
+    }
   }
 
   if (isRenewal) {
@@ -462,6 +500,9 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
 
       try {
         const apiUrl = isProductPayment ? PRODUCT_API_URL : ORDER_API_URL;
+        const custom3dDraft = isCustom3dPayment
+          ? JSON.parse(localStorage.getItem("kopc3dOrderDraft_" + currentUser.uid) || "null")
+          : null;
         const payload = isProductPayment
           ? {
               action: "createProductOrder",
@@ -473,6 +514,7 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
               email: currentUser.email || "",
               customerName: name,
               paymentMethod: paymentMethod,
+              contactPhone: custom3dDraft?.address?.phone || "",
               note: orderNote,
               image: base64Image,
               status: "รอตรวจสอบ",
@@ -507,6 +549,9 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
         alert("ส่งแจ้งโอนเรียบร้อย สามารถติดตามสถานะได้ที่ My Orders");
         if (isCartPayment) {
           localStorage.removeItem("kopcProductCart");
+        }
+        if (isCustom3dPayment) {
+          localStorage.removeItem("kopc3dOrderDraft_" + currentUser.uid);
         }
         window.location.href = isProductPayment ? "product_orders.html" : "My_Order.html";
       } catch (error) {
