@@ -154,6 +154,21 @@ input, select, textarea {
 .order-item strong { display: block; margin-bottom: 6px; }
 .order-meta { color: var(--text-soft); font-size: 0.95rem; line-height: 1.6; }
 .detail-panel { display: grid; gap: 14px; }
+.order-response-panel {
+  padding: 18px;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.96), rgba(236, 253, 245, 0.9));
+}
+.order-response-panel .detail-row:last-of-type { border-bottom: none; }
+.draft-status {
+  display: none;
+  margin: 0 0 12px;
+  color: #b45309;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.draft-status.show { display: block; }
 .detail-row {
   padding: 12px 0;
   border-bottom: 1px solid var(--line-soft);
@@ -241,6 +256,30 @@ footer {
           <div class="panel detail-panel">
             <h2>รายละเอียดออเดอร์</h2>
 
+            <div class="order-response-panel">
+              <div id="draftStatus" class="draft-status">กำลังแก้ไข ระบบจะไม่เขียนทับข้อความนี้ระหว่างรีเฟรชอัตโนมัติ</div>
+
+              <div class="detail-row">
+                <label>สถานะ</label>
+                <select id="detailStatus">
+                  <option>รอตรวจสอบ</option>
+                  <option>กำลังตรวจสอบ</option>
+                  <option>อนุมัติแล้ว</option>
+                  <option>ไม่ผ่าน</option>
+                  <option>เสร็จสิ้น</option>
+                </select>
+              </div>
+
+              <div class="detail-row">
+                <label>ข้อความตอบกลับจากแอดมิน</label>
+                <textarea id="detailReply" rows="5" placeholder="ตัวอย่าง: ตรวจสอบแล้ว ชำระเงินถูกต้อง ระบบจะเปิดใช้งานภายใน 10 นาที"></textarea>
+              </div>
+
+              <div class="admin-actions">
+                <button type="button" onclick="saveOrderUpdate()">บันทึกการอัปเดต</button>
+              </div>
+            </div>
+
             <div class="detail-row">
               <label>Order ID</label>
               <div id="detailOrderId" class="detail-value">-</div>
@@ -269,26 +308,6 @@ footer {
             <div class="detail-row">
               <label>สลิป</label>
               <a id="detailSlip" href="#" target="_blank">-</a>
-            </div>
-
-            <div class="detail-row">
-              <label>สถานะ</label>
-              <select id="detailStatus">
-                <option>รอตรวจสอบ</option>
-                <option>กำลังตรวจสอบ</option>
-                <option>อนุมัติแล้ว</option>
-                <option>ไม่ผ่าน</option>
-                <option>เสร็จสิ้น</option>
-              </select>
-            </div>
-
-            <div class="detail-row">
-              <label>ข้อความตอบกลับจากแอดมิน</label>
-              <textarea id="detailReply" rows="5" placeholder="ตัวอย่าง: ตรวจสอบแล้ว ชำระเงินถูกต้อง ระบบจะเปิดใช้งานภายใน 10 นาที"></textarea>
-            </div>
-
-            <div class="admin-actions">
-              <button type="button" onclick="saveOrderUpdate()">บันทึกการอัปเดต</button>
             </div>
           </div>
         </section>
@@ -329,6 +348,7 @@ footer {
 
   let allOrders = [];
   let selectedOrder = null;
+  let isOrderFormDirty = false;
   let knownOrderIds = new Set();
   let hasLoadedOrdersOnce = false;
 
@@ -503,9 +523,22 @@ footer {
   document.getElementById("statusFilter").addEventListener("change", renderOrderList);
   document.getElementById("notificationPermissionBtn").addEventListener("click", requestNotificationPermission);
   document.getElementById("notificationBtn").addEventListener("click", handleNotificationButtonClick);
+  document.getElementById("detailStatus").addEventListener("change", markOrderFormDirty);
+  document.getElementById("detailReply").addEventListener("input", markOrderFormDirty);
   document.getElementById("manualRefreshBtn").addEventListener("click", () => {
     loadOrders({ notifyOnNew: true, silent: false });
   });
+
+  function markOrderFormDirty() {
+    if (!selectedOrder) return;
+    isOrderFormDirty = true;
+    document.getElementById("draftStatus").classList.add("show");
+  }
+
+  function clearOrderFormDirty() {
+    isOrderFormDirty = false;
+    document.getElementById("draftStatus").classList.remove("show");
+  }
 
   async function loadOrders({ notifyOnNew = false, silent = false } = {}) {
     try {
@@ -577,10 +610,10 @@ footer {
     }
 
     selectedOrder = refreshedOrder;
-    window.selectOrder(refreshedOrder.orderId);
+    window.selectOrder(refreshedOrder.orderId, { preserveDraft: isOrderFormDirty });
   }
 
-  window.selectOrder = function(orderId) {
+  window.selectOrder = function(orderId, { preserveDraft = false } = {}) {
     selectedOrder = allOrders.find(order => order.orderId === orderId);
     if (!selectedOrder) return;
 
@@ -589,8 +622,11 @@ footer {
     document.getElementById("detailItem").innerText = selectedOrder.item || "-";
     document.getElementById("detailAmount").innerText = selectedOrder.amount ? `${selectedOrder.amount} บาท` : "-";
     document.getElementById("detailNote").innerText = selectedOrder.note || "-";
-    document.getElementById("detailStatus").value = selectedOrder.status || "รอตรวจสอบ";
-    document.getElementById("detailReply").value = selectedOrder.adminReply || "";
+    if (!preserveDraft) {
+      document.getElementById("detailStatus").value = selectedOrder.status || "รอตรวจสอบ";
+      document.getElementById("detailReply").value = selectedOrder.adminReply || "";
+      clearOrderFormDirty();
+    }
 
     const slip = document.getElementById("detailSlip");
     if (selectedOrder.slipImage) {
@@ -608,18 +644,24 @@ footer {
       return;
     }
 
-    await fetch(ORDER_API_URL, {
-      method: "POST",
-      body: JSON.stringify({
-        action: "updateOrderByAdmin",
-        orderId: selectedOrder.orderId,
-        status: document.getElementById("detailStatus").value,
-        adminReply: document.getElementById("detailReply").value
-      })
-    });
+    try {
+      await fetch(ORDER_API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "updateOrderByAdmin",
+          orderId: selectedOrder.orderId,
+          status: document.getElementById("detailStatus").value,
+          adminReply: document.getElementById("detailReply").value
+        })
+      });
 
-    alert("บันทึกเรียบร้อย");
-    await loadOrders({ notifyOnNew: false, silent: false });
+      clearOrderFormDirty();
+      alert("บันทึกเรียบร้อย");
+      await loadOrders({ notifyOnNew: false, silent: false });
+    } catch (error) {
+      console.error(error);
+      alert("บันทึกไม่สำเร็จ ข้อความที่พิมพ์ไว้ยังคงอยู่ กรุณาลองใหม่อีกครั้ง");
+    }
   };
   </script>
 </body>
