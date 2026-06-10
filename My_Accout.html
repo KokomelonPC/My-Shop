@@ -344,10 +344,6 @@ footer {
               <span class="profile-label">สถานะบัญชี</span>
               <span class="profile-value" id="accountStatus">กำลังตรวจสอบ...</span>
             </div>
-            <div class="profile-line">
-              <span class="profile-label">User UID</span>
-              <span class="profile-value" id="accountUid">-</span>
-            </div>
 
             <div class="notify-card">
               <h3>การแจ้งเตือน</h3>
@@ -527,7 +523,6 @@ footer {
     document.getElementById("accountName").innerText = user.displayName || "-";
     document.getElementById("accountEmail").innerText = user.email || "-";
     document.getElementById("accountStatus").innerText = "กำลังใช้งาน";
-    document.getElementById("accountUid").innerText = user.uid || "-";
   });
   </script>
 </body>
