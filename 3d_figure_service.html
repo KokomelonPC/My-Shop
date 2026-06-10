@@ -131,18 +131,29 @@ let currentUser=null;
 let selectedFile=null;
 let previewUrl="";
 let spinFrame=1;
+let spinTimer=null;
+const SPIN_INTERVAL=900;
 
 function selectedSize(){const input=document.querySelector('input[name="figureSize"]:checked');return{size:Number(input?.value||80),price:Number(input?.dataset.price||200)}}
 function money(value){return Number(value||0).toLocaleString("th-TH")+" บาท"}
-function updateFigureExample(resetFrame=false){const choice=selectedSize();if(resetFrame)spinFrame=1;const image=document.getElementById("figureSpinImage");image.className="size-"+choice.size;image.src=`3DMove/${choice.size}/frame-${spinFrame}.png`;image.alt=`ตัวอย่างโมเดลหลังปริ้น ขนาด ${choice.size} มม. มุมที่ ${spinFrame}`;document.getElementById("spinHint").innerText=`คลิกเพื่อหมุน ${spinFrame}/8`}
+function updateFigureExample(resetFrame=false){const choice=selectedSize();if(resetFrame)spinFrame=1;const image=document.getElementById("figureSpinImage");image.className="size-"+choice.size;image.src=`3DMove/${choice.size}/frame-${spinFrame}.png`;image.alt=`ตัวอย่างโมเดลหลังปริ้น ขนาด ${choice.size} มม. มุมที่ ${spinFrame}`;document.getElementById("spinHint").innerText=`หมุนอัตโนมัติ ${spinFrame}/8`}
 function updateSummary(){const choice=selectedSize();document.getElementById("summarySize").innerText=choice.size+" มม.";document.getElementById("summaryPrice").innerText=money(choice.price);document.getElementById("summaryTotal").innerText=money(choice.price+SHIPPING_FEE);updateFigureExample(true)}
 
 document.querySelectorAll('input[name="figureSize"]').forEach(input=>input.addEventListener("change",updateSummary));
 function rotateFigure(){if(document.getElementById("summaryPreview").classList.contains("has-image"))return;spinFrame=spinFrame%8+1;updateFigureExample()}
-document.getElementById("figureSpin").addEventListener("click",rotateFigure);
+function stopAutoSpin(){if(spinTimer){clearInterval(spinTimer);spinTimer=null}}
+function startAutoSpin(){stopAutoSpin();if(document.hidden||document.getElementById("summaryPreview").classList.contains("has-image"))return;spinTimer=setInterval(rotateFigure,SPIN_INTERVAL)}
+function preloadSpinImages(){[80,120,180].forEach(size=>{for(let frame=1;frame<=8;frame++){const image=new Image();image.src=`3DMove/${size}/frame-${frame}.png`}})}
+const figureSpin=document.getElementById("figureSpin");
+figureSpin.addEventListener("click",rotateFigure);
 document.getElementById("figureSpin").addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();rotateFigure()}});
+figureSpin.addEventListener("mouseenter",stopAutoSpin);
+figureSpin.addEventListener("mouseleave",startAutoSpin);
+figureSpin.addEventListener("focusin",stopAutoSpin);
+figureSpin.addEventListener("focusout",startAutoSpin);
+document.addEventListener("visibilitychange",()=>{if(document.hidden)stopAutoSpin();else startAutoSpin()});
 document.getElementById("referenceImage").addEventListener("click",event=>{if(!currentUser){event.preventDefault();alert("กรุณา Login ก่อนใส่รูปอ้างอิง");window.goLogin()}});
-document.getElementById("referenceImage").addEventListener("change",event=>{const file=event.target.files[0];if(!file)return;if(file.size>10*1024*1024){alert("กรุณาเลือกรูปขนาดไม่เกิน 10 MB");event.target.value="";return}selectedFile=file;if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=URL.createObjectURL(file);["imagePreview","summaryImage"].forEach(id=>document.getElementById(id).src=previewUrl);document.getElementById("uploadBox").classList.add("has-image");document.getElementById("summaryPreview").classList.add("has-image")});
+document.getElementById("referenceImage").addEventListener("change",event=>{const file=event.target.files[0];if(!file)return;if(file.size>10*1024*1024){alert("กรุณาเลือกรูปขนาดไม่เกิน 10 MB");event.target.value="";return}selectedFile=file;stopAutoSpin();if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=URL.createObjectURL(file);["imagePreview","summaryImage"].forEach(id=>document.getElementById(id).src=previewUrl);document.getElementById("uploadBox").classList.add("has-image");document.getElementById("summaryPreview").classList.add("has-image")});
 
 function resizeReferenceImage(file){return new Promise((resolve,reject)=>{const reader=new FileReader();const image=new Image();reader.onerror=reject;image.onerror=reject;reader.onload=()=>image.src=reader.result;image.onload=()=>{const max=1200;const scale=Math.min(1,max/Math.max(image.width,image.height));const canvas=document.createElement("canvas");canvas.width=Math.round(image.width*scale);canvas.height=Math.round(image.height*scale);canvas.getContext("2d").drawImage(image,0,0,canvas.width,canvas.height);const dataUrl=canvas.toDataURL("image/jpeg",.82);resolve({base64:dataUrl.split(",")[1],type:"image/jpeg",name:(file.name||"reference").replace(/\.[^.]+$/,"")+".jpg"})};reader.readAsDataURL(file)})}
 
@@ -169,6 +180,8 @@ window.prepareCheckout=async function(){
 
 onAuthStateChanged(auth,user=>{currentUser=user||null;if(user){document.getElementById("accountPill").innerText="เข้าสู่ระบบแล้ว";document.getElementById("accountTitle").innerText=user.displayName||user.email||"บัญชีของคุณ";document.getElementById("accountActions").innerHTML='<button class="button button-primary" type="button" onclick="logout()">Log Out</button>'}else{document.getElementById("accountPill").innerText="ยังไม่ได้ Login"}});
 updateSummary();
+preloadSpinImages();
+startAutoSpin();
 </script>
 </body>
 </html>
