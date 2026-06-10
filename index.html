@@ -2031,6 +2031,9 @@ footer {
 
   const resetAutoLogoutTimer = setupAutoLogout();
   renderPublicChatIdentity();
+  if (new URLSearchParams(window.location.search).get("openChat") === "1") {
+    setPublicChatOpen(true);
+  }
   onAuthStateChanged(auth, (user) => {
     window.currentUser = user;
 

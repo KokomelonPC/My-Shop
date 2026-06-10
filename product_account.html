@@ -22,5 +22,6 @@ const app=initializeApp(firebaseConfig); const auth=getAuth(app);
 window.logout=function(){signOut(auth).then(()=>{alert("ออกจากระบบแล้ว");window.location.href="kopc_products.html";});};
 onAuthStateChanged(auth,(user)=>{if(!user){alert("กรุณา Login ก่อน");window.location.href="login.html";return;}document.getElementById("welcomeText").innerText="สวัสดี " + (user.displayName || user.email);document.getElementById("accountName").innerText=user.displayName || "ยังไม่ได้ตั้งชื่อ";document.getElementById("accountEmail").innerText=user.email || "-";document.getElementById("accountStatus").innerText="ใช้งานได้";});
 </script>
+<script src="contact-widget.js"></script>
 </body>
 </html>
