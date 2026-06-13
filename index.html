@@ -763,8 +763,11 @@ button.menu-toggle:focus-visible {
 }
 
 .card-image {
+  display: block;
   position: relative;
   overflow: hidden;
+  color: inherit;
+  text-decoration: none;
 }
 
 .card img {
@@ -801,6 +804,15 @@ button.menu-toggle:focus-visible {
 .card h3 {
   margin: 0 0 14px;
   font-size: 1.2rem;
+}
+
+.card h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.card h3 a:hover {
+  color: var(--brand-blue);
 }
 
 .spec-list {
@@ -910,34 +922,6 @@ button.menu-toggle:focus-visible {
 
 
 
-.card-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.card-actions .rent-btn {
-  margin-top: 0;
-}
-
-.detail-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 11px 14px;
-  border: 1px solid rgba(37, 99, 235, 0.22);
-  border-radius: 14px;
-  color: #1d4ed8;
-  background: #eff6ff;
-  text-decoration: none;
-  font-weight: 800;
-}
-
-.detail-link:hover {
-  background: #dbeafe;
-}
 footer {
   margin-top: 26px;
   padding: 24px;
@@ -1078,12 +1062,12 @@ footer {
         </div>
         <section class="products" id="computerProducts">
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-1.html" aria-label="ดูรายละเอียด Computer Set 1">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 1" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 1</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 1</h3>
+              <h3><a href="computer-set-1.html">Computer Set 1</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD Ryzen9 7950X</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX 4060</span></div>
@@ -1098,16 +1082,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-green">ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-1.html">ดูรายละเอียด</a><button class="rent-btn" data-set="1">สนใจเช่า</button></div>
+              <button class="rent-btn" data-set="1">สนใจเช่า</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-2.html" aria-label="ดูรายละเอียด Computer Set 2">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 2" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 2</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 2</h3>
+              <h3><a href="computer-set-2.html">Computer Set 2</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">Inter Core I5-14400F</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX5050 8GB</span></div>
@@ -1122,16 +1106,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-yellow">Coming Soon</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-2.html">ดูรายละเอียด</a><button class="rent-btn" data-set="2" disabled>Coming Soon</button></div>
+              <button class="rent-btn" data-set="2" disabled>Coming Soon</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-3.html" aria-label="ดูรายละเอียด Computer Set 3">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 3" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 3</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 3</h3>
+              <h3><a href="computer-set-3.html">Computer Set 3</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD RYZEN 7 7800X3D</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX5060 8GB</span></div>
@@ -1146,16 +1130,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-yellow">Coming Soon</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-3.html">ดูรายละเอียด</a><button class="rent-btn" data-set="3" disabled>Coming Soon</button></div>
+              <button class="rent-btn" data-set="3" disabled>Coming Soon</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-4.html" aria-label="ดูรายละเอียด Computer Set 4">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 4" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 4</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 4</h3>
+              <h3><a href="computer-set-4.html">Computer Set 4</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD RYZEN7 8700F</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX 5060</span></div>
@@ -1170,16 +1154,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-green">ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-4.html">ดูรายละเอียด</a><button class="rent-btn" data-set="4">สนใจเช่า</button></div>
+              <button class="rent-btn" data-set="4">สนใจเช่า</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-5.html" aria-label="ดูรายละเอียด Computer Set 5">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 5" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 5</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 5</h3>
+              <h3><a href="computer-set-5.html">Computer Set 5</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD Ryzen7 9700X</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX 4060</span></div>
@@ -1194,16 +1178,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-green">ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-5.html">ดูรายละเอียด</a><button class="rent-btn" data-set="5">สนใจเช่า</button></div>
+              <button class="rent-btn" data-set="5">สนใจเช่า</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-6.html" aria-label="ดูรายละเอียด Computer Set 6">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 6" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 6</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 6</h3>
+              <h3><a href="computer-set-6.html">Computer Set 6</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">Inter E5-2696</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX 3050</span></div>
@@ -1218,16 +1202,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-green">ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-6.html">ดูรายละเอียด</a><button class="rent-btn" data-set="6">สนใจเช่า</button></div>
+              <button class="rent-btn" data-set="6">สนใจเช่า</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-7.html" aria-label="ดูรายละเอียด Computer Set 7">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 7" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 7</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 7</h3>
+              <h3><a href="computer-set-7.html">Computer Set 7</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD RYZEN7 7800X3D</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX 4060</span></div>
@@ -1242,16 +1226,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-red">ไม่ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-7.html">ดูรายละเอียด</a><button class="rent-btn" data-set="7" disabled>ไม่ว่าง</button></div>
+              <button class="rent-btn" data-set="7" disabled>ไม่ว่าง</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-8.html" aria-label="ดูรายละเอียด Computer Set 8">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 8" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 8</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 8</h3>
+              <h3><a href="computer-set-8.html">Computer Set 8</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">Inter Core I5 12400F</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX 5060</span></div>
@@ -1266,16 +1250,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-red">ไม่ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-8.html">ดูรายละเอียด</a><button class="rent-btn" data-set="8" disabled>ไม่ว่าง</button></div>
+              <button class="rent-btn" data-set="8" disabled>ไม่ว่าง</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-10.html" aria-label="ดูรายละเอียด Computer Set 10">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 10" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 10</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 10</h3>
+              <h3><a href="computer-set-10.html">Computer Set 10</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">Inter Core I5-14400F</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX3050 6GB</span></div>
@@ -1290,16 +1274,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-yellow">Coming Soon</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-10.html">ดูรายละเอียด</a><button class="rent-btn" data-set="10" disabled>Coming Soon</button></div>
+              <button class="rent-btn" data-set="10" disabled>Coming Soon</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-9.html" aria-label="ดูรายละเอียด Computer Set 9">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 9" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 9</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 9</h3>
+              <h3><a href="computer-set-9.html">Computer Set 9</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD RYZEN7 9700X</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX4060</span></div>
@@ -1314,16 +1298,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-red">ไม่ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-9.html">ดูรายละเอียด</a><button class="rent-btn" data-set="9" disabled>ไม่ว่าง</button></div>
+              <button class="rent-btn" data-set="9" disabled>ไม่ว่าง</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-11.html" aria-label="ดูรายละเอียด Computer Set 11">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 11" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 11</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 11</h3>
+              <h3><a href="computer-set-11.html">Computer Set 11</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD RYZEN5 5600</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RX 7600</span></div>
@@ -1338,16 +1322,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-red">ไม่ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-11.html">ดูรายละเอียด</a><button class="rent-btn" data-set="11" disabled>ไม่ว่าง</button></div>
+              <button class="rent-btn" data-set="11" disabled>ไม่ว่าง</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-12.html" aria-label="ดูรายละเอียด Computer Set 12">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 12" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 12</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 12</h3>
+              <h3><a href="computer-set-12.html">Computer Set 12</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD RYZEN 5 5600</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX3050 6GB</span></div>
@@ -1362,16 +1346,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-yellow">Coming Soon</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-12.html">ดูรายละเอียด</a><button class="rent-btn" data-set="12" disabled>Coming Soon</button></div>
+              <button class="rent-btn" data-set="12" disabled>Coming Soon</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-13.html" aria-label="ดูรายละเอียด Computer Set 13">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 13" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 13</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 13</h3>
+              <h3><a href="computer-set-13.html">Computer Set 13</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD RYZEN5 5500GT</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX 3050</span></div>
@@ -1386,16 +1370,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-red">ไม่ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-13.html">ดูรายละเอียด</a><button class="rent-btn" data-set="13" disabled>ไม่ว่าง</button></div>
+              <button class="rent-btn" data-set="13" disabled>ไม่ว่าง</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-14.html" aria-label="ดูรายละเอียด Computer Set 14">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 14" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 14</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 14</h3>
+              <h3><a href="computer-set-14.html">Computer Set 14</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD RYZEN5 5500GT</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX 3050</span></div>
@@ -1410,16 +1394,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-red">ไม่ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-14.html">ดูรายละเอียด</a><button class="rent-btn" data-set="14" disabled>ไม่ว่าง</button></div>
+              <button class="rent-btn" data-set="14" disabled>ไม่ว่าง</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-15.html" aria-label="ดูรายละเอียด Computer Set 15">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 15" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 15</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 15</h3>
+              <h3><a href="computer-set-15.html">Computer Set 15</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD RYZEN 5 5500</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX3050 6GB</span></div>
@@ -1434,16 +1418,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-yellow">Coming Soon</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-15.html">ดูรายละเอียด</a><button class="rent-btn" data-set="15" disabled>Coming Soon</button></div>
+              <button class="rent-btn" data-set="15" disabled>Coming Soon</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-16.html" aria-label="ดูรายละเอียด Computer Set 16">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 16" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 16</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 16</h3>
+              <h3><a href="computer-set-16.html">Computer Set 16</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD RYZEN5 5500</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX 4060</span></div>
@@ -1458,16 +1442,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-red">ไม่ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-16.html">ดูรายละเอียด</a><button class="rent-btn" data-set="16" disabled>ไม่ว่าง</button></div>
+              <button class="rent-btn" data-set="16" disabled>ไม่ว่าง</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-17.html" aria-label="ดูรายละเอียด Computer Set 17">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 17" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 17</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 17</h3>
+              <h3><a href="computer-set-17.html">Computer Set 17</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">Inter Core I5 13400F</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX 4060</span></div>
@@ -1482,16 +1466,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-red">ไม่ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-17.html">ดูรายละเอียด</a><button class="rent-btn" data-set="17" disabled>ไม่ว่าง</button></div>
+              <button class="rent-btn" data-set="17" disabled>ไม่ว่าง</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-18.html" aria-label="ดูรายละเอียด Computer Set 18">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 18" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 18</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 18</h3>
+              <h3><a href="computer-set-18.html">Computer Set 18</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">Inter Core I5 12400F</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX3050</span></div>
@@ -1506,16 +1490,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-red">ไม่ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-18.html">ดูรายละเอียด</a><button class="rent-btn" data-set="18" disabled>ไม่ว่าง</button></div>
+              <button class="rent-btn" data-set="18" disabled>ไม่ว่าง</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-19.html" aria-label="ดูรายละเอียด Computer Set 19">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 19" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 19</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 19</h3>
+              <h3><a href="computer-set-19.html">Computer Set 19</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD RYZEN5 5600</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">RTX3050</span></div>
@@ -1530,16 +1514,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-red">ไม่ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-19.html">ดูรายละเอียด</a><button class="rent-btn" data-set="19" disabled>ไม่ว่าง</button></div>
+              <button class="rent-btn" data-set="19" disabled>ไม่ว่าง</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-20.html" aria-label="ดูรายละเอียด Computer Set 20">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 20" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 20</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 20</h3>
+              <h3><a href="computer-set-20.html">Computer Set 20</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">Inter Core I5 12400F</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">GTX 1650</span></div>
@@ -1554,16 +1538,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-red">ไม่ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-20.html">ดูรายละเอียด</a><button class="rent-btn" data-set="20" disabled>ไม่ว่าง</button></div>
+              <button class="rent-btn" data-set="20" disabled>ไม่ว่าง</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-21.html" aria-label="ดูรายละเอียด Computer Set 21">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 21" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 21</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 21</h3>
+              <h3><a href="computer-set-21.html">Computer Set 21</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD RYZEN5 5500GT</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">Integrated Graphi (OB)</span></div>
@@ -1578,16 +1562,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-yellow">Coming Soon</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-21.html">ดูรายละเอียด</a><button class="rent-btn" data-set="21" disabled>Coming Soon</button></div>
+              <button class="rent-btn" data-set="21" disabled>Coming Soon</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-22.html" aria-label="ดูรายละเอียด Computer Set 22">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 22" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 22</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 22</h3>
+              <h3><a href="computer-set-22.html">Computer Set 22</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD RYZEN5 5500GT</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">Integrated Graphi (OB)</span></div>
@@ -1602,16 +1586,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-yellow">Coming Soon</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-22.html">ดูรายละเอียด</a><button class="rent-btn" data-set="22" disabled>Coming Soon</button></div>
+              <button class="rent-btn" data-set="22" disabled>Coming Soon</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-23.html" aria-label="ดูรายละเอียด Computer Set 23">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 23" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 23</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 23</h3>
+              <h3><a href="computer-set-23.html">Computer Set 23</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">Inter Core I5 12400</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">Integrated Graphi (OB)</span></div>
@@ -1626,16 +1610,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-red">ไม่ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-23.html">ดูรายละเอียด</a><button class="rent-btn" data-set="23" disabled>ไม่ว่าง</button></div>
+              <button class="rent-btn" data-set="23" disabled>ไม่ว่าง</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-24.html" aria-label="ดูรายละเอียด Computer Set 24">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 24" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 24</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 24</h3>
+              <h3><a href="computer-set-24.html">Computer Set 24</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD RYZEN3 3200G</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">Integrated Graphi (OB)</span></div>
@@ -1650,16 +1634,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-yellow">Coming Soon</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-24.html">ดูรายละเอียด</a><button class="rent-btn" data-set="24" disabled>Coming Soon</button></div>
+              <button class="rent-btn" data-set="24" disabled>Coming Soon</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-25.html" aria-label="ดูรายละเอียด Computer Set 25">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 25" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 25</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 25</h3>
+              <h3><a href="computer-set-25.html">Computer Set 25</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">Inter Core I3 12100</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">Integrated Graphi (OB)</span></div>
@@ -1674,16 +1658,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-red">ไม่ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-25.html">ดูรายละเอียด</a><button class="rent-btn" data-set="25" disabled>ไม่ว่าง</button></div>
+              <button class="rent-btn" data-set="25" disabled>ไม่ว่าง</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-26.html" aria-label="ดูรายละเอียด Computer Set 26">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 26" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 26</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 26</h3>
+              <h3><a href="computer-set-26.html">Computer Set 26</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">Inter Core I3 12100 3.3</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">Intergrated Inter UHD</span></div>
@@ -1698,16 +1682,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-red">ไม่ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-26.html">ดูรายละเอียด</a><button class="rent-btn" data-set="26" disabled>ไม่ว่าง</button></div>
+              <button class="rent-btn" data-set="26" disabled>ไม่ว่าง</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-27.html" aria-label="ดูรายละเอียด Computer Set 27">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 27" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 27</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 27</h3>
+              <h3><a href="computer-set-27.html">Computer Set 27</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">AMD Ryzen 3 3200G 3.6</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">Intergrated Radeon</span></div>
@@ -1722,16 +1706,16 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-green">ว่าง</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-27.html">ดูรายละเอียด</a><button class="rent-btn" data-set="27">สนใจเช่า</button></div>
+              <button class="rent-btn" data-set="27">สนใจเช่า</button>
             </div>
           </div>
           <div class="card">
-            <div class="card-image">
+            <a class="card-image" href="computer-set-28.html" aria-label="ดูรายละเอียด Computer Set 28">
               <img src="favicon.png" alt="คอมพิวเตอร์ให้เช่า ชุดที่ 28" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
               <span class="card-label">Set 28</span>
-            </div>
+            </a>
             <div class="card-content">
-              <h3>Computer Set 28</h3>
+              <h3><a href="computer-set-28.html">Computer Set 28</a></h3>
               <div class="spec-list">
                 <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">Mac Cloud</span></div>
                 <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">10 GPU</span></div>
@@ -1746,7 +1730,7 @@ footer {
                 <span class="status-title">สถานะ</span>
                 <span class="status status-yellow">Coming Soon</span>
               </div>
-              <div class="card-actions"><a class="detail-link" href="computer-set-28.html">ดูรายละเอียด</a><button class="rent-btn" data-set="28" disabled>Coming Soon</button></div>
+              <button class="rent-btn" data-set="28" disabled>Coming Soon</button>
             </div>
           </div>
         </section>
@@ -1962,12 +1946,12 @@ footer {
 
       return `
         <div class="card">
-          <div class="card-image">
+          <a class="card-image" href="computer-set-${computer.setNumber}.html" aria-label="ดูรายละเอียด Computer Set ${computer.setNumber}">
             <img src="${escapeHtml(computer.imageUrl)}" alt="Computer Set ${computer.setNumber}" loading="lazy" decoding="async" onerror="this.src='favicon.png';">
             <span class="card-label">Set ${computer.setNumber}</span>
-          </div>
+          </a>
           <div class="card-content">
-            <h3>Computer Set ${computer.setNumber}</h3>
+            <h3><a href="computer-set-${computer.setNumber}.html">Computer Set ${computer.setNumber}</a></h3>
             <div class="spec-list">
               <div class="spec"><span class="spec-label">CPU</span><span class="spec-value">${escapeHtml(computer.cpu)}</span></div>
               <div class="spec"><span class="spec-label">GPU</span><span class="spec-value">${escapeHtml(computer.gpu)}</span></div>
@@ -1982,7 +1966,7 @@ footer {
               <span class="status-title">สถานะ</span>
               <span class="status ${statusClass}">${escapeHtml(statusText)}</span>
             </div>
-            <div class="card-actions"><a class="detail-link" href="computer-set-${computer.setNumber}.html">ดูรายละเอียด</a><button class="rent-btn" data-set="${computer.setNumber}" ${isAvailable ? "" : "disabled"}>${escapeHtml(buttonText)}</button></div>
+            <button class="rent-btn" data-set="${computer.setNumber}" ${isAvailable ? "" : "disabled"}>${escapeHtml(buttonText)}</button>
           </div>
         </div>`;
     }).join("");
