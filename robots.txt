@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin_chat.html
+Disallow: /admin_orders.html
+Disallow: /admin_presence.html
+Disallow: /admin_products.html
+Disallow: /admin_product_orders.html
+Disallow: /login.html
+Disallow: /register.html
+Disallow: /forgot_password.html
+Disallow: /My_Accout.html
+Disallow: /My_Order.html
+Disallow: /product_account.html
+Disallow: /product_orders.html
+Disallow: /product_cart.html
+Disallow: /product_detail.html
+Disallow: /shipping_address.html
+Disallow: /payment.html
+Disallow: /refund.html
+Disallow: /data-deletion.html
+Disallow: /Other_MainPage.html
+
+Sitemap: https://kopcservice.com/sitemap.xml
