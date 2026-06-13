@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกมงูกินไข่ | KOPC Service</title>
+<meta name="description" content="เกมงูกินไข่จาก KOPC Service บังคับงูให้กินไข่ เก็บคะแนน และทำสถิติสูงสุด เล่นได้ทั้งคีย์บอร์ดและมือถือ">
+<meta name="robots" content="noindex, nofollow">
+<style>
+:root {
+  --ink: #eff6ff;
+  --soft: #a5b4fc;
+  --panel: rgba(15, 23, 42, 0.76);
+  --line: rgba(148, 163, 184, 0.18);
+  --blue: #2563eb;
+  --indigo: #4f46e5;
+  --cyan: #22d3ee;
+  --green: #22c55e;
+  --egg: #f8fafc;
+  --yolk: #facc15;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(37, 99, 235, 0.3), transparent 32%),
+    radial-gradient(circle at 85% 80%, rgba(34, 211, 238, 0.18), transparent 30%),
+    linear-gradient(145deg, #071124 0%, #111b3d 52%, #071124 100%);
+  padding: 24px;
+}
+
+button { font: inherit; }
+
+.app {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  font-weight: 900;
+  font-size: 1.2rem;
+}
+
+.brand-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--blue), var(--indigo));
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.35);
+}
+
+.top-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 17px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 13px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.button:hover { transform: translateY(-1px); background: rgba(255, 255, 255, 0.14); }
+.button.primary { border: 0; background: linear-gradient(135deg, var(--blue), var(--indigo)); }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 22px;
+  align-items: start;
+}
+
+.game-panel,
+.info-panel {
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--panel);
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(14px);
+}
+
+.game-panel { padding: 22px; }
+
+.scorebar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.score-card {
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.score-card span {
+  display: block;
+  color: var(--soft);
+  font-size: 0.82rem;
+}
+
+.score-card strong {
+  display: block;
+  margin-top: 4px;
+  color: #fff;
+  font-size: 1.25rem;
+}
+
+.board-wrap {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(96, 165, 250, 0.26);
+  border-radius: 22px;
+  background: #07101f;
+  aspect-ratio: 1 / 1;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+  background: rgba(2, 6, 23, 0.76);
+  backdrop-filter: blur(7px);
+}
+
+.overlay.hidden { display: none; }
+
+.overlay-card {
+  width: min(420px, 100%);
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.92);
+}
+
+.overlay-icon { font-size: 3.3rem; }
+.overlay h1 { margin: 12px 0 8px; font-size: clamp(1.8rem, 5vw, 2.7rem); }
+.overlay p { margin: 0 0 20px; color: #cbd5e1; line-height: 1.7; }
+
+.mobile-controls {
+  display: none;
+  width: 214px;
+  margin: 18px auto 0;
+  grid-template-columns: repeat(3, 62px);
+  grid-template-rows: repeat(2, 62px);
+  gap: 8px;
+  justify-content: center;
+}
+
+.control {
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 18px;
+  color: #fff;
+  background: rgba(59, 130, 246, 0.16);
+  font-size: 1.45rem;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.control:active { background: rgba(59, 130, 246, 0.38); transform: scale(0.96); }
+.up { grid-column: 2; }
+.left { grid-column: 1; grid-row: 2; }
+.down { grid-column: 2; grid-row: 2; }
+.right { grid-column: 3; grid-row: 2; }
+
+.info-panel { padding: 25px; }
+.info-panel h2 { margin: 0; font-size: 1.45rem; }
+.info-panel > p { color: #cbd5e1; line-height: 1.75; }
+
+.tips {
+  display: grid;
+  gap: 11px;
+  margin: 22px 0;
+}
+
+.tip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.tip-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: rgba(37, 99, 235, 0.25);
+}
+
+.tip strong { display: block; font-size: 0.96rem; }
+.tip small { display: block; margin-top: 3px; color: #94a3b8; line-height: 1.45; }
+
+.legend {
+  padding: 15px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.16), rgba(79, 70, 229, 0.2));
+}
+
+.legend-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+}
+
+.legend-row span { color: #cbd5e1; }
+.egg-preview { color: var(--yolk); }
+
+.leaderboard {
+  margin-top: 18px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.leaderboard-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 16px;
+  background: rgba(37, 99, 235, 0.14);
+}
+
+.leaderboard-head h3 { margin: 0; font-size: 1rem; }
+.leaderboard-status { color: #93c5fd; font-size: 0.76rem; }
+
+.ranking {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ranking li {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 15px;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.rank-number {
+  display: grid;
+  place-items: center;
+  width: 27px;
+  height: 27px;
+  border-radius: 9px;
+  color: #bfdbfe;
+  background: rgba(37, 99, 235, 0.2);
+  font-weight: 900;
+  font-size: 0.82rem;
+}
+
+.ranking li:nth-child(1) .rank-number { color: #422006; background: #facc15; }
+.ranking li:nth-child(2) .rank-number { color: #1e293b; background: #cbd5e1; }
+.ranking li:nth-child(3) .rank-number { color: #431407; background: #fb923c; }
+.rank-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 800; }
+.rank-score { color: #67e8f9; font-weight: 900; }
+.ranking-empty { color: #94a3b8; text-align: center; }
+
+.score-form {
+  display: grid;
+  gap: 11px;
+  margin-top: 17px;
+  text-align: left;
+}
+
+.score-form.hidden { display: none; }
+.score-form label { color: #cbd5e1; font-size: 0.9rem; font-weight: 700; }
+
+.score-form input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 13px;
+  outline: none;
+  color: #fff;
+  background: #0b1328;
+  font: inherit;
+}
+
+.score-form input:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+.form-message {
+  min-height: 20px;
+  margin: 0;
+  color: #93c5fd;
+  font-size: 0.84rem;
+  text-align: center;
+}
+
+.footer-note {
+  margin: 18px 0 0;
+  color: #64748b;
+  text-align: center;
+  font-size: 0.88rem;
+}
+
+@media (max-width: 860px) {
+  body { padding: 14px; }
+  .layout { grid-template-columns: 1fr; }
+  .info-panel { order: 2; }
+  .mobile-controls { display: grid; }
+}
+
+@media (max-width: 520px) {
+  .topbar { align-items: flex-start; flex-direction: column; }
+  .top-actions { width: 100%; }
+  .top-actions .button { flex: 1; }
+  .game-panel { padding: 13px; border-radius: 20px; }
+  .scorebar { gap: 7px; }
+  .score-card { padding: 10px; }
+  .score-card strong { font-size: 1.05rem; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">🐍</span>
+      <span>KOPC Snake Game</span>
+    </div>
+    <div class="top-actions">
+      <a class="button" href="Other_MainPage.html">กลับเว็บไซต์</a>
+      <button class="button" id="pauseButton" type="button">หยุดเกม</button>
+      <button class="button primary" id="restartButton" type="button">เริ่มใหม่</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="game-panel">
+      <div class="scorebar">
+        <div class="score-card"><span>คะแนน</span><strong id="score">0</strong></div>
+        <div class="score-card"><span>สถิติสูงสุด</span><strong id="highScore">0</strong></div>
+        <div class="score-card"><span>ความยาว</span><strong id="length">4</strong></div>
+      </div>
+
+      <div class="board-wrap">
+        <canvas id="gameCanvas" width="600" height="600" aria-label="พื้นที่เล่นเกมงูกินไข่"></canvas>
+        <div class="overlay" id="overlay">
+          <div class="overlay-card">
+            <div class="overlay-icon" id="overlayIcon">🥚</div>
+            <h1 id="overlayTitle">เกมงูกินไข่</h1>
+            <p id="overlayText">กินไข่เพื่อเพิ่มคะแนนและความยาว ระวังอย่าชนกำแพงหรือชนตัวเอง</p>
+            <button class="button primary" id="startButton" type="button">เริ่มเล่น</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mobile-controls" aria-label="ปุ่มบังคับทิศทาง">
+        <button class="control up" data-direction="up" type="button" aria-label="ขึ้น">▲</button>
+        <button class="control left" data-direction="left" type="button" aria-label="ซ้าย">◀</button>
+        <button class="control down" data-direction="down" type="button" aria-label="ลง">▼</button>
+        <button class="control right" data-direction="right" type="button" aria-label="ขวา">▶</button>
+      </div>
+    </section>
+
+    <aside class="info-panel">
+      <h2>วิธีเล่น</h2>
+      <p>บังคับงูสีฟ้าให้กินไข่ ยิ่งกินมากตัวยิ่งยาวและเกมจะเร็วขึ้นทีละนิด</p>
+
+      <div class="tips">
+        <div class="tip">
+          <span class="tip-icon">⌨️</span>
+          <div><strong>คีย์บอร์ด</strong><small>ปุ่มลูกศร หรือ W A S D</small></div>
+        </div>
+        <div class="tip">
+          <span class="tip-icon">📱</span>
+          <div><strong>มือถือ</strong><small>ปัดบนกระดาน หรือกดปุ่มทิศทาง</small></div>
+        </div>
+        <div class="tip">
+          <span class="tip-icon">⏯</span>
+          <div><strong>หยุดชั่วคราว</strong><small>กด Space หรือปุ่มหยุดเกม</small></div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-row"><span>ไข่ 1 ฟอง</span><strong class="egg-preview">+10 คะแนน</strong></div>
+        <div class="legend-row"><span>กินไข่แล้ว</span><strong>ยาวขึ้น 1 ช่อง</strong></div>
+        <div class="legend-row"><span>สถิติสูงสุด</span><strong>บันทึกในเครื่อง</strong></div>
+      </div>
+
+      <section class="leaderboard" aria-label="ตารางคะแนนสูงสุด">
+        <div class="leaderboard-head">
+          <h3>🏆 5 อันดับสูงสุด</h3>
+          <span class="leaderboard-status" id="leaderboardStatus">กำลังโหลด...</span>
+        </div>
+        <ol class="ranking" id="rankingList">
+          <li class="ranking-empty">ยังไม่มีข้อมูลคะแนน</li>
+        </ol>
+      </section>
+    </aside>
+  </main>
+
+  <p class="footer-note">KOPC Service · Mini Game Demo</p>
+</div>
+
+<script>
+(() => {
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+  const scoreElement = document.getElementById("score");
+  const highScoreElement = document.getElementById("highScore");
+  const lengthElement = document.getElementById("length");
+  const overlay = document.getElementById("overlay");
+  const overlayIcon = document.getElementById("overlayIcon");
+  const overlayTitle = document.getElementById("overlayTitle");
+  const overlayText = document.getElementById("overlayText");
+  const startButton = document.getElementById("startButton");
+  const restartButton = document.getElementById("restartButton");
+  const pauseButton = document.getElementById("pauseButton");
+  const rankingList = document.getElementById("rankingList");
+  const leaderboardStatus = document.getElementById("leaderboardStatus");
+
+  // Replace this value after deploying outputs/snake-leaderboard.gs.
+  const LEADERBOARD_API_URL = "https://script.google.com/macros/s/AKfycbx6xrLe4zIEYvWOyXJprAiigdy3ljZvSQDosgxf3YTOfO_zpgJHFEx-UWCJ1fe86GwI/exec";
+  const API_CONFIGURED = /^https:\/\/script\.google\.com\/macros\/s\//.test(LEADERBOARD_API_URL);
+
+  const cells = 24;
+  const cellSize = canvas.width / cells;
+  const initialSpeed = 135;
+  const minimumSpeed = 62;
+  const directions = {
+    up: { x: 0, y: -1 },
+    down: { x: 0, y: 1 },
+    left: { x: -1, y: 0 },
+    right: { x: 1, y: 0 }
+  };
+
+  let snake = [];
+  let egg = { x: 17, y: 12 };
+  let direction = directions.right;
+  let queuedDirection = directions.right;
+  let score = 0;
+  let highScore = Number(localStorage.getItem("kopcSnakeHighScore") || 0);
+  let speed = initialSpeed;
+  let timer = null;
+  let state = "ready";
+  let touchStart = null;
+  let leaderboard = [];
+  let currentSubmissionId = "";
+
+  function resetGame() {
+    snake = [
+      { x: 8, y: 12 },
+      { x: 7, y: 12 },
+      { x: 6, y: 12 },
+      { x: 5, y: 12 }
+    ];
+    direction = directions.right;
+    queuedDirection = directions.right;
+    score = 0;
+    speed = initialSpeed;
+    currentSubmissionId = createSubmissionId();
+    placeEgg();
+    updateStats();
+    draw();
+  }
+
+  function startGame() {
+    clearInterval(timer);
+    removeScoreForm();
+    if (state === "gameover" || state === "ready") resetGame();
+    state = "playing";
+    overlay.classList.add("hidden");
+    pauseButton.textContent = "หยุดเกม";
+    scheduleLoop();
+  }
+
+  function restartGame() {
+    state = "ready";
+    resetGame();
+    startGame();
+  }
+
+  function togglePause() {
+    if (state === "ready" || state === "gameover") {
+      startGame();
+      return;
+    }
+    if (state === "playing") {
+      state = "paused";
+      clearInterval(timer);
+      pauseButton.textContent = "เล่นต่อ";
+      showOverlay("⏸", "หยุดชั่วคราว", "กดเล่นต่อ หรือกด Space เพื่อกลับเข้าเกม", "เล่นต่อ");
+    } else if (state === "paused") {
+      state = "playing";
+      overlay.classList.add("hidden");
+      pauseButton.textContent = "หยุดเกม";
+      scheduleLoop();
+    }
+  }
+
+  function scheduleLoop() {
+    clearInterval(timer);
+    timer = setInterval(tick, speed);
+  }
+
+  function tick() {
+    direction = queuedDirection;
+    const head = {
+      x: snake[0].x + direction.x,
+      y: snake[0].y + direction.y
+    };
+
+    const hitWall = head.x < 0 || head.y < 0 || head.x >= cells || head.y >= cells;
+    const hitSelf = snake.some(segment => segment.x === head.x && segment.y === head.y);
+    if (hitWall || hitSelf) {
+      endGame();
+      return;
+    }
+
+    snake.unshift(head);
+
+    if (head.x === egg.x && head.y === egg.y) {
+      score += 10;
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem("kopcSnakeHighScore", String(highScore));
+      }
+      speed = Math.max(minimumSpeed, initialSpeed - Math.floor(score / 30) * 7);
+      placeEgg();
+      scheduleLoop();
+    } else {
+      snake.pop();
+    }
+
+    updateStats();
+    draw();
+  }
+
+  function placeEgg() {
+    const freeCells = [];
+    for (let y = 0; y < cells; y++) {
+      for (let x = 0; x < cells; x++) {
+        if (!snake.some(segment => segment.x === x && segment.y === y)) {
+          freeCells.push({ x, y });
+        }
+      }
+    }
+    egg = freeCells[Math.floor(Math.random() * freeCells.length)] || { x: 0, y: 0 };
+  }
+
+  function endGame() {
+    state = "gameover";
+    clearInterval(timer);
+    pauseButton.textContent = "หยุดเกม";
+    showOverlay("💥", "เกมจบแล้ว", `คะแนนของคุณ ${score} คะแนน · ความยาว ${snake.length} ช่อง`, "เล่นอีกครั้ง");
+    showScoreForm();
+  }
+
+  function showOverlay(icon, title, text, buttonText) {
+    overlayIcon.textContent = icon;
+    overlayTitle.textContent = title;
+    overlayText.textContent = text;
+    startButton.textContent = buttonText;
+    removeScoreForm();
+    overlay.classList.remove("hidden");
+  }
+
+  function createSubmissionId() {
+    const randomPart = crypto.getRandomValues(new Uint32Array(2)).join("");
+    return `snake_${Date.now()}_${randomPart}`;
+  }
+
+  function showScoreForm() {
+    overlayTitle.textContent = "บันทึกคะแนน";
+    overlayText.textContent = `คุณทำได้ ${score} คะแนน กรอกชื่อเพื่อเซฟคะแนน หรือเล่นอีกครั้ง`;
+
+    const form = document.createElement("form");
+    form.id = "scoreForm";
+    form.className = "score-form";
+    form.innerHTML = `
+      <label for="playerName">ชื่อผู้เล่น</label>
+      <input id="playerName" name="playerName" maxlength="20" autocomplete="nickname" placeholder="กรอกชื่อไม่เกิน 20 ตัวอักษร" required>
+      <button class="button primary" type="submit">เซฟคะแนน</button>
+      <p class="form-message" id="scoreFormMessage">${API_CONFIGURED ? "" : "โหมดตัวอย่าง: ยังไม่ได้เชื่อม Apps Script"}</p>
+    `;
+
+    startButton.before(form);
+    form.addEventListener("submit", submitScore);
+    setTimeout(() => document.getElementById("playerName")?.focus(), 0);
+  }
+
+  function removeScoreForm() {
+    document.getElementById("scoreForm")?.remove();
+  }
+
+  async function submitScore(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const input = form.querySelector("#playerName");
+    const button = form.querySelector("button");
+    const message = form.querySelector("#scoreFormMessage");
+    const name = input.value.replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, 20);
+
+    if (!name) {
+      message.textContent = "กรุณากรอกชื่อ";
+      return;
+    }
+
+    if (!API_CONFIGURED) {
+      message.textContent = "กรุณาใส่ URL ของ Apps Script ก่อนใช้งานจริง";
+      return;
+    }
+
+    button.disabled = true;
+    input.disabled = true;
+    message.textContent = "กำลังบันทึกคะแนน...";
+
+    try {
+      const response = await fetch(LEADERBOARD_API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "submitScore",
+          name,
+          score,
+          submissionId: currentSubmissionId
+        })
+      });
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message || "บันทึกคะแนนไม่สำเร็จ");
+      }
+
+      leaderboard = data.leaderboard || [];
+      renderLeaderboard();
+      message.textContent = data.rank
+        ? `เซฟแล้ว! คุณติดอันดับ ${data.rank}`
+        : "เซฟคะแนนแล้ว คะแนนถูกเก็บใน Google Sheet";
+      form.querySelector("button").remove();
+      startButton.textContent = "เล่นอีกครั้ง";
+    } catch (error) {
+      message.textContent = error.message || "เชื่อมต่อระบบคะแนนไม่สำเร็จ";
+      button.disabled = false;
+      input.disabled = false;
+    }
+  }
+
+  async function loadLeaderboard() {
+    if (!API_CONFIGURED) {
+      leaderboardStatus.textContent = "รอเชื่อมระบบ";
+      renderLeaderboard();
+      return;
+    }
+
+    leaderboardStatus.textContent = "กำลังโหลด...";
+    try {
+      const response = await fetch(`${LEADERBOARD_API_URL}?action=leaderboard&_=${Date.now()}`);
+      const data = await response.json();
+      if (!data.success) throw new Error(data.message || "โหลดไม่สำเร็จ");
+      leaderboard = data.leaderboard || [];
+      leaderboardStatus.textContent = "อัปเดตล่าสุด";
+      renderLeaderboard();
+    } catch (error) {
+      leaderboardStatus.textContent = "โหลดไม่สำเร็จ";
+      renderLeaderboard();
+    }
+  }
+
+  function renderLeaderboard() {
+    if (!leaderboard.length) {
+      rankingList.innerHTML = '<li class="ranking-empty">ยังไม่มีข้อมูลคะแนน</li>';
+      return;
+    }
+
+    rankingList.innerHTML = leaderboard.slice(0, 5).map((entry, index) => `
+      <li>
+        <span class="rank-number">${index + 1}</span>
+        <span class="rank-name">${escapeHtml(entry.name || "ผู้เล่น")}</span>
+        <span class="rank-score">${Number(entry.score || 0).toLocaleString("th-TH")}</span>
+      </li>
+    `).join("");
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function setDirection(next) {
+    const isReverse = next.x + direction.x === 0 && next.y + direction.y === 0;
+    if (!isReverse) queuedDirection = next;
+  }
+
+  function updateStats() {
+    scoreElement.textContent = score.toLocaleString("th-TH");
+    highScoreElement.textContent = highScore.toLocaleString("th-TH");
+    lengthElement.textContent = snake.length.toLocaleString("th-TH");
+  }
+
+  function roundedRect(x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.roundRect(x, y, width, height, radius);
+    ctx.fill();
+  }
+
+  function draw() {
+    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    gradient.addColorStop(0, "#071425");
+    gradient.addColorStop(1, "#101a38");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.strokeStyle = "rgba(96, 165, 250, 0.07)";
+    ctx.lineWidth = 1;
+    for (let i = 1; i < cells; i++) {
+      const point = i * cellSize;
+      ctx.beginPath();
+      ctx.moveTo(point, 0);
+      ctx.lineTo(point, canvas.height);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, point);
+      ctx.lineTo(canvas.width, point);
+      ctx.stroke();
+    }
+
+    drawEgg();
+
+    snake.forEach((segment, index) => {
+      const pad = 2.2;
+      const x = segment.x * cellSize + pad;
+      const y = segment.y * cellSize + pad;
+      const size = cellSize - pad * 2;
+      const snakeGradient = ctx.createLinearGradient(x, y, x + size, y + size);
+      if (index === 0) {
+        snakeGradient.addColorStop(0, "#22d3ee");
+        snakeGradient.addColorStop(1, "#2563eb");
+      } else {
+        snakeGradient.addColorStop(0, "#38bdf8");
+        snakeGradient.addColorStop(1, "#4f46e5");
+      }
+      ctx.fillStyle = snakeGradient;
+      ctx.shadowColor = index === 0 ? "rgba(34, 211, 238, 0.65)" : "rgba(37, 99, 235, 0.32)";
+      ctx.shadowBlur = index === 0 ? 13 : 6;
+      roundedRect(x, y, size, size, 7);
+      ctx.shadowBlur = 0;
+
+      if (index === 0) drawEyes(segment, x, y, size);
+    });
+  }
+
+  function drawEgg() {
+    const centerX = egg.x * cellSize + cellSize / 2;
+    const centerY = egg.y * cellSize + cellSize / 2;
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.shadowColor = "rgba(250, 204, 21, 0.55)";
+    ctx.shadowBlur = 18;
+    ctx.fillStyle = "#f8fafc";
+    ctx.beginPath();
+    ctx.ellipse(0, 0, cellSize * 0.32, cellSize * 0.4, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = "#facc15";
+    ctx.beginPath();
+    ctx.arc(0, cellSize * 0.05, cellSize * 0.13, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawEyes(segment, x, y, size) {
+    const eyeOffset = size * 0.26;
+    let eyes;
+    if (direction.x === 1) eyes = [[x + size - eyeOffset, y + eyeOffset], [x + size - eyeOffset, y + size - eyeOffset]];
+    else if (direction.x === -1) eyes = [[x + eyeOffset, y + eyeOffset], [x + eyeOffset, y + size - eyeOffset]];
+    else if (direction.y === -1) eyes = [[x + eyeOffset, y + eyeOffset], [x + size - eyeOffset, y + eyeOffset]];
+    else eyes = [[x + eyeOffset, y + size - eyeOffset], [x + size - eyeOffset, y + size - eyeOffset]];
+
+    ctx.fillStyle = "#fff";
+    eyes.forEach(([eyeX, eyeY]) => {
+      ctx.beginPath();
+      ctx.arc(eyeX, eyeY, size * 0.09, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.fillStyle = "#0f172a";
+    eyes.forEach(([eyeX, eyeY]) => {
+      ctx.beginPath();
+      ctx.arc(eyeX, eyeY, size * 0.045, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+
+  const keyDirections = {
+    ArrowUp: directions.up,
+    KeyW: directions.up,
+    ArrowDown: directions.down,
+    KeyS: directions.down,
+    ArrowLeft: directions.left,
+    KeyA: directions.left,
+    ArrowRight: directions.right,
+    KeyD: directions.right
+  };
+
+  document.addEventListener("keydown", event => {
+    if (keyDirections[event.code]) {
+      event.preventDefault();
+      if (state === "ready") startGame();
+      setDirection(keyDirections[event.code]);
+    }
+    if (event.code === "Space") {
+      event.preventDefault();
+      togglePause();
+    }
+  });
+
+  document.querySelectorAll(".control").forEach(button => {
+    button.addEventListener("pointerdown", event => {
+      event.preventDefault();
+      if (state === "ready") startGame();
+      setDirection(directions[button.dataset.direction]);
+    });
+  });
+
+  canvas.addEventListener("pointerdown", event => {
+    touchStart = { x: event.clientX, y: event.clientY };
+  });
+
+  canvas.addEventListener("pointerup", event => {
+    if (!touchStart) return;
+    const dx = event.clientX - touchStart.x;
+    const dy = event.clientY - touchStart.y;
+    touchStart = null;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+    if (state === "ready") startGame();
+    setDirection(Math.abs(dx) > Math.abs(dy)
+      ? (dx > 0 ? directions.right : directions.left)
+      : (dy > 0 ? directions.down : directions.up));
+  });
+
+  startButton.addEventListener("click", () => state === "paused" ? togglePause() : startGame());
+  restartButton.addEventListener("click", restartGame);
+  pauseButton.addEventListener("click", togglePause);
+
+  highScoreElement.textContent = highScore.toLocaleString("th-TH");
+  resetGame();
+  loadLeaderboard();
+})();
+</script>
+</body>
+</html>
